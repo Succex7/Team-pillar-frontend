@@ -49,11 +49,13 @@ body {
   border-bottom: 1px solid var(--pillar-border);
   padding: 0 24px;
   height: 60px;
+  border-radius: 25px;
+  box-shadow: var(--pillar-shadow);
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: sticky;
-  top: 0;
+  top: 10px;
   z-index: 100;
 }
 
@@ -78,6 +80,12 @@ body {
 .nav-hint {
   font-size: 14px;
   color: var(--pillar-muted);
+}
+
+.nav-hint:hover {
+  color: var(--pillar-navy);
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .nav-login-btn {
