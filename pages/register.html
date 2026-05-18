@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Account — Pillar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../src/styles/base.css" />
+    <link rel="stylesheet" href="../src/styles/register.css" />
+  </head>
+  <body>
+
+    <!--NAVBAR-->
+    <nav class="navbar">
+      <a href="/index.html" class="nav-logo">
+        <img src="../public/icon/logo.png" width="22px" height="22px" alt="Pillar Logo" />
+        <span>Pillar</span>
+      </a>
+      <div class="nav-right">
+        <span class="nav-hint">Already have an account?</span>
+        <a href="/pages/login.html" class="nav-login-btn">Login</a>
+      </div>
+    </nav>
+
+    <!--MAIN CONTENT -->
+    <main class="register-main">
+
+      <!-- Hero Card -->
+      <div class="hero-card">
+        <div class="hero-badge">
+            <img src="../public/icon/star.png" width="14px" height="14px" alt="Star Icon" />
+          Nigeria's Top UTME Platform
+        </div>
+        <h1 class="hero-heading">Start your journey to university success.</h1>
+        <p class="hero-sub">Join 50,000+ Nigerian students crushing their JAMB exams with Pillar AI.</p>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <img src="../public/icon/rocket.png" width="22px" height="22px" alt="Rocket Icon" />
+          </div>
+          <div class="feature-text">
+            <p class="feature-title">Personalized Path</p>
+            <p class="feature-desc">AI-driven study plans tailored to your target course.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registration Form -->
+      <section class="form-section">
+        <h2 class="form-heading">Create your student account</h2>
+        <p class="form-sub">Takes less than 2 minutes to get started.</p>
+
+        <form id="registerForm" novalidate>
+
+          <!-- Row: Full Name + Phone -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fullName">Full Name</label>
+              <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                placeholder="Chinedu Okafor"
+                autocomplete="name"
+              />
+              <span class="field-error" id="fullNameError"></span>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="08012345678"
+                autocomplete="tel"
+              />
+              <span class="field-error" id="phoneError"></span>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group full-width">
+            <label for="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="you@student.edu.ng"
+              autocomplete="email"
+            />
+            <span class="field-error" id="emailError"></span>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group full-width">
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="••••••••"
+                autocomplete="new-password"
+              />
+              <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
+                <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+            <span class="field-error" id="passwordError"></span>
+          </div>
+
+          <!-- Ambitions -->
+          <div class="ambitions-card">
+            <div class="ambitions-header">
+              <img src="../public/icon/cap.png" height="14px" width="14px" alt="cap">
+              YOUR AMBITIONS
+            </div>
+            <div class="ambitions-row">
+              <div class="form-group">
+                <label for="university">Target University</label>
+                <div class="select-wrapper">
+                  <select id="university" name="university">
+                    <option value="">Select Institution</option>
+                    <option value="unilag">University of Lagos (UNILAG)</option>
+                    <option value="ui">University of Ibadan (UI)</option>
+                    <option value="abuja">University of Abuja</option>
+                    <option value="oau">Obafemi Awolowo University (OAU)</option>
+                    <option value="uniben">University of Benin (UNIBEN)</option>
+                    <option value="unn">University of Nigeria, Nsukka (UNN)</option>
+                    <option value="funaab">Federal University of Agriculture, Abeokuta (FUNAAB)</option>
+                    <option value="uniport">University of Port Harcourt (UNIPORT)</option>
+                    <option value="abu">Ahmadu Bello University (ABU)</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <svg class="select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2">
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="course">Course of Study</label>
+                <input
+                  type="text"
+                  id="course"
+                  name="course"
+                  placeholder="e.g. Medicine & Surgery"
+                />
+              </div>
+            </div>
+            <p class="ambitions-note">Don't worry, you can change these later!</p>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span id="submitText">Create My Account →</span>
+            <span id="submitLoader" class="btn-loader hidden"></span>
+          </button>
+
+          <p class="tos-text">
+            By signing up, you agree to our
+            <a href="/pages/terms.html" class="tos-link">Terms of Service</a>.
+          </p>
+
+        </form>
+
+        <!-- Toast -->
+        <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="register-footer">
+      <span>JAMB OFFICIAL</span>
+      <span class="footer-dot">·</span>
+      <span>NERDC COMPLIANT</span>
+      <span class="footer-dot">·</span>
+      <span>CBT PREP</span>
+    </footer>
+
+    <script type="module" src="../src/main.js"></script>
+    <script type="module" src="../src/scripts/register.js"></script>
+  </body>
+</html>
