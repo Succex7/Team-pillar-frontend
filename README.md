@@ -110,14 +110,14 @@ Team-pillar-frontend/
 ---
 
 ## ROLES COVERED 🛠️💪
-Product Designer
-Frontend Developer (Vanilla JS)
-Backend Developer (Node.js & Express)
-Data Analyst
-Data Scientist
-Cybersecurity Analyst
-Technical Writer
-Digital Marketer
-AI Specialist
+* Product Designer
+* Frontend Developer (Vanilla JS)
+* Backend Developer (Node.js & Express)
+* Data Analyst
+* Data Scientist
+* Cybersecurity Analyst
+* Technical Writer
+* Digital Marketer
+* AI Specialist
 
 ---
