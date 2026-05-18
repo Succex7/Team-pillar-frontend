@@ -1,6 +1,6 @@
 /*register.css*/
 
-/* ── Tokens (keep in tokens.css normally, mirrored here for portability) */
+/* Tokens  */
 :root {
   --pillar-navy:#1a2e5a;
   --pillar-navy-dark:#111e3d;
@@ -25,7 +25,13 @@
 }
 
 /*Base reset */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,
+*::before, 
+*::after { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
 
 body {
   font-family: var(--font-body);
