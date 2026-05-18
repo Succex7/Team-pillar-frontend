@@ -1,5 +1,13 @@
 /* Reset, root variables, typography */
 
+*,
+*::before, 
+*::after { 
+  box-sizing: border-box; 
+  margin: 0;
+  padding: 0; 
+}
+
 /* Skeleton Loading */
 .skeleton {
   background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
