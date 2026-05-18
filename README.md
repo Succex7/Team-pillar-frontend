@@ -1,5 +1,4 @@
 # TEAM PILLAR
-
 ## PILLAR
 AI-Powered Adaptive UTME Preparation Platform
 
@@ -10,16 +9,16 @@ AI-Powered Adaptive UTME Preparation Platform
 ---
 
 ## TABLE OF CONTENTS 
-* Overview
-* Features
-* Tech Stack
-* Project Structure
-* Getting Started
-* Environment Variable
-* API Endpoints
-* Deployment
-* Roadmap 
-* License
+* [ Overview ]
+* [Features]
+* [Tech Stack]
+* [Project Structure]
+* [Getting Started]
+* [Environment Variable]
+* [API Endpoints]
+* [Deployment]
+* [Roadmap]
+* [License]
 
 ---
 
