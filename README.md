@@ -4,7 +4,11 @@ AI-Powered Adaptive UTME Preparation Platform
 
 ---
 
-## 🚀 Key Features
+## 🚀 LIVE DEMO 
+
+---
+
+## ✨ Key Features
 * **High-Speed Bundling:** Powered by Vite for instant Hot Module Replacement (HMR) and optimized production builds.
 * **Modern UI:** Built using semantic HTML5, Vanilla JavaScript, and scalable CSS architecture.
 * **Component-Driven:** Modular structures to make maintaining a large codebase easy.
@@ -57,7 +61,7 @@ npm run build
 
 A clean layout of our large-scale architecture:
 
-# Project Structure
+## Project Structure
 
 ```txt
 Team-pillar-frontend/
@@ -103,3 +107,17 @@ Team-pillar-frontend/
 │── package-lock.json
 └── vite.config.js
 ```
+---
+
+## ROLES COVERED 🛠️💪
+Product Designer
+Frontend Developer (Vanilla JS)
+Backend Developer (Node.js & Express)
+Data Analyst
+Data Scientist
+Cybersecurity Analyst
+Technical Writer
+Digital Marketer
+AI Specialist
+
+---
