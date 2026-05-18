@@ -9,16 +9,16 @@ AI-Powered Adaptive UTME Preparation Platform
 ---
 
 ## TABLE OF CONTENTS 
-* [ Overview ]
-* [Features]
-* [Tech Stack]
-* [Project Structure]
-* [Getting Started]
-* [Environment Variable]
-* [API Endpoints]
-* [Deployment]
-* [Roadmap]
-* [License]
+* [ Overview ](overview)
+* [Features](features)
+* [Tech Stack](tech-stack)
+* [Project Structure](project-structure)
+* [Getting Started](getting-started)
+* [Environment Variable](environment-variable)
+* [API Endpoints](api-endpoints)
+* [Deployment](deployment)
+* [Roadmap](roadmap)
+* [License](license)
 
 ---
 
