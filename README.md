@@ -9,9 +9,9 @@ AI-Powered Adaptive UTME Preparation Platform
 ---
 
 ## TABLE OF CONTENTS 
-* [ Overview ](overview)
+- [ Overview ](overview)
 * [Features](features)
-* [Tech Stack](tech-stack)
+- [Tech Stack](tech-stack)
 * [Project Structure](project-structure)
 * [Getting Started](getting-started)
 * [Environment Variable](environment-variable)
