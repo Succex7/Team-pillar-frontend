@@ -4,14 +4,16 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        main:       'index.html',
-        login:      'pages/login.html',
-        register:   'pages/register.html',
-        dashboard:  'pages/dashboard.html',
-        quiz:       'pages/quiz.html',
-        results:    'pages/results.html',
+        main:      'index.html',
+        register:  'pages/register.html',
+        login:     'pages/login.html',
+        dashboard: 'pages/dashboard.html',
+        quiz:      'pages/quiz.html',
+        results:   'pages/results.html',
       },
     },
   },
-  server: { port: 5173 },
-});  
+  server: {
+    port: 5173,
+  },
+});

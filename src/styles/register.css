@@ -1,28 +1,6 @@
-/*register.css*/
+/* Register Styles */
 
-/* Tokens  */
-:root {
-  --pillar-navy:#1a2e5a;
-  --pillar-navy-dark:#111e3d;
-  --pillar-navy-mid:#1e3a6e;
-  --pillar-white:#ffffff;
-  --pillar-bg:#f5f6f8;
-  --pillar-card-bg:#ffffff;
-  --pillar-border:#e5e7eb;
-  --pillar-muted:#6b7280;
-  --pillar-label:#374151;
-  --pillar-input-bg:#f9fafb;
-  --pillar-badge-bg:#fef3c7;
-  --pillar-badge-txt:#92400e;
-  --pillar-amber:#b45309;
-  --pillar-error:#dc2626;
-  --pillar-success:#16a34a;
-  --pillar-shadow: 0 2px 16px rgba(26,46,90,0.08);
-  --pillar-radius: 12px;
-  --pillar-radius-sm: 8px;
-  --font-display: 'Sora', sans-serif;
-  --font-body: 'Inter', sans-serif;
-}
+@import './tokens.css';
 
 /*Base reset */
 *,
@@ -507,7 +485,7 @@ select:focus {
   }
 
   .nav-hint {
-    display: none;
+    display: inline-block;
   }
 
   .register-footer {
