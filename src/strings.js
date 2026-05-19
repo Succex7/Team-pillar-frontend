@@ -12,6 +12,7 @@ export const strings = {
     forgotPassword: 'Forgot Password?',
     emailLabel: 'Email Address',
     passwordLabel: 'Password',
+    registerSuccess:  'Account created! Redirecting…',
   },
   quiz: {
     startExam: 'Start Exam',
