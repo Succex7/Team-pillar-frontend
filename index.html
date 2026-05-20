@@ -3,16 +3,393 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';"
+    <title>Pillar — Stop Guessing. Start Improving Your UTME Score.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
     />
-    <title>Pillar — UTME Preparation Platform</title>
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="stylesheet" href="/src/styles/base.css" />
+    <link rel="stylesheet" href="src/styles/tokens.css" />
+    <link rel="stylesheet" href="src/styles/landing.css" />
   </head>
   <body>
-    <div id="app"></div>
+
+    <!--NAVBAR -->
+    <header class="navbar-wrapper">
+      <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-logo" aria-label="Pillar home">
+          <!-- Pillar icon -->
+        <img src="../public/icon/logo.png" alt="Pillar logo" width="20" height="20" aria-hidden="true" />
+          <span>Pillar</span>
+        </a>
+
+        <!-- Desktop nav links -->
+        <ul class="nav-links" id="navLinks" role="list">
+          <li><a href="#features"  class="nav-link">Features</a></li>
+          <li><a href="#how-it-works" class="nav-link">How it works</a></li>
+          <li><a href="#for-schools" class="nav-link">For Schools</a></li>
+          <li><a href="#pricing"   class="nav-link">Pricing</a></li>
+        </ul>
+
+        <!-- Desktop CTA -->
+        <div class="nav-cta">
+          <a href="/pages/register.html" class="btn btn-primary btn-sm">Get Started Free →</a>
+          <a href="/pages/login.html"    class="btn btn-ghost  btn-sm">Sign In</a>
+        </div>
+
+        <!-- Mobile hamburger -->
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+          <span class="ham-line"></span>
+          <span class="ham-line"></span>
+          <span class="ham-line"></span>
+        </button>
+      </nav>
+
+      <!-- Mobile drawer -->
+      <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+        <ul class="mobile-links" role="list">
+          <li><a href="#features"     class="mobile-link">Features</a></li>
+          <li><a href="#how-it-works" class="mobile-link">How it works</a></li>
+          <li><a href="#for-schools"  class="mobile-link">For Schools</a></li>
+          <li><a href="#pricing"      class="mobile-link">Pricing</a></li>
+        </ul>
+        <div class="mobile-cta">
+          <a href="/pages/register.html" class="btn btn-primary">Get Started Free →</a>
+          <a href="/pages/login.html"    class="btn btn-outline btn-lg">Sign In</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <!--HERO SECTION-->
+      <section class="hero" id="hero" aria-labelledby="heroHeading">
+        <div class="container">
+          <div class="hero-content">
+
+            <div class="hero-badge animate-fade-up" data-delay="0">
+              <img src="/icon/ai-badge.png" alt="AI badge" aria-hidden="true" />
+              AI-Powered Preparation
+            </div>
+
+            <h1 class="hero-heading animate-fade-up" id="heroHeading" data-delay="100">
+              Stop Guessing.<br />
+              Start Improving Your<br />
+              <span class="hero-highlight">UTME Score.</span>
+            </h1>
+
+            <p class="hero-sub animate-fade-up" data-delay="200">
+              AI-powered personalised targets, past CBT simulations and progress
+              tracking to help you hit your UTME goal with confidence.
+            </p>
+
+            <div class="hero-actions animate-fade-up" data-delay="300">
+              <a href="/pages/register.html" class="btn btn-primary btn-lg">
+                Get Started Free →
+              </a>
+              <a href="/pages/login.html" class="btn btn-outline btn-lg">
+                Sign In
+              </a>
+            </div>
+
+            <!-- Stats row -->
+            <div class="hero-stats animate-fade-up" data-delay="400">
+              <div class="stat-item">
+                <span class="stat-num">1</span>
+                <span class="stat-label">Take Mock Tests</span>
+                <span class="stat-content">simulate real UTME conditions</span>
+              </div>
+              <div class="stat-divider" aria-hidden="true"></div>
+              <div class="stat-item">
+                 <span class="stat-num">2</span>
+                 <span class="stat-label">AI Detects Weak Areas</span>
+                <span class="stat-content">Get personalized insights</span>
+              </div>
+              <div class="stat-divider" aria-hidden="true"></div>
+              <div class="stat-item">
+                <span class="stat-num">3</span>
+                <span class="stat-label">Improve Your Score</span>
+                <span class="stat-content">Practice smarter, score higher</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero visual -->
+          <div class="hero-visual animate-fade-up" data-delay="200" aria-hidden="true">
+            <div class="hero-mockup">
+              <img
+                src="/src/assets/images/hero-dashboard.png"
+                alt="Pillar dashboard showing performance analytics"
+                class="hero-img"
+                loading="eager"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- UNIVERSITY LOGO MARQUEE -->
+      <section class="marquee-section" aria-label="Partner universities">
+        <p class="marquee-label">Built for students preparing for top Nigerian universities</p>
+        <div class="marquee-track-wrapper">
+          <div class="marquee-track" id="marqueeTrack" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <!-- PROBLEM SECTION-->
+      <section class="problem-section" id="problem" aria-labelledby="problemHeading">
+        <div class="container">
+
+          <!-- Dark card -->
+          <div class="problem-dark-card reveal">
+            <div class="problem-badge">
+              <img src="/icon/energy-icon.png" width="12px" height="12px" alt="energy icon"/>
+              WHY STUDENTS STRUGGLE
+            </div>
+            <h2 class="problem-heading" id="problemHeading">
+              Most UTME Students Study Hard<br />But Not Strategically.
+            </h2>
+            <div class="problem-content">
+              <div class="problem-visual">
+                <img
+                  src="/src/assets/images/problem-chart.png"
+                  alt="Chart showing 78% of UTME candidates score below 200"
+                  class="problem-img"
+                  loading="lazy"
+                />
+                <div class="problem-stat-pill">
+                  78% of UTME candidates score below 200
+                  <p>We're changing that narrative through evidence based learning.</p>
+                </div>
+              </div>
+              <ul class="problem-list" role="list">
+
+            <!-- Item 1: glassmorphism -->
+            <li class="problem-item problem-item--glass">
+              <div class="problem-item-icon">
+                <!-- yellow lightning bolt -->
+                <img src="/icon/energy-icon.png" width="16px" height="16px" alt="energy icon"/>
+              </div>
+              <div class="problem-item-text">
+                <span class="problem-item-title">Students can't accurately measure readiness</span>
+                <span class="problem-item-desc">
+                  Many students practice consistently but still have no clear
+                  idea whether they're truly prepared for the real exam.
+                </span>
+              </div>
+            </li>
+
+            <!-- Item 2: plain -->
+            <li class="problem-item problem-item--plain">
+              <div class="problem-item-icon">
+                <img src="/icon/energy-icon.png" width="16px" height="16px" alt="energy icon"/>
+              </div>
+              <div class="problem-item-text">
+                <span class="problem-item-title">Real CBT pressure changes performance</span>
+              </div>
+            </li>
+
+            <!-- Item 3: plain -->
+            <li class="problem-item problem-item--plain">
+              <div class="problem-item-icon">
+                <img src="/icon/energy-icon.png" width="16px" height="16px" alt="energy icon"/>
+              </div>
+              <div class="problem-item-text">
+                <span class="problem-item-title">Most preparation lacks intelligent feedback</span>
+              </div>
+            </li>
+
+          </ul>
+            </div>
+          </div>
+
+          <!-- Solution cards -->
+          <h2 class="solution-heading reveal">
+            Most UTME Students Study Hard<br/>But Not Strategically.
+          </h2>
+
+          <div class="solution-grid">
+            <div class="solution-card reveal" data-delay="0">
+              <div class="solution-icon solution-icon--blue">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" aria-hidden="true">
+                  <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                </svg>
+              </div>
+              <h3 class="solution-title">Take Mock Tests</h3>
+              <p class="solution-desc">
+                Simulate real UTME conditions to help you perform confidently under pressure successfully
+              </p>
+              <div class="solution-preview">
+                <img src="/src/assets/images/solution-mock.png" alt="Mock test interface" loading="lazy" />
+              </div>
+            </div>
+            <div class="solution-card reveal" data-delay="100">
+              <div class="solution-icon solution-icon--green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+              </div>
+              <h3 class="solution-title">AI Detect Weak Areas</h3>
+              <p class="solution-desc">
+                Get personalized insights to help you improve performance and study smarter effectively
+              </p>
+              <div class="solution-preview">
+                <img src="/src/assets/images/solution-weak.png" alt="Weak area detection" loading="lazy" />
+              </div>
+            </div>
+            <div class="solution-card reveal" data-delay="200">
+              <div class="solution-icon solution-icon--amber">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" aria-hidden="true">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+                </svg>
+              </div>
+              <h3 class="solution-title">Improve Your Score</h3>
+              <p class="solution-desc">
+                Practice smarter, score higher in exams with focused learning and consistent improvement
+              </p>
+              <div class="solution-preview">
+                <img src="/src/assets/images/solution-score.png" alt="Score improvement tracker" loading="lazy" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           FEATURES SECTION
+      ══════════════════════════════════════════ -->
+      <section class="features-section" id="features" aria-labelledby="featuresHeading">
+        <div class="container">
+          <div class="section-header reveal">
+            <div class="section-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#1a2e5a" aria-hidden="true">
+                <path d="M12 2L14.4 9.6H22L15.8 14.4L18.2 22L12 17.2L5.8 22L8.2 14.4L2 9.6H9.6L12 2Z"/>
+              </svg>
+              Core Features
+            </div>
+            <h2 class="section-heading" id="featuresHeading">
+              Everything You Need to Succeed
+            </h2>
+            <p class="section-sub">
+              Our comprehensive toolkit is designed to accelerate exams and top
+              performing JAMB candidates.
+            </p>
+          </div>
+
+          <div class="features-grid" id="featuresGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           PRICING SECTION
+      ══════════════════════════════════════════ -->
+      <section class="pricing-section" id="pricing" aria-labelledby="pricingHeading">
+        <div class="container">
+          <div class="section-header reveal">
+            <div class="section-badge">Pricing</div>
+            <h2 class="section-heading" id="pricingHeading">
+              Simple, Transparent Pricing
+            </h2>
+          </div>
+
+          <div class="pricing-grid" id="pricingGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           APP SCREENSHOTS / SCREENS SHOWCASE
+      ══════════════════════════════════════════ -->
+      <section class="screens-section" aria-label="App screens showcase">
+        <div class="container">
+          <div class="screens-grid">
+            <div class="screen-card reveal" data-delay="0">
+              <img src="/src/assets/images/screen-subjects.png" alt="Subject selection screen" loading="lazy" />
+            </div>
+            <div class="screen-card reveal" data-delay="100">
+              <img src="/src/assets/images/screen-register.png" alt="Register screen" loading="lazy" />
+            </div>
+            <div class="screen-card reveal" data-delay="200">
+              <img src="/src/assets/images/screen-results.png" alt="Results screen" loading="lazy" />
+            </div>
+            <div class="screen-card reveal" data-delay="300">
+              <img src="/src/assets/images/screen-dashboard.png" alt="Dashboard screen" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           CTA SECTION
+      ══════════════════════════════════════════ -->
+      <section class="cta-section" aria-labelledby="ctaHeading">
+        <div class="container">
+          <div class="cta-card reveal">
+            <h2 class="cta-heading" id="ctaHeading">Ready to Ace Your UTME?</h2>
+            <p class="cta-sub">
+              Join thousands of students already using Pillar to prepare smarter,
+              score higher and secure their dream university.
+            </p>
+            <div class="cta-actions">
+              <a href="/pages/register.html" class="btn btn-primary btn-lg btn-cta">
+                Get Started Free →
+              </a>
+              <a href="/pages/login.html" class="btn btn-outline-white btn-lg">
+                Sign In
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ══════════════════════════════════════════
+         FOOTER
+    ══════════════════════════════════════════ -->
+    <footer class="footer" role="contentinfo">
+      <div class="container">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <a href="/" class="nav-logo footer-logo">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="2"    y="18" width="20" height="3" rx="1" fill="white"/>
+                <rect x="4"    y="6"  width="3"  height="12" rx="1" fill="white"/>
+                <rect x="10.5" y="6"  width="3"  height="12" rx="1" fill="white"/>
+                <rect x="17"   y="6"  width="3"  height="12" rx="1" fill="white"/>
+                <rect x="2"    y="4"  width="20" height="3" rx="1" fill="white"/>
+              </svg>
+              <span style="color:white;">Pillar</span>
+            </a>
+            <p class="footer-tagline">
+              Nigeria's most intelligent UTME preparation platform.
+            </p>
+          </div>
+
+          <div class="footer-links-grid" id="footerLinksGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p class="footer-copy">© <span id="currentYear"></span> Pillar. All rights reserved.</p>
+          <div class="footer-badges">
+            <span class="footer-badge">JAMB OFFICIAL</span>
+            <span class="footer-dot">·</span>
+            <span class="footer-badge">NERDC COMPLIANT</span>
+            <span class="footer-dot">·</span>
+            <span class="footer-badge">CBT PREP</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
     <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/scripts/landing.js"></script>
   </body>
 </html>
