@@ -205,6 +205,10 @@
           </div>
 
           <!-- Solution cards -->
+           <div class="problem-badge">
+              <img src="/icon/energy-icon.png" width="12px" height="12px" alt="energy icon"/>
+              HOW IT WORKS
+            </div>
           <h2 class="solution-heading reveal">
             Most UTME Students Study Hard<br/>But Not Strategically.
           </h2>
@@ -213,7 +217,7 @@
             <div class="solution-card reveal" data-delay="0">
               <div class="solution-icon solution-icon--blue">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" aria-hidden="true">
-                  <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                  <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
                 </svg>
               </div>
               <h3 class="solution-title">Take Mock Tests</h3>
@@ -257,23 +261,19 @@
         </div>
       </section>
 
-      <!-- ══════════════════════════════════════════
-           FEATURES SECTION
-      ══════════════════════════════════════════ -->
+      <!-- FEATURES SECTION-->
       <section class="features-section" id="features" aria-labelledby="featuresHeading">
         <div class="container">
           <div class="section-header reveal">
             <div class="section-badge">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="#1a2e5a" aria-hidden="true">
-                <path d="M12 2L14.4 9.6H22L15.8 14.4L18.2 22L12 17.2L5.8 22L8.2 14.4L2 9.6H9.6L12 2Z"/>
-              </svg>
-              Core Features
+              <img src="/icon/energy-icon.png" width="12px" height="12px" alt="energy icon"/>
+              Key Features
             </div>
             <h2 class="section-heading" id="featuresHeading">
               Everything You Need to Succeed
             </h2>
             <p class="section-sub">
-              Our comprehensive toolkit is designed to accelerate exams and top
+              Our comprehensive toolset is designed to accelerate exams and top
               performing JAMB candidates.
             </p>
           </div>
@@ -284,62 +284,82 @@
         </div>
       </section>
 
-      <!-- ══════════════════════════════════════════
-           PRICING SECTION
-      ══════════════════════════════════════════ -->
-      <section class="pricing-section" id="pricing" aria-labelledby="pricingHeading">
-        <div class="container">
-          <div class="section-header reveal">
-            <div class="section-badge">Pricing</div>
-            <h2 class="section-heading" id="pricingHeading">
-              Simple, Transparent Pricing
-            </h2>
-          </div>
+      <!-- APP SCREENSHOTS / SCREENS SHOWCASE-->
+              <section class="screens-section" aria-label="App screens showcase">
+          <div class="screens-container">
 
-          <div class="pricing-grid" id="pricingGrid">
-            <!-- Populated by JS -->
-          </div>
-        </div>
-      </section>
+            <!-- Decorative ring lines (CSS only) -->
+            <div class="screens-rings" aria-hidden="true">
+              <div class="ring ring-1"></div>
+              <div class="ring ring-2"></div>
+              <div class="ring ring-3"></div>
+            </div>
 
-      <!-- ══════════════════════════════════════════
-           APP SCREENSHOTS / SCREENS SHOWCASE
-      ══════════════════════════════════════════ -->
-      <section class="screens-section" aria-label="App screens showcase">
-        <div class="container">
-          <div class="screens-grid">
-            <div class="screen-card reveal" data-delay="0">
-              <img src="/src/assets/images/screen-subjects.png" alt="Subject selection screen" loading="lazy" />
-            </div>
-            <div class="screen-card reveal" data-delay="100">
-              <img src="/src/assets/images/screen-register.png" alt="Register screen" loading="lazy" />
-            </div>
-            <div class="screen-card reveal" data-delay="200">
-              <img src="/src/assets/images/screen-results.png" alt="Results screen" loading="lazy" />
-            </div>
-            <div class="screen-card reveal" data-delay="300">
-              <img src="/src/assets/images/screen-dashboard.png" alt="Dashboard screen" loading="lazy" />
+            <!-- Screen grid -->
+            <div class="screens-grid">
+              <!-- Row 1: two small screens in flex row -->
+              <div class="screens-row">
+                <div class="screen-card screen-card--small reveal" data-delay="0">
+                  <img
+                    src="/src/assets/images/screen-subjects.png"
+                    alt="Subject selection screen"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="screen-card screen-card--small reveal" data-delay="100">
+                  <img
+                    src="/src/assets/images/screen-profile.png"
+                    alt="Profile screen"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+
+              <!-- Row 2: one large screen spanning full width -->
+              <div class="screen-card screen-card--large reveal" data-delay="200">
+                <img
+                  src="/src/assets/images/screen-register.png"
+                  alt="Register screen"
+                  loading="lazy"
+                />
+              </div>
+
+              <!-- Row 3: two small screens in flex row -->
+              <div class="screens-row screens-row--bottom">
+                <div class="screen-card screen-card--small reveal" data-delay="300">
+                  <img
+                    src="/src/assets/images/screen-dashboard.png"
+                    alt="Dashboard screen"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="screen-card screen-card--small reveal" data-delay="400">
+                  <img
+                    src="/src/assets/images/screen-premium.png"
+                    alt="Premium screen"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- ══════════════════════════════════════════
-           CTA SECTION
-      ══════════════════════════════════════════ -->
+      <!--CTA SECTION -->
       <section class="cta-section" aria-labelledby="ctaHeading">
         <div class="container">
           <div class="cta-card reveal">
+          <span class="right-pattern"><img src="/icon/pattern.png" alt="Pillar Logo Pattern"></span>
+          <span class="left-pattern"><img src="/icon/pattern2.png" alt="Pillar Logo Pattern"></span>
             <h2 class="cta-heading" id="ctaHeading">Ready to Ace Your UTME?</h2>
             <p class="cta-sub">
-              Join thousands of students already using Pillar to prepare smarter,
-              score higher and secure their dream university.
+               Join 50000+ students and start your journey to a a300+ score today. No credit card required to start.
             </p>
             <div class="cta-actions">
-              <a href="/pages/register.html" class="btn btn-primary btn-lg btn-cta">
+              <a href="/pages/register.html" class="btn btn-primary btn-lg btn-cta2 ">
                 Get Started Free →
               </a>
-              <a href="/pages/login.html" class="btn btn-outline-white btn-lg">
+              <a href="/pages/login.html" class="btn btn-primary btn-lg btn-cta">
                 Sign In
               </a>
             </div>
@@ -349,21 +369,24 @@
 
     </main>
 
-    <!-- ══════════════════════════════════════════
-         FOOTER
-    ══════════════════════════════════════════ -->
+    <!-- FOOTER-->
     <footer class="footer" role="contentinfo">
       <div class="container">
         <div class="footer-top">
           <div class="footer-brand">
             <a href="/" class="nav-logo footer-logo">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <rect x="2"    y="18" width="20" height="3" rx="1" fill="white"/>
-                <rect x="4"    y="6"  width="3"  height="12" rx="1" fill="white"/>
-                <rect x="10.5" y="6"  width="3"  height="12" rx="1" fill="white"/>
-                <rect x="17"   y="6"  width="3"  height="12" rx="1" fill="white"/>
-                <rect x="2"    y="4"  width="20" height="3" rx="1" fill="white"/>
-              </svg>
+
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <!-- Roof (trapezoid, flat bottom) -->
+          <polygon points="2,8 12,3 22,8 2,8" y="22" fill="white"/>
+          <!-- Pillars -->
+          <rect x="2" y="18" width="20" height="3" rx="1" fill="white"/>
+          <rect x="4" y="8" width="3" height="10" rx="1" fill="white"/>
+          <rect x="10.5" y="8" width="3" height="10" rx="1" fill="white"/>
+          <rect x="17" y="8" width="3" height="10" rx="1" fill="white"/>
+          <!-- Top bar under roof -->
+          <rect x="2" y="6" width="20" height="2" rx="1" fill="white"/>
+        </svg>
               <span style="color:white;">Pillar</span>
             </a>
             <p class="footer-tagline">
