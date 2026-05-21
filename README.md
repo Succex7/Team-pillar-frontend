@@ -4,7 +4,7 @@ AI-Powered Adaptive UTME Preparation Platform
 
 ---
 
-## 🚀 LIVE DEMO 
+## LIVE DEMO 
 
 ---
 
@@ -113,7 +113,7 @@ Team-pillar-frontend/
 
 ---
 
-## 📦 Getting Started
+## Getting Started
 
 Follow these instructions to set up and run the project locally on your machine.
 
@@ -149,19 +149,7 @@ npm run build
 
 ---
 
-## Environment Variable
-
----
-
-## API Endpoints
-
----
-
 ## Deployment
-
----
-
-## Roadmap
 
 ---
 
