@@ -1,10 +1,7 @@
-// src/scripts/landing.js
-// Landing page logic — Pillar UTME Platform
+// Landing page logic
 // Dynamic data, marquee, scroll reveal, counter animation, navbar scroll
 
-// ═══════════════════════════════════════════════════════════
-// DATA — all content is dynamic, nothing hardcoded in HTML
-// ═══════════════════════════════════════════════════════════
+// DATA
 
 const UNIVERSITIES = [
   { name: 'UNILAG',   logo: '/src/assets/logos/unilag.png'   },
@@ -29,9 +26,9 @@ const FEATURES = [
         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
       </svg>`,
     },
-    preview: '/src/assets/images/feature-adaptive.png',
+    preview: '/src/assets/images/solution-weak.png',
     title: 'Adaptive Learning',
-    desc: 'Our AI analyses your exam results and recommends topics and questions that improve your weakest areas automatically.',
+    desc: 'Our AI identifies your weak spots and creates a personalized study path to fix them fast.',
   },
   {
     icon: {
@@ -40,9 +37,9 @@ const FEATURES = [
         <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
       </svg>`,
     },
-    preview: '/src/assets/images/feature-cbt.png',
+    preview: '/src/assets/images/solution-mock.png',
     title: 'CBT Simulation',
-    desc: 'Practice with interface identical to the actual JAMB CBT environment including timer, flagging, and navigation.',
+    desc: 'Practice with an interface identical to the official JAMB CBT environment to build exam-day confidence.',
   },
   {
     icon: {
@@ -53,7 +50,7 @@ const FEATURES = [
     },
     preview: '/src/assets/images/feature-analytics.png',
     title: 'Performance Analytics',
-    desc: 'Track your accuracy across all your sessions and subjects. See exactly where you\'re improving and where to focus next.',
+    desc: 'Detailed breakdowns of your speed, accuracy, and subject-level mastery with beautiful chart.',
   },
   {
     icon: {
@@ -64,7 +61,7 @@ const FEATURES = [
     },
     preview: '/src/assets/images/feature-ai.png',
     title: 'AI Explanations',
-    desc: 'Get a specific step-by-step, curriculum-aligned explanation for every question you get wrong — no guessing required.',
+    desc: 'Stuck on a question? Get instant, detailed step-by-step explanations powered by our proprietary AI tutor.',
   },
   {
     icon: {
@@ -78,7 +75,7 @@ const FEATURES = [
     },
     preview: '/src/assets/images/feature-gamification.png',
     title: 'Gamification',
-    desc: 'Earn points, unlock achievements, and maintain study streaks that keep you motivated throughout your preparation journey.',
+    desc: 'Earn points, climb the leaderboard, and unlock badges. Study becomes as addictive as your favorite game.',
   },
   {
     icon: {
@@ -89,58 +86,7 @@ const FEATURES = [
     },
     preview: '/src/assets/images/feature-school.png',
     title: 'School Dashboard',
-    desc: 'Schools and tutorial centres get full cohort analytics of all your registered students. Export detailed performance reports.',
-  },
-];
-
-const PRICING_PLANS = [
-  {
-    name: 'Free',
-    price: '₦0',
-    period: 'Forever',
-    badge: null,
-    featured: false,
-    features: [
-      { text: '10 practice questions/day', included: true },
-      { text: 'Basic performance stats',   included: true },
-      { text: '2 CBT simulations/month',   included: true },
-      { text: 'AI explanations',           included: false },
-      { text: 'Study plan generation',     included: false },
-      { text: 'Offline access',            included: false },
-    ],
-    cta: { label: 'Get Started Free', href: '/pages/register.html' },
-  },
-  {
-    name: 'Pro',
-    price: '₦2,500',
-    period: 'per month',
-    badge: 'Most Popular',
-    featured: true,
-    features: [
-      { text: 'Unlimited practice questions', included: true },
-      { text: 'Full performance analytics',   included: true },
-      { text: 'Unlimited CBT simulations',    included: true },
-      { text: 'AI explanations',              included: true },
-      { text: 'Personalised study plan',      included: true },
-      { text: 'Offline access',               included: false },
-    ],
-    cta: { label: 'Start Pro →', href: '/pages/register.html' },
-  },
-  {
-    name: 'School',
-    price: '₦15,000',
-    period: 'per month',
-    badge: null,
-    featured: false,
-    features: [
-      { text: 'Up to 200 students',         included: true },
-      { text: 'School admin dashboard',     included: true },
-      { text: 'Cohort analytics & export',  included: true },
-      { text: 'All Pro features for pupils', included: true },
-      { text: 'Priority support',           included: true },
-      { text: 'Offline access',             included: true },
-    ],
-    cta: { label: 'Contact Us', href: '/pages/contact.html' },
+    desc: 'For administrators: Track the performance of all your students in real-time and provide targeted help.',
   },
 ];
 
@@ -180,10 +126,7 @@ const FOOTER_LINKS = [
   },
 ];
 
-// ═══════════════════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════════════════
-
 function init() {
   renderMarquee();
   renderFeatures();
@@ -196,10 +139,9 @@ function init() {
   initCounterAnimation();
 }
 
-// ═══════════════════════════════════════════════════════════
-// MARQUEE — CSS-animation approach (best for performance)
+
+// MARQUEE 
 // Duplicates items so the loop is seamless
-// ═══════════════════════════════════════════════════════════
 
 function renderMarquee() {
   const track = document.getElementById('marqueeTrack');
@@ -213,7 +155,7 @@ function renderMarquee() {
 
       const img = document.createElement('img');
       img.src = logo;
-      img.alt = '';               // decorative
+      img.alt = '';             
       img.width = 24;
       img.height = 24;
       img.loading = 'lazy';
@@ -245,10 +187,8 @@ function renderMarquee() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-// FEATURES — render cards dynamically
-// ═══════════════════════════════════════════════════════════
 
+// FEATURES 
 function renderFeatures() {
   const grid = document.getElementById('featuresGrid');
   if (!grid) return;
@@ -276,9 +216,7 @@ function renderFeatures() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
 // PRICING — render cards dynamically
-// ═══════════════════════════════════════════════════════════
 
 function renderPricing() {
   const grid = document.getElementById('pricingGrid');
@@ -330,10 +268,7 @@ function renderPricing() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
-// FOOTER LINKS — render columns dynamically
-// ═══════════════════════════════════════════════════════════
-
+// FOOTER LINKS
 function renderFooterLinks() {
   const grid = document.getElementById('footerLinksGrid');
   if (!grid) return;
@@ -366,19 +301,13 @@ function renderFooterLinks() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
 // CURRENT YEAR in footer
-// ═══════════════════════════════════════════════════════════
-
 function setCurrentYear() {
   const el = document.getElementById('currentYear');
   if (el) el.textContent = new Date().getFullYear();
 }
 
-// ═══════════════════════════════════════════════════════════
 // NAVBAR — scroll shadow + active link highlight
-// ═══════════════════════════════════════════════════════════
-
 function bindNavbar() {
   const navbar = document.getElementById('navbar');
   if (!navbar) return;
@@ -408,8 +337,7 @@ function bindNavbar() {
   }, { passive: true });
 }
 
-// ─── Active nav link based on scroll position ─────────────
-
+//Active nav link based on scroll position
 function highlightActiveNavLink() {
   const sections = ['hero', 'features', 'pricing'];
   const navLinks = document.querySelectorAll('.nav-link');
@@ -435,10 +363,7 @@ function highlightActiveNavLink() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
 // HAMBURGER — mobile menu toggle
-// ═══════════════════════════════════════════════════════════
-
 function bindHamburger() {
   const hamburger  = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
@@ -473,9 +398,7 @@ function bindHamburger() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
 // SCROLL REVEAL — Intersection Observer
-// ═══════════════════════════════════════════════════════════
 
 function initScrollReveal() {
   // Skip if reduced motion preferred
@@ -512,7 +435,7 @@ function initScrollReveal() {
 
   observeRevealElements();
 
-  // Watch for new elements (features/pricing cards rendered by JS)
+  // Watch for new elements (features cards rendered by JS)
   const mutationObserver = new MutationObserver(() => {
     observeRevealElements();
   });
@@ -523,10 +446,7 @@ function initScrollReveal() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
 // COUNTER ANIMATION — hero stats count up
-// ═══════════════════════════════════════════════════════════
-
 function initCounterAnimation() {
   const counterEls = document.querySelectorAll('.stat-num[data-target]');
   if (!counterEls.length) return;
@@ -583,31 +503,6 @@ function formatNumber(num) {
   return String(num);
 }
 
-// ═══════════════════════════════════════════════════════════
 // BOOT
-// ═══════════════════════════════════════════════════════════
-
 init();
 
-
-// ═══════════════════════════════════════════════════════════
-// NOTE ON FRAMER MOTION
-// ─────────────────────────────────────────────────────────
-// Framer Motion is a React library — it cannot be used in
-// a Vanilla JS + HTML project directly. It requires a React
-// component tree to work.
-//
-// What we've used instead:
-//   ✅ CSS @keyframes (hero fade-up, float cards)
-//   ✅ CSS animation (marquee scroll — hardware accelerated)
-//   ✅ IntersectionObserver (scroll reveal — performant)
-//   ✅ requestAnimationFrame (counter animation — smooth)
-//   ✅ CSS transitions (hover states, navbar)
-//
-// These are all GPU-accelerated where possible (transform,
-// opacity) and respect prefers-reduced-motion.
-//
-// If the project ever moves to React (e.g. a dashboard SPA),
-// Framer Motion can be added then via:
-//   npm install framer-motion
-// ═══════════════════════════════════════════════════════════
