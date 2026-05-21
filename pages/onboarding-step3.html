@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step 3 of 3 — Pillar</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/base.css" />
+    <link rel="stylesheet" href="../src/styles/onboarding-step3.css" />
+  </head>
+
+  <body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Onboarding navigation">
+      <a href="/" class="nav-logo" aria-label="Pillar home">
+        <img src="/icon/logo.png" alt="Pillar Logo" width="22px" height="22px" />
+        <span>Pillar</span>
+      </a>
+
+      <!-- Step indicator -->
+      <div class="step-indicator" role="status" aria-label="Step 3 of 3">
+        <span class="step-label">Step 3 of 3</span>
+        <div class="step-bars" aria-hidden="true">
+          <div class="step-bar step-bar--done"   id="stepBar1"></div>
+          <div class="step-bar step-bar--done"   id="stepBar2"></div>
+          <div class="step-bar step-bar--active" id="stepBar3"></div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- MAIN-->
+    <main class="onboarding-main" id="main">
+
+      <div class="onboarding-container">
+
+        <!-- Page heading -->
+        <header class="page-header">
+          <h1 class="page-title">How many hours a day can you study?</h1>
+          <p class="page-sub">
+            We'll tailor your UTME master plan based on your availability.
+          </p>
+        </header>
+
+        <!-- Study hours options -->
+        <section aria-labelledby="optionsLabel">
+          <span id="optionsLabel" class="sr-only">Select your daily study hours</span>
+
+          <ul class="options-list" id="optionsList" role="radiogroup" aria-labelledby="optionsLabel">
+            <!-- Populated dynamically by JS -->
+          </ul>
+        </section>
+
+        <!-- Motivational image -->
+        <div class="motivation-image-wrapper">
+          <img
+            src="/src/assets/images/onboarding-motivation.png"
+            alt="Laptop showing Pillar dashboard with study notes in background"
+            class="motivation-image"
+            loading="lazy"
+            id="motivationImage"
+          />
+        </div>
+
+        <!-- Actions -->
+        <div class="actions-wrapper">
+          <button
+            type="button"
+            class="btn-finish"
+            id="finishBtn"
+            aria-disabled="true"
+            disabled
+          >
+            <span class="btn-finish-text" id="finishBtnText">Finish &amp; Go to Dashboard →</span>
+            <span class="btn-finish-loader hidden" id="finishBtnLoader" aria-hidden="true"></span>
+          </button>
+
+          <a href="/pages/onboarding-step2.html" class="back-link" id="backLink">
+            Go back to Step 2
+          </a>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/scripts/onboarding-step3.js"></script>
+  </body>
+</html>
