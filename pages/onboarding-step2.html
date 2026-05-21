@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Set your Aim – Pillar</title>
+
+    <!-- Phosphor Icons CDN -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Google Fonts: Sora + Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;900&family=Sora:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- base.css first (lead's instruction) -->
+    <link rel="stylesheet" href="../src/styles/base.css" />
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+
+    <!-- Page-specific styles -->
+    <link rel="stylesheet" href="../src/styles/onboarding-step2.css" />
+  </head>
+
+  <body>
+
+    <!-- ===================== FIXED HEADER ===================== -->
+    <header class="site-header">
+      <div class="header-container">
+
+        <!-- Logo: image + "Pillar" wordmark -->
+        <a href="../index.html" class="logo-link" aria-label="Go to Pillar home">
+          <img src="../public/icon/logo.png" width="22px" height="22px" alt="Pillar Logo" />
+          <span>Pillar</span>
+        </a>
+
+        <!-- Step progress: Step 2 of 3 -->
+        <nav class="steps-container" aria-label="Onboarding progress">
+          <span class="steps-label">
+            Step <strong>2</strong> of <strong>3</strong>
+          </span>
+          <ol class="steps-bars" role="list">
+            <!-- Step 1 is done, step 2 is active, step 3 is inactive -->
+            <li class="step-bar done" aria-label="Step 1 complete"></li>
+            <li class="step-bar active" aria-label="Step 2 active"></li>
+            <li class="step-bar" aria-label="Step 3"></li>
+          </ol>
+        </nav>
+
+      </div>
+    </header>
+    <!-- =================== END FIXED HEADER =================== -->
+
+
+    <!-- ===================== MAIN CONTENT ===================== -->
+    <main class="main-content">
+
+      <!-- Page title + subtitle -->
+      <section class="page-intro" aria-labelledby="page-title">
+        <h1 id="page-title" class="page-title">Set your Aim</h1>
+        <p class="page-subtitle">
+          You need 4 subjects to build your personalized study plan.
+          <strong class="highlight-text">Use of English</strong> is already selected for you!
+        </p>
+      </section>
+
+
+      <!-- Main content area: Aim box + Right panel -->
+      <section class="aim-content-container" aria-label="Aim setter content">
+
+        <!-- LEFT: Aim High box -->
+        <article class="aim-box" aria-labelledby="aim-high-heading">
+
+          <!-- Heading + paragraph -->
+          <div class="aim-box-intro">
+            <h2 id="aim-high-heading" class="aim-high-heading">Aim High.</h2>
+            <p class="aim-high-paragraph">
+              What is your target UTME score? We'll tailor
+              your study plan to help you reach it.
+            </p>
+          </div>
+
+          <!-- Score display + slider -->
+          <div class="score-slider-container">
+
+            <!-- Current score display — updates dynamically via JS -->
+            <div class="score-display-wrapper">
+              <strong class="score-display" id="score-display" aria-live="polite">315</strong>
+            </div>
+
+            <!-- Slider + min/max labels -->
+            <div class="slider-wrapper">
+              <!-- The range input — JS reads its value -->
+              <input
+                type="range"
+                class="score-slider"
+                id="score-slider"
+                min="0"
+                max="400"
+                value="315"
+                step="1"
+                aria-label="Target UTME score"
+              />
+              <!-- Labels below the slider -->
+              <div class="slider-labels" aria-hidden="true">
+                <span>150</span>
+                <span>275</span>
+                <span>400</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Set Target button -->
+          <button class="btn-set-target" id="btn-set-target" aria-label="Set your target score">
+            Set Target →
+          </button>
+
+        </article>
+        <!-- END LEFT -->
+
+
+        <!-- RIGHT: Top 5% Tier + Average/Goal cards -->
+        <aside class="right-panel" aria-label="Score insights">
+
+          <!-- Top 5% Tier card -->
+          <article class="tier-card" aria-labelledby="tier-heading">
+
+            <!-- Icon + heading + description -->
+            <div class="tier-card-content">
+              <!-- Trophy/medal icon — green to match design -->
+              <i class="ph ph-seal-check tier-icon" aria-hidden="true"></i>
+
+              <div class="tier-text-content">
+                <h3 id="tier-heading" class="tier-heading">
+                  <!-- Tier title changes dynamically via JS -->
+                  <span id="tier-title">Top 5% Tier</span>
+                </h3>
+                <!--
+                  TODO (backend): This description should come from the backend
+                  based on the score range the user selects.
+                  For now it updates via JS using mock tier data.
+                -->
+                <p class="tier-description" id="tier-description">
+                  A score of 315 places you in the elite bracket. You are eligible
+                  for competitive courses like Medicine or Engineering at top
+                  Nigerian universities.
+                </p>
+              </div>
+            </div>
+
+            <!-- cap.png decorative image — bottom right, rotated, low opacity -->
+            <img
+              src="../public/icon/cap.png"
+              alt=""
+              class="tier-cap-image"
+              aria-hidden="true"
+            />
+
+          </article>
+          <!-- END Tier card -->
+
+
+          <!-- Average + Your Goal cards row -->
+          <div class="stats-row" aria-label="Score comparison">
+
+            <!-- AVERAGE card -->
+            <article class="stat-card average-card" aria-label="Average UTME score">
+              <p class="stat-label">AVERAGE</p>
+              <strong class="stat-value">~200</strong>
+              <!-- Static grey bar — average is always ~200 -->
+              <div class="stat-bar-track" aria-hidden="true">
+                <div class="stat-bar-fill average-fill"></div>
+              </div>
+            </article>
+
+            <!-- YOUR GOAL card -->
+            <article class="stat-card goal-card" aria-label="Your goal score">
+              <p class="stat-label goal-label">YOUR GOAL</p>
+              <!-- Goal value updates when Set Target is clicked -->
+              <strong class="stat-value" id="goal-value">315</strong>
+              <!-- Two-tone bar: navy = closeness to 400, amber = closeness to 200 -->
+              <div class="stat-bar-track" aria-hidden="true">
+                <div class="stat-bar-fill goal-fill-navy" id="goal-fill-navy"></div>
+                <div class="stat-bar-fill goal-fill-amber" id="goal-fill-amber"></div>
+              </div>
+            </article>
+
+          </div>
+          <!-- END stats row -->
+
+        </aside>
+        <!-- END RIGHT -->
+
+      </section>
+      <!-- END aim-content-container -->
+
+
+      <!-- Navigation buttons -->
+      <section class="nav-buttons" aria-label="Page navigation">
+        <button class="btn-next" id="btn-next">Next</button>
+        <a href="onboarding-step1.html" class="btn-go-back">Go back to Step 1</a>
+      </section>
+
+    </main>
+    <!-- =================== END MAIN CONTENT =================== -->
+
+
+    
+    <script type="module" src="../src/main.js"></script>
+    <script type="module" src="../src/scripts/onboarding-step2.js"></script>
+
+  </body>
+</html>
