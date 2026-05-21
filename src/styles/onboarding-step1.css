@@ -29,8 +29,7 @@
   left: 0;
   right: 0;
   z-index: 100;             /* sits above all other content */
-  background: var(--pillar-white);
-  border-bottom: 1px solid var(--pillar-border);
+  background: transparent;
   padding: 12px 16px;       /* breathing room inside the header */
 }
 
@@ -41,27 +40,26 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 85px;                /* gap between logo and steps (from spec) */
+  gap: 85px;              
   height: 56px;             /* comfortable touch target height */
   background: var(--pillar-white);
-  border-radius: 58px;      /* pill shape from spec */
+  border-radius: 58px;      
   padding: 0 20px;          /* inner horizontal padding */
   box-shadow: var(--pillar-shadow);
 }
 
 /* Logo image size */
-.logo-img {
-  height: 36px;
-  width: auto;
-  display: block;
-}
-
 .logo-link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  gap: 8px;
   text-decoration: none;
+  color: var(--pillar-navy);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
 }
-
 
 /* ── Step progress (right side of header) ── */
 .steps-container {
@@ -94,7 +92,7 @@
 
 /* Active step = amber/orange (matches the design) */
 .step-bar.active {
-  background: var(--pillar-amber);
+  background: var(--pillar-yellow);
 }
 
 /* Completed step = navy */
@@ -108,7 +106,7 @@
    Push it down so it doesn't hide behind the fixed header.
    ================================================================ */
 .main-content {
-  padding-top: 100px;       /* clears the fixed header */
+  padding-top: 160px;       /* clears the fixed header */
   padding-bottom: 48px;
   padding-left: 16px;
   padding-right: 8px;       /* from spec: padding 16px 8px */
@@ -128,7 +126,7 @@
   flex-direction: column;
   gap: 12px;
   text-align: center;
-  max-width: 715px;         /* from spec */
+  max-width: 715px;      
   margin: 0 auto;
 }
 
@@ -160,7 +158,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 901px;         /* from spec */
+  max-width: 901px;         
   margin: 0 auto;
   width: 100%;
 }
@@ -194,16 +192,16 @@
   color: var(--pillar-label);
   background: var(--pillar-input-bg);
   border: 1px solid var(--pillar-border);
-  border-radius: 16px;      /* from spec */
-  padding: 7px 16px;        /* from spec */
+  border-radius: 16px;    
+  padding: 7px 16px;       
   white-space: nowrap;
 }
 
 /* The grey track behind the fill */
 .progress-bar-track {
   width: 100%;
-  height: 12px;             /* from spec */
-  border-radius: 9999px;    /* fully pill shaped */
+  height: 12px;           
+  border-radius: 9999px;  
   background: var(--pillar-border);
   overflow: hidden;
 }
@@ -233,14 +231,14 @@
 .subject-card {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   background: var(--pillar-card-bg);
   border: 1px solid var(--pillar-border);
   border-radius: var(--pillar-radius); /* 12px from tokens */
   padding: 16px;
   cursor: pointer;
-  opacity: 0.9;             /* from spec */
+  opacity: 0.9;             
   position: relative;       /* for the COMPULSORY badge positioning */
   min-height: 140px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
@@ -272,8 +270,8 @@
 .compulsory-badge {
   position: absolute;
   top: -12px;               /* pops above the card edge */
-  left: 12px;
-  background: var(--pillar-amber);
+  left: 25px;
+  background: var(--pillar-yellow);
   color: var(--pillar-white);
   font-family: var(--font-body);
   font-size: 0.65rem;
@@ -310,7 +308,8 @@
 /* "Selected" status row at the bottom of the card */
 .card-status {
   display: flex;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 4px;
   font-family: var(--font-body);
   font-size: 0.78rem;
@@ -319,7 +318,7 @@
   transition: color 0.2s ease;
 }
 
-/* When card is selected, turn status text green */
+/* When card is selected, turn status text  */
 .subject-card.selected .card-status {
   color: var(--pillar-navy-mid);
 }
@@ -352,16 +351,18 @@
 /* Next button */
 .btn-next {
   width: 100%;
-  padding: 16px;
+  height: 100px;           
+  border-radius: 12px;     
+  padding-top: 13.5px;      
+  padding-bottom: 14.5px;  
   background: var(--pillar-navy);
   color: var(--pillar-white);
   font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 600;
   border: none;
-  border-radius: var(--pillar-radius);
   cursor: pointer;
-  transition: background 0.2s ease, opacity 0.2s ease;
+  transition: background 0.2s ease;
 }
 
 .btn-next:hover:not(:disabled) {
@@ -440,8 +441,8 @@
   }
 
   .btn-next {
-    font-size: 0.95rem;
-    padding: 14px;
+    height: auto;
+    padding: 16px;
   }
 
   .tracker-count {

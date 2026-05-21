@@ -1,5 +1,4 @@
 /* =============================================================
-   aim-setter.js
    Handles all interactivity on the "Set your Aim" page (Step 2).
 
    HOW IT WORKS (beginner-friendly):
