@@ -1,0 +1,612 @@
+/* =============================================================
+   Styles for the "Set your Aim" onboarding page (Step 2 of 3).
+   Uses design tokens from tokens.css — never hardcode colours
+   unless the value is not yet in tokens (noted where used).
+   ============================================================= */
+
+
+/* ================================================================
+   FIXED HEADER
+   Same header used across onboarding — reusing exact same rules
+   as subject-selection for consistency.
+   ================================================================ */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: transparent;
+  padding: 44px 21px 0;     /* top:44px left:21px from spec */
+}
+
+/* Inner pill container */
+.header-container {
+  max-width: 1398px;        /* from spec */
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 96px;             /* from spec */
+  background: var(--pillar-white);
+  border-radius: 58px;      /* from spec */
+  padding: 20px;            /* from spec */
+  gap: 85px;                /* from spec */
+  box-shadow: var(--pillar-shadow);
+}
+
+/* Logo — exact from previous chat memory */
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--pillar-navy);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+/* Steps container — right side of header */
+.steps-container {
+  display: flex;
+  align-items: center;
+  gap: 32px;                /* from spec: steps bar gap */
+  width: 564px;             /* from spec */
+  height: 28px;             /* from spec */
+}
+
+.steps-label {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--pillar-muted);
+  white-space: nowrap;
+}
+
+.steps-bars {
+  display: flex;
+  gap: 8px;
+  list-style: none;
+}
+
+.step-bar {
+  width: 80px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--pillar-border);
+  transition: background 0.3s ease;
+}
+
+/* Step 1 done = amber (matches design: both bar 1 and 2 are amber) */
+.step-bar.done {
+  background: #F59E0B;
+}
+
+/* Step 2 active = amber */
+.step-bar.active {
+  background: #F59E0B;
+}
+
+
+/* ================================================================
+   MAIN CONTENT
+   ================================================================ */
+.main-content {
+  padding-top: 160px;       /* clears fixed header */
+  padding-bottom: 48px;
+  padding-left: 16px;       /* from spec */
+  padding-right: 8px;       /* from spec */
+  max-width: 1440px;        /* from spec */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+
+/* ================================================================
+   PAGE INTRO (title + subtitle)
+   ================================================================ */
+.page-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+  padding: 16px 8px;        /* from spec */
+  border-radius: 16px;      /* from spec */
+  margin: 0 auto;
+  width: 100%;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--pillar-navy);
+}
+
+.page-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--pillar-muted);
+  line-height: 1.6;
+}
+
+.highlight-text {
+  color: var(--pillar-navy-mid);
+  font-weight: 600;
+}
+
+
+/* ================================================================
+   AIM CONTENT CONTAINER
+   Holds the left aim box and the right panel side by side.
+   ================================================================ */
+.aim-content-container {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;                /* visual gap between left and right panels */
+  width: 1140px;            /* from spec */
+  max-width: 100%;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+
+
+/* ================================================================
+   LEFT: AIM BOX
+   ================================================================ */
+.aim-box {
+  width: 536px;             /* from spec */
+  height: 471px;            /* from spec */
+  border-radius: 12px;      /* from spec */
+  border: 0.5px solid var(--pillar-border); /* from spec */
+  padding: 24px;            /* from spec */
+  background: var(--pillar-white);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+/* Aim High heading + paragraph wrapper */
+.aim-box-intro {
+  width: 488px;             /* from spec */
+  height: 132px;            /* from spec */
+  padding-bottom: 40px;     /* from spec */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aim-high-heading {
+  font-family: var(--font-display);
+  font-size: 32px;          /* from spec */
+  font-weight: 700;         /* from spec */
+  color: var(--pillar-navy);
+}
+
+.aim-high-paragraph {
+  font-family: var(--font-body);
+  font-size: 16px;          /* from spec */
+  color: var(--pillar-muted);
+  line-height: 1.5;
+}
+
+
+/* ── Score display + slider container ── */
+.score-slider-container {
+  width: 488px;             /* from spec */
+  height: 248px;            /* from spec */
+  display: flex;
+  flex-direction: column;
+  gap: 64px;                /* from spec */
+}
+
+/* The big score number above the slider */
+.score-display-wrapper {
+  display: flex;
+  justify-content: flex-end; /* number sits to the right as in design */
+  width: 100%;
+}
+
+.score-display {
+  font-family: var(--font-display);
+  font-size: 48px;          /* from spec */
+  font-weight: 900;         /* from spec */
+  color: var(--pillar-navy);
+  line-height: 1;
+}
+
+/* Slider track + labels wrapper */
+.slider-wrapper {
+  width: 488px;             /* from spec */
+  height: 44px;             /* from spec */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;                /* from spec */
+  padding-right: 4px;       /* from spec */
+  padding-left: 4px;        /* from spec */
+}
+
+/* The range input slider */
+.score-slider {
+  width: 480px;             /* from spec */
+  height: 12px;             /* from spec */
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 9999px;
+  background: var(--pillar-border);
+  outline: none;
+  cursor: pointer;
+}
+
+/* Slider filled track colour */
+.score-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--pillar-navy);
+  cursor: pointer;
+  border: 3px solid var(--pillar-white);
+  box-shadow: var(--pillar-shadow);
+}
+
+.score-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--pillar-navy);
+  cursor: pointer;
+  border: 3px solid var(--pillar-white);
+  box-shadow: var(--pillar-shadow);
+}
+
+/* Min / mid / max labels beneath slider */
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--pillar-muted);
+}
+
+
+/* ── Set Target button ── */
+.btn-set-target {
+  width: 488px;             /* from spec */
+  height: 76px;             /* from spec */
+  border-radius: 8px;       /* from spec */
+  padding-top: 24px;        /* from spec */
+  padding-bottom: 24px;     /* from spec */
+  gap: 8px;                 /* from spec */
+  background: #002452;      /* from spec */
+  color: var(--pillar-white);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+
+.btn-set-target:hover {
+  opacity: 0.9;
+}
+
+.btn-set-target:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ================================================================
+   RIGHT PANEL
+   ================================================================ */
+.right-panel {
+  width: 580px;             /* from spec */
+  height: 471px;            /* from spec */
+  display: flex;
+  flex-direction: column;
+  gap: 40px;                /* from spec */
+  flex-shrink: 0;
+}
+
+
+/* ── Top 5% Tier card ── */
+.tier-card {
+  width: 580px;             /* from spec */
+  height: 329px;            /* from spec */
+  background: #1B3A6B;      /* from spec */
+  border-radius: var(--pillar-radius);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;       /* for cap image absolute positioning */
+  overflow: hidden;         /* keeps cap image from overflowing card */
+  gap: 8px;                 /* from spec: tier card gap */
+}
+
+/* Icon + text wrapper */
+.tier-card-content {
+  width: 532px;             /* from spec: text content width */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;                 /* from spec: text content gap */
+  position: relative;
+  z-index: 1;               /* sits above the cap image */
+}
+
+/* Seal/medal icon — green to match design */
+.tier-icon {
+  font-size: 1.4rem;
+  color: var(--pillar-success);
+  margin-bottom: 4px;
+}
+
+/* Tier title text */
+.tier-heading {
+  font-family: var(--font-display);
+  font-size: 20px;          /* from spec */
+  font-weight: 700;
+  color: var(--pillar-white);
+  margin-bottom: 4px;
+}
+
+/* Description paragraph */
+.tier-description {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: #89A5DD;           /* from spec */
+  line-height: 1.6;
+  width: 532px;             /* from spec: text content width */
+}
+
+/* cap.png — decorative, bottom right, rotated, faded */
+.tier-cap-image {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 161px;             /* from spec: 160.75px rounded */
+  height: 168px;            /* from spec: 167.67px rounded */
+  padding-top: 7.67px;      /* from spec */
+  padding-left: 3.25px;     /* from spec */
+  transform: rotate(-12deg);/* from spec: angle -12deg */
+  opacity: 0.2;             /* from spec */
+  object-fit: contain;
+  pointer-events: none;     /* not clickable */
+}
+
+
+/* ── Average + Your Goal stats row ── */
+.stats-row {
+  width: 580px;             /* from spec */
+  height: 102px;            /* from spec */
+  display: flex;
+  flex-direction: row;
+  gap: 8px;                 /* from spec */
+}
+
+/* Individual stat card */
+.stat-card {
+  width: 286px;             /* from spec */
+  height: 102px;            /* from spec */
+  border-radius: 12px;      /* from spec */
+  padding: 12px;            /* from spec */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;                 /* from spec */
+}
+
+/* Average card background */
+.average-card {
+  background: #E5EEFF;      /* same as goal card per spec */
+}
+
+/* Your Goal card background */
+.goal-card {
+  background: #E5EEFF;      /* from spec */
+}
+
+/* AVERAGE / YOUR GOAL labels */
+.stat-label {
+  font-family: var(--font-body);
+  font-size: 14px;          /* from spec */
+  font-weight: 600;         /* from spec */
+  color: var(--pillar-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* YOUR GOAL label is amber coloured */
+.goal-label {
+  color: #F59E0B;
+}
+
+/* ~200 and 315 digit values */
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 20px;          /* from spec */
+  font-weight: 900;         /* from spec */
+  color: var(--pillar-navy);
+  line-height: 1.1;
+}
+
+/* Bar track inside stat cards */
+.stat-bar-track {
+  width: 262px;             /* from spec */
+  height: 8px;              /* from spec */
+  border-radius: 9999px;    /* from spec */
+  background: var(--pillar-border);
+  display: flex;
+  overflow: hidden;
+  margin-top: auto;
+}
+
+/* Average bar — static grey fill at 50% (200 out of 400) */
+.average-fill {
+  width: 50%;
+  height: 100%;
+  background: var(--pillar-muted);
+  border-radius: 9999px;
+}
+
+/* Your Goal bar — two segments side by side, widths set by JS */
+.goal-fill-navy {
+  height: 100%;
+  background: var(--pillar-navy);
+  border-radius: 9999px 0 0 9999px;
+  transition: width 0.4s ease;
+}
+
+.goal-fill-amber {
+  height: 100%;
+  background: #F59E0B;
+  border-radius: 0 9999px 9999px 0;
+  transition: width 0.4s ease;
+}
+
+
+/* ================================================================
+   NAVIGATION BUTTONS (Next + Go back to Step 1)
+   ================================================================ */
+.nav-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 916px;         /* from spec */
+  margin: 0 auto;
+  width: 100%;
+}
+
+.btn-next {
+  width: 100%;
+  height: 100px;            /* from spec */
+  border-radius: 12px;      /* from spec */
+  padding-top: 13.5px;      /* from spec */
+  padding-bottom: 14.5px;   /* from spec */
+  background: var(--pillar-navy);
+  color: var(--pillar-white);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-next:hover {
+  background: var(--pillar-navy-mid);
+}
+
+.btn-go-back {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--pillar-muted);
+  text-decoration: none;
+  padding: 8px;
+  transition: color 0.2s ease;
+}
+
+.btn-go-back:hover {
+  color: var(--pillar-navy);
+}
+
+
+/* ================================================================
+   RESPONSIVE BREAKPOINTS
+   ================================================================ */
+
+/* Tablet: stack left and right panels vertically */
+@media (max-width: 1024px) {
+  .aim-content-container {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+
+  .aim-box,
+  .right-panel,
+  .tier-card,
+  .stats-row {
+    width: 100%;
+    height: auto;
+  }
+
+  .aim-box-intro,
+  .score-slider-container,
+  .btn-set-target,
+  .slider-wrapper,
+  .score-slider,
+  .tier-description {
+    width: 100%;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .site-header {
+    padding: 16px 12px 0;
+  }
+
+  .header-container {
+    height: 64px;
+    border-radius: 24px;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .step-bar {
+    width: 32px;
+  }
+
+  .steps-label {
+    font-size: 0.72rem;
+  }
+
+  .steps-container {
+    width: auto;
+    gap: 12px;
+  }
+
+  .main-content {
+    padding-top: 110px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .aim-high-heading {
+    font-size: 24px;
+  }
+
+  .score-display {
+    font-size: 36px;
+  }
+
+  .stats-row {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .stat-card {
+    width: 100%;
+    height: auto;
+  }
+
+  .stat-bar-track {
+    width: 100%;
+  }
+
+  .btn-next {
+    height: auto;
+    padding: 16px;
+  }
+}
