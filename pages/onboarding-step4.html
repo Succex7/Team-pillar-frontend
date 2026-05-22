@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step 1 of 3 — Select Subjects – Pillar</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/base.css" />
+    <link rel="stylesheet" href="../src/styles/onboarding-step1.css" />
+  </head>
+
+  <body>
+
+    <!--PAGE TRANSITION OVERLAY -->
+    <div class="page-overlay" id="pageOverlay" aria-hidden="true"></div>
+
+    <!-- HEADER-->
+    <header class="site-header">
+      <div class="header-container">
+
+        <a href="../index.html" class="logo-link" aria-label="Go to Pillar home">
+          <img src="/icon/logo.png" alt="Pillar Logo" width="22px" height="22px" />
+          <span>Pillar</span>
+        </a>
+
+        <nav class="steps-container" aria-label="Onboarding progress">
+          <span class="steps-label">
+            Step <strong>1</strong> of <strong>2</strong>
+          </span>
+          <ol class="steps-bars" role="list">
+            <li class="step-bar step-bar--active"   aria-label="Step 1 active"></li>
+            <li class="step-bar " aria-label="Step 2"></li>
+            <li class="step-bar"                  aria-label="Step 3"></li>
+          </ol>
+        </nav>
+
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main-content" id="main">
+
+      <!-- Page intro -->
+      <section class="page-intro" aria-labelledby="pageTitle">
+        <h1 class="page-title" id="pageTitle">Select your UTME subjects</h1>
+        <p class="page-subtitle">
+          You need 4 subjects to build your personalized study plan.
+          <strong class="highlight-text">Use of English</strong> is already selected for you!
+        </p>
+      </section>
+
+      <!-- Progress bar -->
+      <div class="selection-progress" role="group" aria-labelledby="progressLabel">
+        <div class="progress-header">
+          <p class="progress-label" id="progressLabel">
+            <span class="progress-count" id="progressCount">1</span>
+            <span class="progress-total">/4</span>
+            <span class="progress-text"> Subjects Selected</span>
+          </p>
+          <span class="remaining-badge" id="remainingBadge">Remaining 3</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="4">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- Subjects grid -->
+      <section aria-label="Available subjects">
+        <ul class="subjects-grid" id="subjectsGrid" role="list">
+          <!-- Populated by JS -->
+        </ul>
+      </section>
+
+      <!-- Actions -->
+      <div class="actions-wrapper">
+        <button
+          type="button"
+          class="btn-next"
+          id="nextBtn"
+          disabled
+          aria-disabled="true"
+        >
+          <span id="nextBtnText">Next</span>
+          <span class="btn-loader hidden" id="nextBtnLoader" aria-hidden="true"></span>
+        </button>
+
+        <a href="../index.html" class="back-link">Go back</a>
+      </div>
+
+    </main>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script type="module" src="../src/scripts/onboarding-step1.js"></script>
+  </body>
+</html>
