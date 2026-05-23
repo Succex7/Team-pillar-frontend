@@ -1,36 +1,24 @@
-/* =============================================================
-   Styles for the "Set your Aim" onboarding page (Step 2 of 3).
-   ============================================================= */
-
-
-/* ================================================================
-   FIXED HEADER
-   Same header used across onboarding — reusing exact same rules
-   as subject-selection for consistency.
-   ================================================================ */
+/* onboarding step2 styles */
 .site-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  position: sticky;
+  top: 15px;
   z-index: 100;
   background: transparent;
-  padding: 44px 21px 0;    
+  width: 90%;
+  margin: 0 auto;
 }
 
 /* Inner pill container */
-.header-container {
-  max-width: 1398px;     
-  margin: 0 auto;
+.header-container {       
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 96px;           
+  height: 64px;            
   background: var(--pillar-white);
-  border-radius: 58px;     
-  padding: 20px;            
-  gap: 85px;                
+  border-radius: 30px;      
+  padding: 0 20px;          
   box-shadow: var(--pillar-shadow);
+  transition: box-shadow var(--transition-fast);
 }
 
 /* Logo */
@@ -46,13 +34,16 @@
   letter-spacing: -0.3px;
 }
 
+.Site-header.scrolled {
+  box-shadow: 0 2px 12px rgba(26, 46, 90, 0.08);
+}
+
 /* Steps container — right side of header */
 .steps-container {
   display: flex;
   align-items: center;
-  gap: 32px;               
-  width: 564px;           
-  height: 28px;             
+  gap: 12px;
+  flex-shrink: 1;
 }
 
 .steps-label {
@@ -69,43 +60,113 @@
 }
 
 .step-bar {
-  width: 80px;
-  height: 6px;
-  border-radius: 9999px;
+  width: 60px;
+  height: 5px;
+  border-radius: 100px;
   background: var(--pillar-border);
-  transition: background 0.3s ease;
+  transition: background var(--transition-base)
 }
 
-/* Step 1 done = amber */
-.step-bar.done {
+/* Page transition overlay */
+.page-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--pillar-white);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.page-overlay.fade-in {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/*Step bar states*/
+.step-bar--done   { 
   background: var(--pillar-yellow);
 }
 
-/* Step 2 active = amber */
-.step-bar.active {
+.step-bar--active {
   background: var(--pillar-yellow);
+  opacity: 0.6; 
+}
+
+/* Button loader spinner*/
+.btn-loader {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.hidden { display: none; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--pillar-navy-dark);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  pointer-events: none;
+  z-index: 9999;
+  white-space: nowrap;
+  max-width: 90vw;
+  text-align: center;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast.error   { background: #991b1b; }
+.toast.success { background: #14532d; }
+
+/* btn-next loader state */
+.btn-next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Highlight text */
+.highlight-text {
+  color: var(--pillar-navy);
+  font-weight: 700;
 }
 
 
-/* ================================================================
-   MAIN CONTENT
-   ================================================================ */
+/*  MAIN CONTENT */
 .main-content {
-  padding-top: 160px;       /* clears fixed header */
-  padding-bottom: 48px;
-  padding-left: 16px;     
-  padding-right: 8px;      
-  max-width: 1440px;        
+  padding: 72px 24px 48px;
+  max-width: 1140px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 32px;
 }
 
 
-/* ================================================================
-   PAGE INTRO (title + subtitle)
-   ================================================================ */
+/* PAGE INTRO (title + subtitle)*/
 .page-intro {
   display: flex;
   flex-direction: column;
@@ -137,10 +198,7 @@
 }
 
 
-/* ================================================================
-   AIM CONTENT CONTAINER
-   Holds the left aim box and the right panel side by side.
-   ================================================================ */
+/* AIM CONTENT CONTAINER: Holds the left aim box and the right panel side by side.*/
 .aim-content-container {
   display: flex;
   flex-direction: row;
@@ -152,9 +210,7 @@
 }
 
 
-/* ================================================================
-   LEFT: AIM BOX
-   ================================================================ */
+/* LEFT: AIM BOX */
 .aim-box {
   width: 536px;           
   height: 471px;            
@@ -193,7 +249,7 @@
 }
 
 
-/* ── Score display + slider container ── */
+/*Score display + slider container */
 .score-slider-container {
   width: 488px;             
   height: 248px;           
@@ -240,7 +296,7 @@
   cursor: pointer;
 }
 
-/* Slider filled track colour */
+/* Slider filled track color */
 .score-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -273,7 +329,7 @@
 }
 
 
-/* ── Set Target button ── */
+/*Set Target button */
 .btn-set-target {
   width: 488px;            
   height: 76px;             
@@ -303,9 +359,9 @@
   cursor: not-allowed;
 }
 
-/* ================================================================
+/*
    RIGHT PANEL
-   ================================================================ */
+   */
 .right-panel {
   width: 580px;            
   height: 471px;            
@@ -316,7 +372,7 @@
 }
 
 
-/* ── Top 5% Tier card ── */
+/* Top 5% Tier card */
 .tier-card {
   width: 580px;           
   height: 329px;          
@@ -326,9 +382,9 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  position: relative;       /* for cap image absolute positioning */
-  overflow: hidden;         /* keeps cap image from overflowing card */
-  gap: 8px;                 /* from spec: tier card gap */
+  position: relative;       
+  overflow: hidden;         
+  gap: 8px;                 
 }
 
 /* Icon + text wrapper */
@@ -338,10 +394,10 @@
   flex-direction: column;
   gap: 4px;                 
   position: relative;
-  z-index: 1;               /* sits above the cap image */
+  z-index: 1;               
 }
 
-/* Seal/medal icon — green to match design */
+/* Seal/medal icon */
 .tier-icon {
   font-size: 1.4rem;
   color: var(--pillar-success);
@@ -378,11 +434,11 @@
   transform: rotate(-12deg);
   opacity: 0.2;             
   object-fit: contain;
-  pointer-events: none;     /* not clickable */
+  pointer-events: none;     
 }
 
 
-/* ── Average + Your Goal stats row ── */
+/* Average + Your Goal stats row*/
 .stats-row {
   width: 580px;             
   height: 102px;           
@@ -471,9 +527,9 @@
 }
 
 
-/* ================================================================
+/*
    NAVIGATION BUTTONS (Next + Go back to Step 1)
-   ================================================================ */
+   */
 .nav-buttons {
   display: flex;
   flex-direction: column;
@@ -486,18 +542,24 @@
 
 .btn-next {
   width: 100%;
-  height: 100px;            
-  border-radius: 12px;      
-  padding-top: 13.5px;     
-  padding-bottom: 14.5px;   
+  padding: 18px 24px;
   background: var(--pillar-navy);
   color: var(--pillar-white);
-  font-family: var(--font-body);
-  font-size: 1rem;
+  font-family: var(--font-display);
+  font-size: 15px;
   font-weight: 600;
   border: none;
+  border-radius: var(--pillar-radius-sm);
   cursor: pointer;
-  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    background var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform 0.1s ease,
+    opacity var(--transition-fast);
 }
 
 .btn-next:hover {
@@ -519,9 +581,7 @@
 }
 
 
-/* ================================================================
-   RESPONSIVE BREAKPOINTS
-   ================================================================ */
+/* RESPONSIVE BREAKPOINTS */
 
 /* Tablet: stack left and right panels vertically */
 @media (max-width: 1024px) {
@@ -555,34 +615,29 @@
 
 /* Mobile */
 @media (max-width: 600px) {
-  .site-header {
-    padding: 16px 12px 0;
-  }
-
   .header-container {
     height: 64px;
-    border-radius: 24px;
-    padding: 12px 16px;
-    gap: 12px;
+    border-radius: 25px;
+    padding: 0 20px;
   }
 
   .step-bar {
-    width: 32px;
+    width: 40px;
   }
 
   .steps-label {
     font-size: 0.72rem;
   }
 
-  .steps-container {
-    width: auto;
-    gap: 12px;
-  }
+.steps-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
   .main-content {
-    padding-top: 110px;
-    padding-left: 12px;
-    padding-right: 12px;
+     padding: 72px 24px 48px;
+    gap: 36px
   }
 
   .aim-high-heading {
@@ -610,5 +665,116 @@
   .btn-next {
     height: auto;
     padding: 16px;
+  }
+}
+
+
+/* Very small screens: 320px and below */
+@media (max-width: 320px) {
+  .main-content {
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 32px;
+    padding-bottom: 24px;
+    gap: 18px;
+  }
+
+
+  .header-container {
+    height: 56px;
+    border-radius: 30px;
+    padding: 0 16px;
+  }
+
+
+  .steps-label {
+    font-size: 11px;
+  }
+
+  .nav-logo {
+    font-size: 12px;
+  }
+
+  .steps-container {
+    gap: 4px;
+    padding-left: 4px;
+  }
+
+  .steps-bars {
+    width: 60%;
+  }
+
+  .page-intro {
+    padding: 8px 2px;
+    gap: 6px;
+  }
+  .page-title {
+    font-size: 1.1rem;
+  }
+  .page-subtitle {
+    font-size: 0.8rem;
+  }
+  .aim-content-container {
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+  }
+  .aim-box,
+  .right-panel,
+  .stats-row,
+  .tier-card,
+  .aim-box-intro,
+  .score-slider-container,
+  .btn-set-target,
+  .slider-wrapper,
+  .score-slider,
+  .tier-description {
+    width: 100% !important;
+    min-width: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .aim-box,
+  .right-panel,
+  .tier-card {
+    padding: 8px;
+    height: auto;
+  }
+  .aim-high-heading {
+    font-size: 18px;
+  }
+  .score-display {
+    font-size: 24px;
+  }
+  .slider-labels {
+    font-size: 0.7rem;
+  }
+  .btn-set-target {
+    font-size: 0.9rem;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    height: auto;
+  }
+  .stat-card {
+    width: 100% !important;
+    height: auto;
+    padding: 8px;
+  }
+  .stat-label {
+    font-size: 12px;
+  }
+  .stat-value {
+    font-size: 14px;
+  }
+  .stat-bar-track {
+    width: 100% !important;
+  }
+  .btn-next {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+  .nav-buttons {
+    max-width: 100%;
+    gap: 8px;
   }
 }

@@ -1,171 +1,294 @@
-/* =============================================================
-   Handles all interactivity on the "Set your Aim" page (Step 2).
+// Onboarding Step 2 — Set Your Aim (Target Score)
+// DATA 
 
-   HOW IT WORKS (beginner-friendly):
-   - A range input (slider) lets the user pick a score from 200–400.
-   - As they drag, the big score number above the slider updates live.
-   - When "Set Target" is clicked, the "Your Goal" card number updates
-     and the two-tone progress bar animates accordingly.
-   - The tier card description updates live as the slider moves.
-   =============================================================
-
-
-/* ── Grab DOM elements ───────────────────────────────────────── */
-const scoreSlider  = document.getElementById('score-slider');
-const scoreDisplay = document.getElementById('score-display');
-const btnSetTarget = document.getElementById('btn-set-target');
-const goalValue    = document.getElementById('goal-value');
-const goalFillNavy = document.getElementById('goal-fill-navy');
-const goalFillAmber= document.getElementById('goal-fill-amber');
-const tierTitle    = document.getElementById('tier-title');
-const tierDesc     = document.getElementById('tier-description');
-const btnNext      = document.getElementById('btn-next');
-
-
-/* ── Score range constants ───────────────────────────────────── */
-const MIN_SCORE = 200;
-const MAX_SCORE = 400;
-
-
-/* ── Mock tier data ──────────────────────────────────────────────
-   TODO (backend): Replace this array with an API call when ready.
-   The backend should return the correct tier object based on score.
-   ─────────────────────────────────────────────────────────────── */
-const tierData = [
+const SCORE_TIERS = [
   {
-    minScore: 350,
-    maxScore: 400,
-    title: 'Top 5% Tier',
-    description:
-      'A score in this range places you in the elite bracket. You are eligible for competitive courses like Medicine or Engineering at top Nigerian universities.',
+    min:   150,
+    max:   199,
+    title: 'Below Average',
+    desc:  'This score range is below the national average. With the right study plan, you can significantly improve before your exam.',
   },
   {
-    minScore: 300,
-    maxScore: 349,
-    title: 'Top 15% Tier',
-    description:
-      'A score in this range is excellent. You qualify for strong programmes like Law, Pharmacy, and Computer Science at leading Nigerian universities.',
+    min:   200,
+    max:   249,
+    title: 'Average Tier',
+    desc:  'You\'re aiming at the average range. This qualifies you for many courses — a focused study plan can push you higher.',
   },
   {
-    minScore: 250,
-    maxScore: 299,
+    min:   250,
+    max:   299,
     title: 'Above Average',
-    description:
-      'A solid score. You are competitive for many degree programmes. With focused study, you can push into the top tier.',
+    desc:  'A solid score that opens doors to many competitive courses. You are on track for a strong UTME performance.',
   },
   {
-    minScore: 200,
-    maxScore: 249,
-    title: 'Average Range',
-    description:
-      'This is around the national average. There is great room to grow. Your personalised study plan will help you aim higher.',
+    min:   300,
+    max:   349,
+    title: 'Top 10% Tier',
+    desc:  'A score in this range places you in the top 10% of candidates. You are eligible for competitive courses at leading universities.',
+  },
+  {
+    min:   350,
+    max:   400,
+    title: 'Top 5% Tier',
+    desc:  'A score of {score} places you in the elite bracket. You are eligible for competitive courses like Medicine or Engineering at top Nigerian universities.',
   },
 ];
 
+const AVERAGE_SCORE    = 200;
+const MAX_SCORE        = 400;
+const DEFAULT_SCORE    = 315;
 
-/* ── Get the matching tier object for a score ────────────────── */
-function getTierForScore(score) {
-  return tierData.find(
-    (tier) => score >= tier.minScore && score <= tier.maxScore
-  );
+// STATE
+let currentScore    = DEFAULT_SCORE;
+let confirmedScore  = null; // set when user clicks "Set Target"
+
+// DOM REFERENCES
+const scoreSlider      = document.getElementById('scoreSlider');
+const scoreDisplay     = document.getElementById('scoreDisplay');
+const btnSetTarget     = document.getElementById('btnSetTarget');
+const setTargetText    = document.getElementById('setTargetText');
+const setTargetLoader  = document.getElementById('setTargetLoader');
+const tierTitle        = document.getElementById('tierTitle');
+const tierDescription  = document.getElementById('tierDescription');
+const goalValue        = document.getElementById('goalValue');
+const goalFillNavy     = document.getElementById('goalFillNavy');
+const goalFillAmber    = document.getElementById('goalFillAmber');
+const nextBtn          = document.getElementById('nextBtn');
+const nextBtnText      = document.getElementById('nextBtnText');
+const nextBtnLoader    = document.getElementById('nextBtnLoader');
+const backLink         = document.getElementById('backLink');
+const toast            = document.getElementById('toast');
+const pageOverlay      = document.getElementById('pageOverlay');
+
+// INIT
+function init() {
+  guardAccess();
+  restoreSavedScore();
+  updateScoreDisplay(currentScore);
+  updateTierCard(currentScore);
+  updateGoalBar(currentScore);
+  updateSliderTrack(currentScore);
+  bindSlider();
+  bindSetTarget();
+  bindNextButton();
+  bindBackLink();
+  fadeInOnLoad();
 }
 
-
-/* ── Update the slider's filled left track colour ────────────────
-   CSS range inputs don't colour the left side of the thumb by default
-   so we use a gradient background trick to simulate it.
-   ─────────────────────────────────────────────────────────────── */
-function updateSliderFill(score) {
-  const percent = ((score - MIN_SCORE) / (MAX_SCORE - MIN_SCORE)) * 100;
-  scoreSlider.style.background = `linear-gradient(
-    to right,
-    var(--pillar-navy) 0%,
-    var(--pillar-navy) ${percent}%,
-    var(--pillar-border) ${percent}%,
-    var(--pillar-border) 100%
-  )`;
+// GUARD — must have completed step 1
+function guardAccess() {
+  const step1Done = sessionStorage.getItem('onboarding_step1_done');
+  if (!step1Done) {
+    navigateTo('/pages/onboarding-step1.html');
+  }
 }
 
+// RESTORE SAVED SCORE
+function restoreSavedScore() {
+  const saved = sessionStorage.getItem('onboarding_step2_data');
+  if (!saved) return;
 
-/* ── Update the two-tone Your Goal progress bar ─────────────────
-   Navy  = how close the score is to 400 (high achievement)
-   Amber = remaining portion (closer to 200 = more amber shows)
-   ─────────────────────────────────────────────────────────────── */
+  try {
+    const data = JSON.parse(saved);
+    if (data.targetScore) {
+      currentScore   = data.targetScore;
+      confirmedScore = data.targetScore;
+
+      if (scoreSlider) scoreSlider.value = currentScore;
+    }
+  } catch {
+    // Ignore
+  }
+}
+
+// SLIDER
+function bindSlider() {
+  if (!scoreSlider) return;
+
+  scoreSlider.addEventListener('input', () => {
+    currentScore = Number(scoreSlider.value);
+    updateScoreDisplay(currentScore);
+    updateTierCard(currentScore);
+    updateGoalBar(currentScore);
+    updateSliderTrack(currentScore);
+  });
+}
+
+// Live score number above slider 
+
+function updateScoreDisplay(score) {
+  if (scoreDisplay) scoreDisplay.textContent = score;
+}
+
+// Slider filled track via CSS gradient
+function updateSliderTrack(score) {
+  if (!scoreSlider) return;
+
+  const min     = Number(scoreSlider.min);
+  const max     = Number(scoreSlider.max);
+  const percent = ((score - min) / (max - min)) * 100;
+
+  scoreSlider.style.background = `
+    linear-gradient(
+      to right,
+      var(--pillar-navy) 0%,
+      var(--pillar-navy) ${percent}%,
+      var(--pillar-border) ${percent}%,
+      var(--pillar-border) 100%
+    )
+  `;
+}
+
+//Tier card — title and description update on slide
+
+function updateTierCard(score) {
+  const tier = SCORE_TIERS.find(t => score >= t.min && score <= t.max);
+  if (!tier) return;
+
+  if (tierTitle) {
+    tierTitle.textContent = tier.title;
+  }
+
+  if (tierDescription) {
+    tierDescription.textContent = tier.desc.replace('{score}', score);
+  }
+}
+
+// Goal bar — two-tone bar
+
 function updateGoalBar(score) {
-  const range        = MAX_SCORE - MIN_SCORE;        /* always 200      */
-  const progress     = score - MIN_SCORE;            /* e.g 315-200=115 */
-  const navyPercent  = (progress / range) * 100;     /* e.g 57.5%       */
-  const amberPercent = 100 - navyPercent;            /* e.g 42.5%       */
+  if (!goalFillNavy || !goalFillAmber) return;
+
+  // Navy portion: how far above average (200) the goal is
+  // Amber portion: the remaining stretch to max (400)
+  const navyPercent  = Math.min(((score - AVERAGE_SCORE) / (MAX_SCORE - AVERAGE_SCORE)) * 100, 100);
+  const amberPercent = 100 - navyPercent;
 
   goalFillNavy.style.width  = `${navyPercent}%`;
-  goalFillAmber.style.width = `${amberPercent}%`;
+  goalFillAmber.style.width = `${amberPercent > 5 ? 15 : 0}%`; // amber shows as accent
+
+  if (goalValue) goalValue.textContent = score;
 }
 
-
-/* ── Update the tier card title and description ──────────────── */
-function updateTierCard(score) {
-  const tier = getTierForScore(score);
-  if (tier) {
-    tierTitle.textContent = tier.title;
-    tierDesc.textContent  = tier.description;
-  }
+// SET TARGET BUTTON
+function bindSetTarget() {
+  if (!btnSetTarget) return;
+  btnSetTarget.addEventListener('click', handleSetTarget);
 }
 
+function handleSetTarget() {
+  confirmedScore = currentScore;
 
-/* ── SLIDER: live input event ────────────────────────────────────
-   Fires continuously as the user drags the slider.
-   Updates the big score number, slider fill, and tier card live.
-   ─────────────────────────────────────────────────────────────── */
-/* Updated slider: min=0, max=400, button disabled below 200 */
-scoreSlider.addEventListener('input', () => {
-  const score = parseInt(scoreSlider.value, 10);
+  // Visual feedback
+  setTargetLoading(true);
 
-  /* Always update the displayed number */
-  scoreDisplay.textContent = score;
+  setTimeout(() => {
+    setTargetLoading(false);
 
-  /* Update slider fill colour */
-  updateSliderFill(score);
+    // Update button label to show confirmation
+    if (setTargetText) setTargetText.textContent = `Target Set: ${confirmedScore} ✓`;
 
-  /* Update tier card only if score is 200+ */
-  if (score >= 200) {
-    updateTierCard(score);
+    // Save to session
+    const step2Data = {
+      targetScore: confirmedScore,
+    };
+    sessionStorage.setItem('onboarding_step2_data', JSON.stringify(step2Data));
+    sessionStorage.setItem('onboarding_step2_done', '1');
+
+    showToast(`Target score set to ${confirmedScore}!`, 'success');
+
+    // Re-enable next button after target set
+    if (nextBtn) {
+      nextBtn.disabled = false;
+      nextBtn.setAttribute('aria-disabled', 'false');
+    }
+
+  }, 600);
+}
+
+function setTargetLoading(isLoading) {
+  if (!btnSetTarget || !setTargetText || !setTargetLoader) return;
+  btnSetTarget.disabled = isLoading;
+  setTargetText.classList.toggle('hidden', isLoading);
+  setTargetLoader.classList.toggle('hidden', !isLoading);
+}
+
+// NEXT BUTTON
+function bindNextButton() {
+  if (!nextBtn) return;
+
+  // Disable until Set Target is clicked
+  const alreadyDone = sessionStorage.getItem('onboarding_step2_done');
+  if (!alreadyDone) {
+    nextBtn.disabled = true;
+    nextBtn.setAttribute('aria-disabled', 'true');
   }
 
-  /* Disable Set Target button if below 200 */
-  btnSetTarget.disabled = score < 200;
-});
+  nextBtn.addEventListener('click', handleNext);
+}
 
-/* ── SET TARGET button: click event ──────────────────────────────
-   Only when this button is clicked does the "YOUR GOAL" card update.
-   ─────────────────────────────────────────────────────────────── */
-btnSetTarget.addEventListener('click', () => {
-  const score = parseInt(scoreSlider.value, 10);
+function handleNext() {
+  if (!confirmedScore && !sessionStorage.getItem('onboarding_step2_done')) {
+    showToast('Please set your target score before continuing.', 'error');
+    return;
+  }
 
-  /* Update the "315" number inside the Your Goal card */
-  goalValue.textContent = score;
+  // If user skipped Set Target click but score is valid — auto-confirm
+  if (!confirmedScore) {
+    confirmedScore = currentScore;
+    const step2Data = { targetScore: confirmedScore };
+    sessionStorage.setItem('onboarding_step2_data', JSON.stringify(step2Data));
+    sessionStorage.setItem('onboarding_step2_done', '1');
+  }
 
-  /* Update the two-tone bar to reflect this score */
-  updateGoalBar(score);
+  navigateTo('/pages/onboarding-step3.html');
+}
 
-  /*
-    TODO: Persist the target score for the next page and backend.
-    sessionStorage.setItem('targetScore', score);
-  */
-});
+// BACK LINK — navigate back to step 1 seamlessly
+function bindBackLink() {
+  if (!backLink) return;
+  backLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    navigateTo('/pages/onboarding-step1.html');
+  });
+}
 
+// SEAMLESS PAGE TRANSITION
+function navigateTo(url) {
+  if (!pageOverlay) {
+    window.location.href = url;
+    return;
+  }
 
-/* ── NEXT button navigation ─────────────────────────────────────────────────────────────── */
-btnNext.addEventListener('click', () => {
-  window.location.href = 'onboarding-step3.html'; /* TODO: update when next page is ready */
-});
+  pageOverlay.classList.add('fade-in');
 
+  setTimeout(() => {
+    window.location.href = url;
+  }, 300);
+}
 
-/* ── Initialise on page load ─────────────────────────────────────
-   Run everything once so the page reflects the default score (315).
-   ─────────────────────────────────────────────────────────────── */
-const initialScore = parseInt(scoreSlider.value, 10);
+function fadeInOnLoad() {
+  if (!pageOverlay) return;
+  pageOverlay.classList.add('fade-in');
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      pageOverlay.classList.remove('fade-in');
+    });
+  });
+}
 
-scoreDisplay.textContent = initialScore;  /* show 315 in big number   */
-updateSliderFill(initialScore);           /* colour the slider track  */
-updateTierCard(initialScore);             /* set correct tier text    */
-updateGoalBar(initialScore);              /* set goal bar fill        */
+// TOAST
+function showToast(message, type = '') {
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.className   = `toast ${type}`.trim();
+
+  void toast.offsetWidth;
+  toast.classList.add('show');
+
+  setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+// BOOT
+init();

@@ -1,200 +1,345 @@
-/* =============================================================
-   subject-selection.js
-   Handles all interactivity on the "Select your UTME subjects" 
-   - We have a list of subjects stored as data (mock data for now).
-   - We loop through that list and build a card for each subject in the HTML.
-   - "Use of English" is pre-selected because it's compulsory.
-   - Users can click cards to select/deselect (max 4 total, 3 additional).
-   - As selections change, we update the progress bar, counter, and badge.
-   - When exactly 4 subjects are selected, the Next button becomes active.
-   ============================================================= */
- // import { lazyLoadImages } from '../utils/lazyLoad.js';
- // import { showSkeleton } from '../utils/skeleton.js';
+// Onboarding Step 1 — Select UTME Subjects
+// Handles: subject rendering, selection logic, progress bar,
+//          validation, session persistence, seamless navigation
 
-/* ── Mock subject data ──────────────────────────────────
-   Each subject has:
-   - id        : unique identifier
-   - name      : displayed on the card
-   - icon      : Phosphor icon class name (ph = regular, ph-bold = bold)
-   - compulsory: true means auto-selected and can't be deselected
-   ──────────────────────────────────────────────────────────── */
-const subjectsData = [
-  { id: "english",    name: "Use of English", icon: "ph ph-book-open",      compulsory: true  },
-  { id: "maths",      name: "Mathematics",    icon: "ph ph-math-operations", compulsory: false },
-  { id: "biology",    name: "Biology",        icon: "ph ph-leaf",            compulsory: false },
-  { id: "chemistry",  name: "Chemistry",      icon: "ph ph-flask",           compulsory: false },
-  { id: "government", name: "Government",     icon: "ph ph-bank",            compulsory: false },
-  { id: "physics",    name: "Physics",        icon: "ph ph-lightning",       compulsory: false },
-  { id: "economics",  name: "Economics",      icon: "ph ph-chart-line-up",   compulsory: false },
-  { id: "literature", name: "Literature",     icon: "ph ph-book-bookmark",   compulsory: false },
+// DATA — all content dynamic
+
+const SUBJECTS = [
+  {
+    id:          'use-of-english',
+    name:        'Use of English',
+    compulsory:  true,
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+    </svg>`,
+  },
+  {
+    id:         'mathematics',
+    name:       'Mathematics',
+    compulsory:  false,
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <path d="M9 9h.01M15 9h.01M9 15h.01M15 15h.01M12 9v6"/>
+    </svg>`,
+  },
+  {
+    id:         'biology',
+    name:       'Biology',
+    compulsory:  false,
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22c4.97 0 9-3.582 9-8 0-2.91-1.64-5.455-4.125-6.965"/>
+      <path d="M3 14c0 4.418 4.03 8 9 8"/>
+      <path d="M12 2C7.03 2 3 5.582 3 10c0 2.91 1.64 5.455 4.125 6.965"/>
+      <path d="M21 10c0-4.418-4.03-8-9-8"/>
+    </svg>`,
+  },
+  {
+    id:         'chemistry',
+    name:       'Chemistry',
+    compulsory:  false,
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 3h6M9 3v7l-5 9.5A2 2 0 0 0 5.76 22h12.48A2 2 0 0 0 20 19.5L15 10V3M9 3h6"/>
+    </svg>`,
+  },
+  {
+    id:         'government',
+    name:       'Government',
+    compulsory:  false,
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L22 8H2L12 2Z"/>
+      <rect x="4" y="9" width="3" height="10" rx="1"/>
+      <rect x="10.5" y="9" width="3" height="10" rx="1"/>
+      <rect x="17" y="9" width="3" height="10" rx="1"/>
+      <rect x="2" y="19" width="20" height="2" rx="0.5"/>
+    </svg>`,
+  },
+  {
+    id:         'physics',
+    name:       'Physics',
+    compulsory:  false,
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M13 2L4.09 12.97H11L10 22L20.91 11.03H14L13 2Z"/>
+    </svg>`,
+  },
+  {
+    id:         'economics',
+    name:       'Economics',
+    compulsory:  false,
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+      <polyline points="17 6 23 6 23 12"/>
+    </svg>`,
+  },
+  {
+    id:         'literature',
+    name:       'Literature',
+    compulsory:  false,
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+    </svg>`,
+  },
 ];
 
-/* Maximum number of subjects a student can select */
-const MAX_SUBJECTS = 4;
+const MAX_SUBJECTS   = 4;
+const TOTAL_SUBJECTS = 4;
 
-/* Track which subject IDs are currently selected.
-   We start with "english" pre-selected (it's compulsory). */
-const selectedSubjects = new Set(["english"]);
+// STATE
+// Pre-select compulsory subject
+let selectedIds = new Set(
+  SUBJECTS.filter(s => s.compulsory).map(s => s.id)
+);
+
+// DOM REFERENCES
+const subjectsGrid   = document.getElementById('subjectsGrid');
+const nextBtn        = document.getElementById('nextBtn');
+const nextBtnText    = document.getElementById('nextBtnText');
+const nextBtnLoader  = document.getElementById('nextBtnLoader');
+const progressCount  = document.getElementById('progressCount');
+const progressFill   = document.getElementById('progressFill');
+const remainingBadge = document.getElementById('remainingBadge');
+const toast          = document.getElementById('toast');
+const pageOverlay    = document.getElementById('pageOverlay');
 
 
-/* ── STEP 2: Grab DOM elements we'll need to update ──────────── */
-const cardsContainer  = document.getElementById("subject-cards-container");
-const selectedCount   = document.getElementById("selected-count");
-const remainingBadge  = document.getElementById("remaining-badge");
-const progressFill    = document.getElementById("progress-bar-fill");
-const btnNext         = document.getElementById("btn-next");
-const progressTrack   = document.querySelector(".progress-bar-track");
+// INIT
 
 
-/* ──  Build and render each subject card ──────────────────
-   This function creates a card element for each subject in subjectsData
-   and inserts it into the page. This is dynamic -
-   the HTML cards are created from data, not typed by hand.
-   ──────────────────────────────────────────────────────────────── */
-function renderSubjectCards() {
-  /* Clear the container first (in case this is called again) */
-  cardsContainer.innerHTML = "";
-
-  subjectsData.forEach((subject) => {
-    /* Is this subject currently selected? */
-    const isSelected = selectedSubjects.has(subject.id);
-
-    /* Create the article element */
-    const card = document.createElement("article");
-    card.classList.add("subject-card");
-    card.setAttribute("role", "listitem");
-    card.setAttribute("aria-pressed", isSelected ? "true" : "false");
-    card.setAttribute("aria-label", `${subject.name}${subject.compulsory ? ", compulsory" : ""}`);
-    card.dataset.id = subject.id; /* store the subject id on the element */
-
-    /* If pre-selected, add the selected CSS class */
-    if (isSelected) card.classList.add("selected");
-
-    /* Build the inner HTML of the card */
-    card.innerHTML = `
-      ${subject.compulsory
-        /* Compulsory badge only shows on Use of English */
-        ? `<span class="compulsory-badge" aria-label="Compulsory subject">Compulsory</span>`
-        : ""
-      }
-
-      <!-- Icon wrapped in a styled circle -->
-      <div class="card-icon-wrapper" aria-hidden="true">
-        <i class="${subject.icon}"></i>
-      </div>
-
-      <!-- Subject name -->
-      <p class="card-subject-name">${subject.name}</p>
-
-      <!-- Selected/unselected status row -->
-      <div class="card-status">
-        <i class="card-status-icon ${isSelected ? "ph-fill ph-check-circle" : "ph ph-circle"}"></i>
-        <span class="card-status-text">${isSelected ? "Selected" : ""}</span>
-      </div>
-    `;
-
-    /* Attach click handler (only if not compulsory — English can't be deselected) */
-    if (!subject.compulsory) {
-      card.addEventListener("click", () => handleCardClick(subject.id));
-    }
-
-    /* Add the completed card to the container */
-    cardsContainer.appendChild(card);
-  });
+function init() {
+  restoreSavedSelection();
+  renderSubjects();
+  updateProgress();
+  updateNextButton();
 }
 
 
-/* ── STEP 4: Handle card clicks ──────────────────────────────────
-   This runs every time a non-compulsory card is clicked.
-   It toggles the subject in/out of the selectedSubjects Set,
-   then re-renders the cards and updates the progress UI.
-   ──────────────────────────────────────────────────────────────── */
-function handleCardClick(subjectId) {
-  if (selectedSubjects.has(subjectId)) {
-    /* Subject is already selected — DESELECT it */
-    selectedSubjects.delete(subjectId);
+// RESTORE SAVED — if user navigated back from step 2
+
+
+function restoreSavedSelection() {
+  const saved = sessionStorage.getItem('onboarding_step1_subjects');
+  if (!saved) return;
+
+  try {
+    const ids = JSON.parse(saved);
+    if (Array.isArray(ids)) {
+      selectedIds = new Set(ids);
+      // Always keep compulsory selected
+      SUBJECTS.filter(s => s.compulsory).forEach(s => selectedIds.add(s.id));
+    }
+  } catch {
+    // Ignore parse errors — start fresh
+  }
+}
+
+
+// RENDER SUBJECTS DYNAMICALLY
+
+
+function renderSubjects() {
+  if (!subjectsGrid) return;
+
+  SUBJECTS.forEach(subject => {
+    const li = document.createElement('li');
+
+    const card = document.createElement('div');
+    card.className = buildCardClasses(subject);
+    card.setAttribute('role',         'checkbox');
+    card.setAttribute('aria-checked', String(selectedIds.has(subject.id)));
+    card.setAttribute('tabindex',     subject.compulsory ? '-1' : '0');
+    card.setAttribute('data-id',      subject.id);
+    card.setAttribute('aria-label',   subject.name);
+
+    // Compulsory badge
+    if (subject.compulsory) {
+      const badge = document.createElement('div');
+      badge.className = 'compulsory-badge';
+      badge.textContent = 'Compulsory';
+      card.appendChild(badge);
+    }
+
+    // Icon
+    const iconEl = document.createElement('div');
+    iconEl.className = 'subject-icon';
+    iconEl.innerHTML = subject.icon;
+    card.appendChild(iconEl);
+
+    // Name
+    const nameEl = document.createElement('span');
+    nameEl.className = 'subject-name';
+    nameEl.textContent = subject.name;
+    card.appendChild(nameEl);
+
+    // Status
+    const statusEl = document.createElement('div');
+    statusEl.className = 'subject-status';
+    statusEl.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      <span>Selected</span>
+    `;
+    card.appendChild(statusEl);
+
+    // Events — skip for compulsory
+    if (!subject.compulsory) {
+      card.addEventListener('click',   () => handleToggle(subject.id, card));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          handleToggle(subject.id, card);
+        }
+      });
+    }
+
+    li.appendChild(card);
+    subjectsGrid.appendChild(li);
+  });
+}
+
+function buildCardClasses(subject) {
+  const classes = ['subject-card'];
+  if (selectedIds.has(subject.id)) classes.push('selected');
+  if (subject.compulsory) classes.push('compulsory');
+  return classes.join(' ');
+}
+
+// TOGGLE SELECTION
+function handleToggle(id, card) {
+  const subject = SUBJECTS.find(s => s.id === id);
+  if (!subject || subject.compulsory) return;
+
+  const isSelected = selectedIds.has(id);
+
+  if (isSelected) {
+    // Deselect
+    selectedIds.delete(id);
+    card.classList.remove('selected');
+    card.setAttribute('aria-checked', 'false');
+
   } else {
-    /* Subject is not selected — SELECT it (only if under the max) */
-    if (selectedSubjects.size >= MAX_SUBJECTS) {
-      /* Max reached: do nothing (button is disabled by CSS too) */
+    // Select — check max limit
+    if (selectedIds.size >= MAX_SUBJECTS) {
+      showToast(`You can only select ${MAX_SUBJECTS} subjects.`, 'error');
       return;
     }
-    selectedSubjects.add(subjectId);
+    selectedIds.add(id);
+    card.classList.add('selected');
+    card.setAttribute('aria-checked', 'true');
   }
 
-  /* After every click, refresh the cards and counter UI */
-  renderSubjectCards();
-  updateProgressUI();
-  updateDisabledCards();
+  updateProgress();
+  updateNextButton();
+  saveSelection();
 }
 
+// PROGRESS BAR
+function updateProgress() {
+  const count     = selectedIds.size;
+  const remaining = MAX_SUBJECTS - count;
+  const percent   = (count / TOTAL_SUBJECTS) * 100;
 
-/* ──  Update the progress bar + counter + badge ───────────
-   Called every time a subject is selected or deselected.
-   ──────────────────────────────────────────────────────────────── */
-function updateProgressUI() {
-  const count     = selectedSubjects.size;              /* e.g. 2       */
-  const remaining = MAX_SUBJECTS - count;               /* e.g. 2       */
-  const percent   = (count / MAX_SUBJECTS) * 100;       /* e.g. 50%     */
+  if (progressCount)  progressCount.textContent  = count;
+  if (progressFill)   progressFill.style.width    = `${percent}%`;
 
-  /* Update the "1/4 Subjects Selected" counter */
-  selectedCount.textContent = count;
+  if (remainingBadge) {
+    remainingBadge.textContent = remaining > 0
+      ? `Remaining ${remaining}`
+      : 'Complete!';
+  }
 
-  /* Update the "Remaining X" badge */
-  remainingBadge.textContent = `Remaining ${remaining}`;
-
-  /* Update the progress bar fill width */
-  progressFill.style.width = `${percent}%`;
-
-  /* Update the aria attribute for screen readers */
-  progressTrack.setAttribute("aria-valuenow", count);
-
-  /* Enable the Next button only when all 4 are selected */
-  btnNext.disabled = count < MAX_SUBJECTS;
+  // Update progressbar aria
+  const track = document.querySelector('.progress-track');
+  if (track) track.setAttribute('aria-valuenow', count);
 }
 
+// NEXT BUTTON STATE
+function updateNextButton() {
+  if (!nextBtn) return;
+  const isReady = selectedIds.size === MAX_SUBJECTS;
+  nextBtn.disabled = !isReady;
+  nextBtn.setAttribute('aria-disabled', String(!isReady));
+}
 
-/* ──  Disable unselected cards when max is reached ────────
-   When 4 subjects are selected, all unselected cards should look
-   greyed out and be unclickable.
-   ──────────────────────────────────────────────────────────────── */
-function updateDisabledCards() {
-  const allCards = cardsContainer.querySelectorAll(".subject-card");
+// PERSIST SELECTION
+function saveSelection() {
+  sessionStorage.setItem(
+    'onboarding_step1_subjects',
+    JSON.stringify([...selectedIds])
+  );
+}
 
-  allCards.forEach((card) => {
-    const id = card.dataset.id;
-    const isCompulsory = subjectsData.find((s) => s.id === id)?.compulsory;
+// NEXT BUTTON — navigate to step 2
+function bindNextButton() {
+  if (!nextBtn) return;
+  nextBtn.addEventListener('click', handleNext);
+}
 
-    if (!isCompulsory && !selectedSubjects.has(id) && selectedSubjects.size >= MAX_SUBJECTS) {
-      /* Max reached and this card is not selected — disable it */
-      card.classList.add("disabled");
-    } else {
-      /* Otherwise keep it interactive */
-      card.classList.remove("disabled");
-    }
+function handleNext() {
+  if (selectedIds.size < MAX_SUBJECTS) {
+    showToast(`Please select ${MAX_SUBJECTS} subjects to continue.`, 'error');
+    return;
+  }
+
+  // Build step 1 payload
+  const step1Data = {
+    subjects: [...selectedIds].map(id => {
+      const subject = SUBJECTS.find(s => s.id === id);
+      return { id, name: subject?.name || id };
+    }),
+  };
+
+  sessionStorage.setItem('onboarding_step1_data', JSON.stringify(step1Data));
+  sessionStorage.setItem('onboarding_step1_done', '1');
+
+  // Seamless transition to step 2
+  navigateTo('/pages/onboarding-step2.html');
+}
+
+// SEAMLESS PAGE TRANSITION
+function navigateTo(url) {
+  if (!pageOverlay) {
+    window.location.href = url;
+    return;
+  }
+
+  // Fade out current page
+  pageOverlay.classList.add('fade-in');
+
+  // Navigate after fade completes
+  setTimeout(() => {
+    window.location.href = url;
+  }, 300);
+}
+
+// TOAST
+function showToast(message, type = '') {
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.className   = `toast ${type}`.trim();
+
+  void toast.offsetWidth; // reflow
+  toast.classList.add('show');
+
+  setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+// FADE IN ON PAGE LOAD (arriving from another step)
+function fadeInOnLoad() {
+  if (!pageOverlay) return;
+  // Briefly show overlay then fade out
+  pageOverlay.classList.add('fade-in');
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      pageOverlay.classList.remove('fade-in');
+    });
   });
 }
 
-
-/* ── Next button navigation ──────────────────────────────
-   When the user clicks Next (and it's enabled), navigate forward.
-   The target page URL will be updated once the team decides.
-   ──────────────────────────────────────────────────────────────── */
-btnNext.addEventListener("click", () => {
-  if (selectedSubjects.size === MAX_SUBJECTS) {
-    
-      sessionStorage.setItem("selectedSubjects", JSON.stringify([...selectedSubjects]));
-    
-    window.location.href = "/pages/onboarding-step2.html"; 
-  }
-});
-
-
-/* ─ Initialise the page ─────────────────────────────────
-   These three calls run as soon as the script loads.
-   They build the cards, set up the UI, and handle disabled states.
-   ──────────────────────────────────────────────────────────────── */
-renderSubjectCards();   /* build all cards from subjectsData */
-updateProgressUI();     /* set correct count/bar/badge from the start */
-updateDisabledCards();  /* disable correct cards from the start */
- // lazyLoadImages() 
+// BOOT
+init();
+bindNextButton();
+fadeInOnLoad();

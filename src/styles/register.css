@@ -22,18 +22,21 @@ body {
 }
 
 /*NAVBAR*/
+
 .navbar {
   background: var(--pillar-white);
   border-bottom: 1px solid var(--pillar-border);
   padding: 0 24px;
-  height: 60px;
-  border-radius: 25px;
+  height: 64px;
+  width: 90%;
+  margin: 0 auto;
+  border-radius: 30px;
   box-shadow: var(--pillar-shadow);
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: sticky;
-  top: 10px;
+  top: 15px;
   z-index: 100;
 }
 

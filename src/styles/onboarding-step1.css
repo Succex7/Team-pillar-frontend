@@ -1,81 +1,100 @@
-/* =============================================================
-   subject-selection.css
-   Styles for the "Select your UTME subjects" onboarding page.
-   Uses design tokens from tokens.css — never hardcode colours.
-   ============================================================= */
+/* Onboarding Step 1 — Select UTME Subjects */
 
-
-/* ── Utility: visually hidden (accessible text for screen readers) ── */
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
+/* Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
   padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }
 
+body {
+  font-family: var(--font-body);
+  background-color: var(--pillar-bg);
+  color: var(--pillar-navy);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
 
-/* ================================================================
-   FIXED HEADER
-   Sticks to the top while the user scrolls the subject cards.
-   ================================================================ */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/*Page transition overlay  */
+.page-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--pillar-white);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.page-overlay.fade-in {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* HEADER */
+
 .site-header {
-  position: fixed;          /* stays in place on scroll */
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;             /* sits above all other content */
+  position: sticky;
+  top: 15px;
+  z-index: 100;
   background: transparent;
-  padding: 12px 16px;       /* breathing room inside the header */
 }
 
-/* Inner row: logo on left, steps on right */
-.header-container {
-  max-width: 1400px;
-  margin: 0 auto;           /* center on wide screens */
+.header-container {       
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 85px;              
-  height: 56px;             /* comfortable touch target height */
+  height: 64px;
+  width: 90%;
+  margin: 0 auto;
   background: var(--pillar-white);
-  border-radius: 58px;      
-  padding: 0 20px;          /* inner horizontal padding */
+  border-radius: 30px;      
+  padding: 0 20px;          
   box-shadow: var(--pillar-shadow);
+  transition: box-shadow var(--transition-fast);
 }
 
-/* Logo image size */
+.Site-header.scrolled {
+  box-shadow: 0 2px 12px rgba(26, 46, 90, 0.08);
+}
+
 .logo-link {
   display: flex;
   align-items: center;
   gap: 8px;
-  text-decoration: none;
-  color: var(--pillar-navy);
   font-family: var(--font-display);
   font-size: 18px;
   font-weight: 700;
+  color: var(--pillar-navy);
   letter-spacing: -0.3px;
 }
 
-/* ── Step progress (right side of header) ── */
+/* Steps */
 .steps-container {
   display: flex;
   align-items: center;
-  gap: 12px;                /* space between label and bars */
+  gap: 12px;
+  flex-shrink: 1;
 }
 
 .steps-label {
   font-family: var(--font-body);
   font-size: 0.85rem;
   color: var(--pillar-muted);
-  white-space: nowrap;      /* prevent wrapping on small screens */
+  white-space: nowrap;
 }
 
-/* The three progress bar segments */
 .steps-bars {
   display: flex;
   gap: 8px;
@@ -83,369 +102,465 @@
 }
 
 .step-bar {
-  width: 80px;              /* each segment */
-  height: 6px;
-  border-radius: 9999px;    /* fully rounded pill */
-  background: var(--pillar-border);  /* inactive = grey */
-  transition: background 0.3s ease;
+  width: 40px;
+  height: 5px;
+  border-radius: 100px;
+  background: var(--pillar-border);
+  transition: background var(--transition-base)
 }
 
-/* Active step = amber/orange (matches the design) */
-.step-bar.active {
-  background: var(--pillar-yellow);
+.step-bar--done { 
+    background: var(--pillar-yellow); 
 }
 
-/* Completed step = navy */
-.step-bar.done {
-  background: var(--pillar-navy);
+.step-bar--active {
+    background: var(--pillar-yellow);
+    opacity: 0.6;
 }
 
-
-/* ================================================================
-   MAIN CONTENT
-   Push it down so it doesn't hide behind the fixed header.
-   ================================================================ */
+/* MAIN CONTENT */
 .main-content {
-  padding-top: 160px;       /* clears the fixed header */
+  padding-top: 32px;
   padding-bottom: 48px;
   padding-left: 16px;
-  padding-right: 8px;       /* from spec: padding 16px 8px */
-  max-width: 1200px;
-  margin: 0 auto;           /* centered on wide screens */
+  padding-right: 16px;
+  max-width: 1000px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 32px;                /* vertical space between sections */
+  gap: 32px;
 }
 
-
-/* ================================================================
-   PAGE INTRO (title + subtitle)
-   ================================================================ */
+/* Page intro */
 .page-intro {
+  text-align: center;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  text-align: center;
-  max-width: 715px;      
-  margin: 0 auto;
 }
 
 .page-title {
-  font-family: var(--font-display);   /* Sora from tokens */
-  font-size: clamp(1.4rem, 3vw, 2rem); /* responsive font size */
+  font-family: var(--font-display);
+  font-size: clamp(20px, 4vw, 28px);
   font-weight: 700;
   color: var(--pillar-navy);
+  letter-spacing: -0.4px;
 }
 
 .page-subtitle {
-  font-family: var(--font-body);      /* Inter from tokens */
-  font-size: 0.95rem;
+  font-size: 14px;
   color: var(--pillar-muted);
   line-height: 1.6;
+  max-width: 520px;
+  margin: 0 auto;
 }
 
-/* The "Use of English" blue link-like text in subtitle */
 .highlight-text {
-  color: var(--pillar-navy-mid);
-  font-weight: 600;
+  color: var(--pillar-navy);
+  font-weight: 700;
 }
 
-
-/* ================================================================
-   SELECTION TRACKER (count + progress bar + remaining badge)
-   ================================================================ */
-.selection-tracker {
+/* Selection progress */
+.selection-progress {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 901px;         
-  margin: 0 auto;
-  width: 100%;
 }
 
-/* Top row: "1/4 Subjects Selected" and "Remaining 3" badge */
-.tracker-top {
+.progress-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.tracker-count {
-  font-family: var(--font-body);
-  font-size: 1rem;
+.progress-label {
+  font-size: 14px;
   color: var(--pillar-navy);
-  font-weight: 600;
 }
 
-.tracker-count-label {
-  font-weight: 400;
+.progress-count {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--pillar-navy);
+}
+
+.progress-total {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--pillar-navy);
+}
+
+.progress-text {
+  font-size: 13px;
   color: var(--pillar-muted);
   margin-left: 4px;
-  font-size: 0.9rem;
 }
 
-/* "Remaining X" pill badge */
 .remaining-badge {
-  font-family: var(--font-body);
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--pillar-label);
-  background: var(--pillar-input-bg);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pillar-navy);
+  background: var(--pillar-white);
   border: 1px solid var(--pillar-border);
-  border-radius: 16px;    
-  padding: 7px 16px;       
-  white-space: nowrap;
+  border-radius: 100px;
+  padding: 4px 12px;
 }
 
-/* The grey track behind the fill */
-.progress-bar-track {
+.progress-track {
   width: 100%;
-  height: 12px;           
-  border-radius: 9999px;  
+  height: 8px;
   background: var(--pillar-border);
+  border-radius: 9999px;
   overflow: hidden;
 }
 
-/* The coloured fill — width is controlled by JS */
-.progress-bar-fill {
+.progress-fill {
   height: 100%;
-  width: 25%;               /* starts at 25% because English is pre-selected (1/4) */
-  border-radius: 9999px;
   background: var(--pillar-navy);
-  transition: width 0.4s ease; /* smooth animation when selecting */
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+  width: 25%; /* 1/4 — Use of English is pre-selected */
 }
 
-
-/* ================================================================
-   SUBJECT CARDS GRID
-   ================================================================ */
-.subject-cards-container {
+/* SUBJECTS GRID */
+.subjects-grid {
   display: grid;
-  /* 4 columns on desktop, shrinks on smaller screens */
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;                /* comfortable spacing between cards */
-  width: 100%;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
 }
 
-/* Individual subject card — acts as a button */
+/* Subject card */
 .subject-card {
+  background: var(--pillar-white);
+  border: 1.5px solid var(--pillar-border);
+  border-radius: var(--pillar-radius);
+  padding: 20px 16px 16px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--pillar-card-bg);
-  border: 1px solid var(--pillar-border);
-  border-radius: var(--pillar-radius); /* 12px from tokens */
-  padding: 16px;
+  align-items: flex-start;
+  gap: 12px;
   cursor: pointer;
-  opacity: 0.9;             
-  position: relative;       /* for the COMPULSORY badge positioning */
-  min-height: 140px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-  user-select: none;        /* prevent text highlight on click */
+  position: relative;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform 0.1s ease;
+    -webkit-user-select: none; 
+    user-select: none;
+    outline: none;
 }
 
-/* Hover effect — subtle lift */
 .subject-card:hover {
-  border-color: var(--pillar-navy-mid);
-  box-shadow: var(--pillar-shadow);
-  opacity: 1;
+  border-color: rgba(26, 46, 90, 0.3);
+  box-shadow: 0 2px 12px rgba(26, 46, 90, 0.07);
 }
 
-/* Selected state — navy border + light navy background tint */
+.subject-card:active {
+  transform: scale(0.98);
+}
+
+.subject-card:focus-visible {
+  border-color: var(--pillar-navy);
+  box-shadow: 0 0 0 3px rgba(26, 46, 90, 0.12);
+}
+
+/* Selected state */
 .subject-card.selected {
   border-color: var(--pillar-navy);
-  background: #eef1f7;      /* soft navy tint */
-  opacity: 1;
+  box-shadow: 0 0 0 1px var(--pillar-navy), 0 4px 12px rgba(26, 46, 90, 0.10);
 }
 
-/* Disabled state — when max 4 selections reached and card not selected */
-.subject-card.disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-/* COMPULSORY badge on Use of English */
+/* Compulsory badge */
 .compulsory-badge {
   position: absolute;
-  top: -12px;               /* pops above the card edge */
-  left: 25px;
-  background: var(--pillar-yellow);
-  color: var(--pillar-white);
-  font-family: var(--font-body);
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  top: -12px;
+  left: 12px;
+  background: #f59e0b;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  border-radius: 9999px;
   padding: 3px 10px;
+  border-radius: 100px;
 }
 
-/* Icon area inside each card */
-.card-icon-wrapper {
+/* Disabled (compulsory — cannot deselect) */
+.subject-card.compulsory {
+  cursor: default;
+}
+
+/* Icon circle */
+.subject-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--pillar-bg);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: var(--pillar-radius-sm); /* 8px */
-  background: var(--pillar-bg);
-  margin-bottom: 10px;
-  font-size: 1.3rem;        /* icon size */
-  color: var(--pillar-navy-mid);
+  flex-shrink: 0;
+  transition: background var(--transition-fast);
 }
 
-/* Subject name text */
-.card-subject-name {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
+.subject-card.selected .subject-icon {
+  background: rgba(26, 46, 90, 0.08);
+}
+
+.subject-icon svg {
+  width: 20px;
+  height: 20px;
+  color: var(--pillar-navy);
+}
+
+/* Subject name */
+.subject-name {
+  font-family: var(--font-display);
+  font-size: 14px;
   font-weight: 600;
   color: var(--pillar-navy);
-  margin-bottom: 8px;
+  line-height: 1.3;
 }
 
-/* "Selected" status row at the bottom of the card */
-.card-status {
+/* Selected indicator */
+.subject-status {
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 4px;
-  font-family: var(--font-body);
-  font-size: 0.78rem;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
   font-weight: 500;
-  color: var(--pillar-muted);   /* grey = not selected */
-  transition: color 0.2s ease;
+  color: var(--pillar-navy);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
 }
 
-/* When card is selected, turn status text  */
-.subject-card.selected .card-status {
-  color: var(--pillar-navy-mid);
+.subject-card.selected .subject-status {
+  opacity: 1;
 }
 
-/* The small checkmark circle icon */
-.card-status-icon {
-  font-size: 1rem;
-  color: var(--pillar-muted);
-  transition: color 0.2s ease;
+.subject-status svg {
+  width: 14px;
+  height: 14px;
+  color: var(--pillar-navy);
 }
 
-.subject-card.selected .card-status-icon {
-  color: var(--pillar-navy-mid);
-}
-
-
-/* ================================================================
-   NAVIGATION BUTTONS (Next + Go back)
-   ================================================================ */
-.nav-buttons {
+/* ACTIONS */
+.actions-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  max-width: 965px;
-  margin: 0 auto;
-  width: 100%;
+  padding-top: 8px;
 }
 
-/* Next button */
 .btn-next {
   width: 100%;
-  height: 100px;           
-  border-radius: 12px;     
-  padding-top: 13.5px;      
-  padding-bottom: 14.5px;  
+  padding: 18px 24px;
   background: var(--pillar-navy);
   color: var(--pillar-white);
-  font-family: var(--font-body);
-  font-size: 1rem;
+  font-family: var(--font-display);
+  font-size: 15px;
   font-weight: 600;
   border: none;
+  border-radius: var(--pillar-radius-sm);
   cursor: pointer;
-  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    background var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform 0.1s ease,
+    opacity var(--transition-fast);
 }
 
 .btn-next:hover:not(:disabled) {
   background: var(--pillar-navy-mid);
+  box-shadow: 0 4px 16px rgba(26, 46, 90, 0.25);
 }
 
-/* Disabled state — when not all 4 subjects selected */
+.btn-next:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
 .btn-next:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
-/* Go back link styled as plain text */
-.btn-go-back {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--pillar-muted);
-  text-decoration: none;
-  padding: 8px;
-  transition: color 0.2s ease;
+.btn-loader {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
 }
 
-.btn-go-back:hover {
+.hidden {
+  display: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.back-link {
+  font-size: 14px;
+  color: var(--pillar-muted);
+  transition: color var(--transition-fast);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.back-link:hover {
   color: var(--pillar-navy);
 }
 
+/*TOAST */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--pillar-navy-dark);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0;
+  transition: transform var(--transition-base), opacity var(--transition-base);
+  pointer-events: none;
+  z-index: 9999;
+  white-space: nowrap;
+  max-width: 90vw;
+  text-align: center;
+}
 
-/* ================================================================
-   RESPONSIVE BREAKPOINTS
-   ================================================================ */
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
 
-/* Tablet: 2 columns */
-@media (max-width: 768px) {
-  .subject-cards-container {
-    grid-template-columns: repeat(2, 1fr);
+.toast.error   { background: #991b1b; }
+.toast.success { background: #14532d; }
+
+/* TABLET — 600px and above */
+
+@media (min-width: 600px) {
+
+  .site-header {
+    padding: 0 32px;
+  }
+
+  .step-bar {
+    width: 64px;
+  }
+
+  .main-content {
+    padding-top: 56px;
+    padding-left: 32px;
+    padding-right: 72px;
+    gap: 36px;
+  }
+
+  .subjects-grid {
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
   }
 
-  .header-container {
-    gap: 24px;              /* reduce gap on smaller screens */
+  .subject-card {
+    padding: 24px 20px 20px;
   }
 
-  .step-bar {
-    width: 48px;            /* shorter bars on tablet */
-  }
-
-  .page-title {
-    font-size: 1.3rem;
-  }
 }
 
-/* Mobile: still 2 columns but tighter spacing */
-@media (max-width: 480px) {
-  .main-content {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
+/* DESKTOP — 960px and above */
 
-  .subject-cards-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+@media (min-width: 960px) {
+
+  .site-header {
+    padding: 0;
   }
 
   .step-bar {
-    width: 32px;
+    width: 64px;
   }
 
-  .steps-label {
-    font-size: 0.75rem;
+  .main-content {
+    padding-top: 72px;
+    padding-left: 48px;
+    padding-right: 80px;
   }
 
+  .subjects-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+}
+
+
+/* Very small screens: 320px and below */
+@media (max-width: 320px) {
   .header-container {
+    height: 48px;
+    border-radius: 30px;
+    padding-left: 8px;
+    width: 95%;
+    min-width: 0;
+  }
+
+  .logo-link {
+    font-size: 14px;
+    gap: 4px;
+  }
+
+  .main-content {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    padding-left: 4px;
+    padding-right: 4px;
     gap: 12px;
-    padding: 0 12px;
+  }
+  .page-title {
+    font-size: 1.1rem;
+  }
+  .page-subtitle {
+    font-size: 0.8rem;
+    max-width: 95vw;
   }
 
+  .steps-container {
+    gap: 4px;
+  }
+
+  .steps-bars {
+    width: 60%;
+  }
+
+  .step-label {
+    font-size: 9px;
+  }
+
+  .subject-name {
+    font-size: 12px;
+  }
   .btn-next {
-    height: auto;
-    padding: 16px;
+    font-size: 0.95rem;
+    padding: 10px;
   }
-
-  .tracker-count {
-    font-size: 0.9rem;
+  .actions-wrapper {
+    gap: 8px;
+    padding-top: 4px;
+  }
+  .toast {
+    font-size: 11px;
+    padding: 8px 12px;
+    max-width: 98vw;
   }
 }
