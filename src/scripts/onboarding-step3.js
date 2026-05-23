@@ -1,14 +1,10 @@
-// src/scripts/onboarding-step3.js
 // Onboarding Step 3 — Study Hours Selection
 // Connected to steps 1 & 2 via seamless page transitions
 
 import { userStore } from '../store/userStore.js';
 import { strings }   from '../strings.js';
 
-// ═══════════════════════════════════════════════════════════
 // DATA
-// ═══════════════════════════════════════════════════════════
-
 const STUDY_HOURS_OPTIONS = [
   {
     id:    'hours-1-2',
@@ -60,16 +56,10 @@ const STUDY_HOURS_OPTIONS = [
   },
 ];
 
-// ═══════════════════════════════════════════════════════════
 // STATE
-// ═══════════════════════════════════════════════════════════
-
 let selectedValue = null;
 
-// ═══════════════════════════════════════════════════════════
 // DOM REFERENCES
-// ═══════════════════════════════════════════════════════════
-
 const optionsList       = document.getElementById('optionsList');
 const finishBtn         = document.getElementById('finishBtn');
 const finishBtnText     = document.getElementById('finishBtnText');
@@ -81,10 +71,7 @@ const navbar            = document.getElementById('navbar');
 const backLink          = document.getElementById('backLink');
 const pageOverlay       = document.getElementById('pageOverlay');
 
-// ═══════════════════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════════════════
-
 function init() {
   guardOnboardingAccess();
   renderOptions();
@@ -96,10 +83,7 @@ function init() {
   fadeInOnLoad();
 }
 
-// ═══════════════════════════════════════════════════════════
 // GUARD
-// ═══════════════════════════════════════════════════════════
-
 function guardOnboardingAccess() {
   const step1Done = sessionStorage.getItem('onboarding_step1_done');
   const step2Done = sessionStorage.getItem('onboarding_step2_done');
@@ -114,10 +98,7 @@ function guardOnboardingAccess() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
 // RENDER OPTIONS
-// ═══════════════════════════════════════════════════════════
-
 function renderOptions() {
   if (!optionsList) return;
 
@@ -171,10 +152,7 @@ function renderOptions() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
 // OPTION SELECTION
-// ═══════════════════════════════════════════════════════════
-
 function handleOptionSelect(value, clickedCard) {
   selectedValue = value;
 
@@ -201,10 +179,7 @@ function enableFinishButton() {
   finishBtn.setAttribute('aria-disabled', 'false');
 }
 
-// ═══════════════════════════════════════════════════════════
 // RESTORE SAVED SELECTION
-// ═══════════════════════════════════════════════════════════
-
 function restoreSavedSelection() {
   const saved = sessionStorage.getItem('onboarding_step3_hours');
   if (!saved) return;
@@ -216,10 +191,7 @@ function restoreSavedSelection() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
 // MOTIVATION IMAGE — skeleton loading
-// ═══════════════════════════════════════════════════════════
-
 function initMotivationImage() {
   if (!motivationImage || !motivationWrapper) return;
 
@@ -248,10 +220,7 @@ function initMotivationImage() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
 // NAVBAR SCROLL
-// ═══════════════════════════════════════════════════════════
-
 function bindNavbarScroll() {
   if (!navbar) return;
 
@@ -268,10 +237,7 @@ function bindNavbarScroll() {
   }, { passive: true });
 }
 
-// ═══════════════════════════════════════════════════════════
 // BACK LINK — seamless transition to step 2
-// ═══════════════════════════════════════════════════════════
-
 function bindBackLink() {
   if (!backLink) return;
   backLink.addEventListener('click', (e) => {
@@ -280,10 +246,7 @@ function bindBackLink() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
 // FINISH BUTTON
-// ═══════════════════════════════════════════════════════════
-
 function bindFinishButton() {
   if (!finishBtn) return;
   finishBtn.addEventListener('click', handleFinish);
@@ -323,10 +286,7 @@ async function handleFinish() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
 // BUILD PAYLOAD
-// ═══════════════════════════════════════════════════════════
-
 function buildOnboardingPayload() {
   const step1Data = JSON.parse(sessionStorage.getItem('onboarding_step1_data') || '{}');
   const step2Data = JSON.parse(sessionStorage.getItem('onboarding_step2_data') || '{}');
@@ -340,10 +300,7 @@ function buildOnboardingPayload() {
   };
 }
 
-// ═══════════════════════════════════════════════════════════
 // SEAMLESS TRANSITION
-// ═══════════════════════════════════════════════════════════
-
 function navigateTo(url) {
   if (!pageOverlay) {
     window.location.href = url;
@@ -367,10 +324,7 @@ function fadeInOnLoad() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
 // HELPERS
-// ═══════════════════════════════════════════════════════════
-
 function setFinishLoading(isLoading) {
   if (!finishBtn || !finishBtnText || !finishBtnLoader) return;
   finishBtn.disabled = isLoading;
@@ -396,8 +350,5 @@ function getErrorMessage(err) {
   return map[err?.status] || err?.message || 'Something went wrong. Please try again.';
 }
 
-// ═══════════════════════════════════════════════════════════
 // BOOT
-// ═══════════════════════════════════════════════════════════
-
 init();

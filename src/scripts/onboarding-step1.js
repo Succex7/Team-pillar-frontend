@@ -1,11 +1,8 @@
-// src/scripts/onboarding-step1.js
 // Onboarding Step 1 — Select UTME Subjects
 // Handles: subject rendering, selection logic, progress bar,
 //          validation, session persistence, seamless navigation
 
-// ═══════════════════════════════════════════════════════════
 // DATA — all content dynamic
-// ═══════════════════════════════════════════════════════════
 
 const SUBJECTS = [
   {
@@ -88,19 +85,13 @@ const SUBJECTS = [
 const MAX_SUBJECTS   = 4;
 const TOTAL_SUBJECTS = 4;
 
-// ═══════════════════════════════════════════════════════════
 // STATE
-// ═══════════════════════════════════════════════════════════
-
 // Pre-select compulsory subject
 let selectedIds = new Set(
   SUBJECTS.filter(s => s.compulsory).map(s => s.id)
 );
 
-// ═══════════════════════════════════════════════════════════
 // DOM REFERENCES
-// ═══════════════════════════════════════════════════════════
-
 const subjectsGrid   = document.getElementById('subjectsGrid');
 const nextBtn        = document.getElementById('nextBtn');
 const nextBtnText    = document.getElementById('nextBtnText');
@@ -111,9 +102,9 @@ const remainingBadge = document.getElementById('remainingBadge');
 const toast          = document.getElementById('toast');
 const pageOverlay    = document.getElementById('pageOverlay');
 
-// ═══════════════════════════════════════════════════════════
+
 // INIT
-// ═══════════════════════════════════════════════════════════
+
 
 function init() {
   restoreSavedSelection();
@@ -122,9 +113,9 @@ function init() {
   updateNextButton();
 }
 
-// ═══════════════════════════════════════════════════════════
+
 // RESTORE SAVED — if user navigated back from step 2
-// ═══════════════════════════════════════════════════════════
+
 
 function restoreSavedSelection() {
   const saved = sessionStorage.getItem('onboarding_step1_subjects');
@@ -142,9 +133,9 @@ function restoreSavedSelection() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
+
 // RENDER SUBJECTS DYNAMICALLY
-// ═══════════════════════════════════════════════════════════
+
 
 function renderSubjects() {
   if (!subjectsGrid) return;
@@ -215,10 +206,7 @@ function buildCardClasses(subject) {
   return classes.join(' ');
 }
 
-// ═══════════════════════════════════════════════════════════
 // TOGGLE SELECTION
-// ═══════════════════════════════════════════════════════════
-
 function handleToggle(id, card) {
   const subject = SUBJECTS.find(s => s.id === id);
   if (!subject || subject.compulsory) return;
@@ -247,10 +235,7 @@ function handleToggle(id, card) {
   saveSelection();
 }
 
-// ═══════════════════════════════════════════════════════════
 // PROGRESS BAR
-// ═══════════════════════════════════════════════════════════
-
 function updateProgress() {
   const count     = selectedIds.size;
   const remaining = MAX_SUBJECTS - count;
@@ -270,10 +255,7 @@ function updateProgress() {
   if (track) track.setAttribute('aria-valuenow', count);
 }
 
-// ═══════════════════════════════════════════════════════════
 // NEXT BUTTON STATE
-// ═══════════════════════════════════════════════════════════
-
 function updateNextButton() {
   if (!nextBtn) return;
   const isReady = selectedIds.size === MAX_SUBJECTS;
@@ -281,10 +263,7 @@ function updateNextButton() {
   nextBtn.setAttribute('aria-disabled', String(!isReady));
 }
 
-// ═══════════════════════════════════════════════════════════
 // PERSIST SELECTION
-// ═══════════════════════════════════════════════════════════
-
 function saveSelection() {
   sessionStorage.setItem(
     'onboarding_step1_subjects',
@@ -292,10 +271,7 @@ function saveSelection() {
   );
 }
 
-// ═══════════════════════════════════════════════════════════
 // NEXT BUTTON — navigate to step 2
-// ═══════════════════════════════════════════════════════════
-
 function bindNextButton() {
   if (!nextBtn) return;
   nextBtn.addEventListener('click', handleNext);
@@ -322,10 +298,7 @@ function handleNext() {
   navigateTo('/pages/onboarding-step2.html');
 }
 
-// ═══════════════════════════════════════════════════════════
 // SEAMLESS PAGE TRANSITION
-// ═══════════════════════════════════════════════════════════
-
 function navigateTo(url) {
   if (!pageOverlay) {
     window.location.href = url;
@@ -341,10 +314,7 @@ function navigateTo(url) {
   }, 300);
 }
 
-// ═══════════════════════════════════════════════════════════
 // TOAST
-// ═══════════════════════════════════════════════════════════
-
 function showToast(message, type = '') {
   if (!toast) return;
 
@@ -357,10 +327,7 @@ function showToast(message, type = '') {
   setTimeout(() => toast.classList.remove('show'), 3500);
 }
 
-// ═══════════════════════════════════════════════════════════
 // FADE IN ON PAGE LOAD (arriving from another step)
-// ═══════════════════════════════════════════════════════════
-
 function fadeInOnLoad() {
   if (!pageOverlay) return;
   // Briefly show overlay then fade out
@@ -372,10 +339,7 @@ function fadeInOnLoad() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
 // BOOT
-// ═══════════════════════════════════════════════════════════
-
 init();
 bindNextButton();
 fadeInOnLoad();

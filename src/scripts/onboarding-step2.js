@@ -1,11 +1,5 @@
-// src/scripts/onboarding-step2.js
 // Onboarding Step 2 — Set Your Aim (Target Score)
-// Handles: slider interaction, tier updates, goal bar,
-//          Set Target, Next navigation, seamless transitions
-
-// ═══════════════════════════════════════════════════════════
-// DATA — tier definitions, fully dynamic
-// ═══════════════════════════════════════════════════════════
+// DATA 
 
 const SCORE_TIERS = [
   {
@@ -44,17 +38,11 @@ const AVERAGE_SCORE    = 200;
 const MAX_SCORE        = 400;
 const DEFAULT_SCORE    = 315;
 
-// ═══════════════════════════════════════════════════════════
 // STATE
-// ═══════════════════════════════════════════════════════════
-
 let currentScore    = DEFAULT_SCORE;
 let confirmedScore  = null; // set when user clicks "Set Target"
 
-// ═══════════════════════════════════════════════════════════
 // DOM REFERENCES
-// ═══════════════════════════════════════════════════════════
-
 const scoreSlider      = document.getElementById('scoreSlider');
 const scoreDisplay     = document.getElementById('scoreDisplay');
 const btnSetTarget     = document.getElementById('btnSetTarget');
@@ -72,10 +60,7 @@ const backLink         = document.getElementById('backLink');
 const toast            = document.getElementById('toast');
 const pageOverlay      = document.getElementById('pageOverlay');
 
-// ═══════════════════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════════════════
-
 function init() {
   guardAccess();
   restoreSavedScore();
@@ -90,10 +75,7 @@ function init() {
   fadeInOnLoad();
 }
 
-// ═══════════════════════════════════════════════════════════
 // GUARD — must have completed step 1
-// ═══════════════════════════════════════════════════════════
-
 function guardAccess() {
   const step1Done = sessionStorage.getItem('onboarding_step1_done');
   if (!step1Done) {
@@ -101,10 +83,7 @@ function guardAccess() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
 // RESTORE SAVED SCORE
-// ═══════════════════════════════════════════════════════════
-
 function restoreSavedScore() {
   const saved = sessionStorage.getItem('onboarding_step2_data');
   if (!saved) return;
@@ -122,10 +101,7 @@ function restoreSavedScore() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
 // SLIDER
-// ═══════════════════════════════════════════════════════════
-
 function bindSlider() {
   if (!scoreSlider) return;
 
@@ -138,14 +114,13 @@ function bindSlider() {
   });
 }
 
-// ── Live score number above slider ──
+// Live score number above slider 
 
 function updateScoreDisplay(score) {
   if (scoreDisplay) scoreDisplay.textContent = score;
 }
 
-// ── Slider filled track via CSS gradient ──
-
+// Slider filled track via CSS gradient
 function updateSliderTrack(score) {
   if (!scoreSlider) return;
 
@@ -164,7 +139,7 @@ function updateSliderTrack(score) {
   `;
 }
 
-// ── Tier card — title and description update on slide ──
+//Tier card — title and description update on slide
 
 function updateTierCard(score) {
   const tier = SCORE_TIERS.find(t => score >= t.min && score <= t.max);
@@ -179,7 +154,7 @@ function updateTierCard(score) {
   }
 }
 
-// ── Goal bar — two-tone bar ──
+// Goal bar — two-tone bar
 
 function updateGoalBar(score) {
   if (!goalFillNavy || !goalFillAmber) return;
@@ -195,10 +170,7 @@ function updateGoalBar(score) {
   if (goalValue) goalValue.textContent = score;
 }
 
-// ═══════════════════════════════════════════════════════════
 // SET TARGET BUTTON
-// ═══════════════════════════════════════════════════════════
-
 function bindSetTarget() {
   if (!btnSetTarget) return;
   btnSetTarget.addEventListener('click', handleSetTarget);
@@ -241,10 +213,7 @@ function setTargetLoading(isLoading) {
   setTargetLoader.classList.toggle('hidden', !isLoading);
 }
 
-// ═══════════════════════════════════════════════════════════
 // NEXT BUTTON
-// ═══════════════════════════════════════════════════════════
-
 function bindNextButton() {
   if (!nextBtn) return;
 
@@ -275,10 +244,7 @@ function handleNext() {
   navigateTo('/pages/onboarding-step3.html');
 }
 
-// ═══════════════════════════════════════════════════════════
 // BACK LINK — navigate back to step 1 seamlessly
-// ═══════════════════════════════════════════════════════════
-
 function bindBackLink() {
   if (!backLink) return;
   backLink.addEventListener('click', (e) => {
@@ -287,10 +253,7 @@ function bindBackLink() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
 // SEAMLESS PAGE TRANSITION
-// ═══════════════════════════════════════════════════════════
-
 function navigateTo(url) {
   if (!pageOverlay) {
     window.location.href = url;
@@ -314,10 +277,7 @@ function fadeInOnLoad() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
 // TOAST
-// ═══════════════════════════════════════════════════════════
-
 function showToast(message, type = '') {
   if (!toast) return;
 
@@ -330,8 +290,5 @@ function showToast(message, type = '') {
   setTimeout(() => toast.classList.remove('show'), 3500);
 }
 
-// ═══════════════════════════════════════════════════════════
 // BOOT
-// ═══════════════════════════════════════════════════════════
-
 init();

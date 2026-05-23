@@ -43,20 +43,23 @@ ul {
 }
 
 /* HEADER */
+
 .site-header {
   position: sticky;
-  top: 10px;
+  top: 15px;
   z-index: 100;
   background: transparent;
 }
 
-.header-container {        
+.header-container {       
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;            
+  height: 64px;
+  width: 90%;
+  margin: 0 auto;
   background: var(--pillar-white);
-  border-radius: 25px;      
+  border-radius: 30px;      
   padding: 0 20px;          
   box-shadow: var(--pillar-shadow);
   transition: box-shadow var(--transition-fast);
@@ -79,9 +82,10 @@ ul {
 
 /* Steps */
 .steps-container {
- display: flex;
+  display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 1;
 }
 
 .steps-label {
@@ -114,11 +118,9 @@ ul {
     opacity: 0.6;
 }
 
-/* ══════════════════════════════════════════════════════════
-   MAIN CONTENT
-══════════════════════════════════════════════════════════ */
+/* MAIN CONTENT */
 .main-content {
-  padding-top: 120px;
+  padding-top: 32px;
   padding-bottom: 48px;
   padding-left: 16px;
   padding-right: 16px;
@@ -129,7 +131,7 @@ ul {
   gap: 32px;
 }
 
-/* ── Page intro ───────────────────────────────────────────── */
+/* Page intro */
 .page-intro {
   text-align: center;
   display: flex;
@@ -158,7 +160,7 @@ ul {
   font-weight: 700;
 }
 
-/* ── Selection progress ─────────────────────────────────── */
+/* Selection progress */
 .selection-progress {
   display: flex;
   flex-direction: column;
@@ -221,9 +223,7 @@ ul {
   width: 25%; /* 1/4 — Use of English is pre-selected */
 }
 
-/* ══════════════════════════════════════════════════════════
-   SUBJECTS GRID
-══════════════════════════════════════════════════════════ */
+/* SUBJECTS GRID */
 .subjects-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -345,9 +345,7 @@ ul {
   color: var(--pillar-navy);
 }
 
-/* ══════════════════════════════════════════════════════════
-   ACTIONS
-══════════════════════════════════════════════════════════ */
+/* ACTIONS */
 .actions-wrapper {
   display: flex;
   flex-direction: column;
@@ -422,9 +420,7 @@ ul {
   color: var(--pillar-navy);
 }
 
-/* ══════════════════════════════════════════════════════════
-   TOAST
-══════════════════════════════════════════════════════════ */
+/*TOAST */
 .toast {
   position: fixed;
   bottom: 24px;
@@ -453,19 +449,12 @@ ul {
 .toast.error   { background: #991b1b; }
 .toast.success { background: #14532d; }
 
-/* ══════════════════════════════════════════════════════════
-   TABLET — 600px+
-══════════════════════════════════════════════════════════ */
+/* TABLET — 600px and above */
+
 @media (min-width: 600px) {
 
   .site-header {
-    padding: 20px 20px 0;
-  }
-
-  .header-container {
-    height: 80px;
-    padding: 20px 32px;
-    border-radius: 58px;
+    padding: 0 32px;
   }
 
   .step-bar {
@@ -473,9 +462,9 @@ ul {
   }
 
   .main-content {
-    padding-top: 136px;
-    padding-left: 24px;
-    padding-right: 24px;
+    padding-top: 56px;
+    padding-left: 32px;
+    padding-right: 72px;
     gap: 36px;
   }
 
@@ -490,23 +479,22 @@ ul {
 
 }
 
-/* ══════════════════════════════════════════════════════════
-   DESKTOP — 960px+
-══════════════════════════════════════════════════════════ */
+/* DESKTOP — 960px and above */
+
 @media (min-width: 960px) {
 
   .site-header {
-    padding: 0 48px;
+    padding: 0;
   }
 
   .step-bar {
-    width: 80px;
+    width: 64px;
   }
 
   .main-content {
-    padding-top: 160px;
-    padding-left: 32px;
-    padding-right: 32px;
+    padding-top: 72px;
+    padding-left: 48px;
+    padding-right: 80px;
   }
 
   .subjects-grid {
@@ -514,4 +502,65 @@ ul {
     gap: 20px;
   }
 
+}
+
+
+/* Very small screens: 320px and below */
+@media (max-width: 320px) {
+  .header-container {
+    height: 48px;
+    border-radius: 30px;
+    padding-left: 8px;
+    width: 95%;
+    min-width: 0;
+  }
+
+  .logo-link {
+    font-size: 14px;
+    gap: 4px;
+  }
+
+  .main-content {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    padding-left: 4px;
+    padding-right: 4px;
+    gap: 12px;
+  }
+  .page-title {
+    font-size: 1.1rem;
+  }
+  .page-subtitle {
+    font-size: 0.8rem;
+    max-width: 95vw;
+  }
+
+  .steps-container {
+    gap: 4px;
+  }
+
+  .steps-bars {
+    width: 60%;
+  }
+
+  .step-label {
+    font-size: 9px;
+  }
+
+  .subject-name {
+    font-size: 12px;
+  }
+  .btn-next {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+  .actions-wrapper {
+    gap: 8px;
+    padding-top: 4px;
+  }
+  .toast {
+    font-size: 11px;
+    padding: 8px 12px;
+    max-width: 98vw;
+  }
 }

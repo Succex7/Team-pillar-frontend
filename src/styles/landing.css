@@ -1,5 +1,3 @@
-/* Landing page styling */
-
 @import './tokens.css';
 
 /*Reset */
@@ -20,7 +18,7 @@ body {
   background: var(--pillar-white);
   color: var(--pillar-navy);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: hidden; 
 }
 
 img {
@@ -135,22 +133,25 @@ ul   { list-style: none; }
 /* NAVBAR */
 .navbar-wrapper {
   position: sticky;
-  top: 10px;
-  border-radius: 25px;
-  box-shadow: var(--pillar-shadow);
+  top: 15px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
   z-index: 1000;
-  background: var(--pillar-white);
-  border-bottom: 1px solid var(--pillar-border);
   transition: box-shadow var(--transition-fast);
 }
 
-.navbar-wrapper.scrolled {
+.navbar-wrapper.scrolled .navbar {
   box-shadow: 0 2px 16px rgba(26,46,90,0.10);
 }
 
 .navbar {
-  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
+  background: var(--pillar-white);
+  border-radius: 30px;
+  box-shadow: var(--pillar-shadow);
+  border-bottom: 1px solid var(--pillar-border);
   padding: 0 20px;
   height: 64px;
   display: flex;
@@ -492,10 +493,6 @@ ul   { list-style: none; }
   margin-bottom: 56px;
 }
 
-/* .problem-dark-card h2 {
-  align-self: center;
-} */
-
 .problem-badge {
   display: inline-flex;
   align-items: center;
@@ -606,7 +603,7 @@ ul   { list-style: none; }
   line-height: 1.6;
 }
 
-/* ── First item: glassmorphism card with yellow border ── */
+/* First item: glassmorphism card with yellow border */
 .problem-item--glass {
   background: rgba(255, 255, 255, 0.06);
   -webkit-backdrop-filter: blur(12px);
@@ -764,12 +761,13 @@ ul   { list-style: none; }
   max-width: 720px;
   margin: 0 auto;
   padding: 0 20px;
+  overflow: hidden;
 }
 
 /*Decorative concentric rings */
 .screens-rings {
   position: absolute;
-  inset: -10% -15%;
+  inset: -10% -5%;
   pointer-events: none;
   z-index: 0;
 }
@@ -852,49 +850,12 @@ ul   { list-style: none; }
   align-self: center;
 }
 
-
-
-/* Small cards in flex row: allow them to be large but not overlap, with gap */
+/* Small cards in flex row */
 .screens-row .screen-card--small {
   flex: 1 1 0;
   max-width: 48%;
   min-width: 0;
 }
-
-@media (min-width: 600px) {
-  /* On tablet screens and above, center small cards in columns 2 and 3 */
-  .screens-grid .screen-card--small:nth-child(1) {
-    grid-column: 2 / 3;
-    width: 150%;
-  }
-  .screens-grid .screen-card--small:nth-child(2) {
-    grid-column: 3 / 4;
-    width: 150%;
-  }
-  .screens-grid .screen-card--small:nth-child(4) {
-    grid-column: 2 / 3;
-    width: 150%;
-  }
-  .screens-grid .screen-card--small:nth-child(5) {
-    grid-column: 3 / 4;
-    width: 150%;
-  }
-}
-
-/* Responsive */
-@media (min-width: 600px) {
-  .screens-grid { gap: 16px; }
-}
-
-@media (min-width: 600px) {
-  .screens-row {
-    gap: 40px;
-  }
-  .screens-row .screen-card--small {
-    max-width: 44%;
-  }
-}
-
 
 .cta-card {
   background: var(--pillar-navy);
@@ -921,32 +882,6 @@ ul   { list-style: none; }
   width: 120px;
   max-width: 30vw;
   z-index: 0;
-}
-
-@media (min-width: 600px) {
-  .right-pattern {
-    bottom: -2rem;
-    width: 260px;
-    max-width: 30vw;
-  }
-  .left-pattern {
-    bottom: 20px;
-    width: 180px;
-    max-width: 20vw;
-  }
-}
-
-@media (min-width: 960px) {
-  .right-pattern {
-    bottom: -2rem;
-    width: 320px;
-    max-width: 22vw;
-  }
-  .left-pattern {
-    bottom: 20px;
-    width: 220px;
-    max-width: 16vw;
-  }
 }
 
 .cta-card::before {
@@ -1121,6 +1056,19 @@ ul   { list-style: none; }
 
   .navbar { padding: 0 32px; }
 
+  .navbar-wrapper { padding: 0 24px; }
+
+  .right-pattern {
+    bottom: -2rem;
+    width: 260px;
+    max-width: 30vw;
+  }
+  .left-pattern {
+    bottom: 20px;
+    width: 180px;
+    max-width: 20vw;
+  }
+
   .hero-actions {
     flex-direction: row;
     flex-wrap: wrap;
@@ -1142,6 +1090,13 @@ ul   { list-style: none; }
 
   .screens-grid { grid-template-columns: repeat(4, 1fr); }
 
+  .screens-row {
+    gap: 40px;
+  }
+  .screens-row .screen-card--small {
+    max-width: 44%;
+  }
+
   .cta-actions {
     flex-direction: row;
     justify-content: center;
@@ -1161,6 +1116,8 @@ ul   { list-style: none; }
   .container { padding: 0 40px; }
 
   .navbar { padding: 0 40px; }
+
+  .navbar-wrapper { padding: 0 32px; }
 
   /* Show desktop nav */
   .nav-links {
@@ -1222,6 +1179,17 @@ ul   { list-style: none; }
     align-items: flex-start;
   }
   .footer-brand { max-width: 220px; }
+
+  .right-pattern {
+    bottom: -2rem;
+    width: 320px;
+    max-width: 22vw;
+  }
+  .left-pattern {
+    bottom: 20px;
+    width: 220px;
+    max-width: 16vw;
+  }
 }
 
 /* LARGE — 1200px+*/
