@@ -761,6 +761,46 @@ ul   { list-style: none; }
   max-width: 720px;
   margin: 0 auto;
   padding: 0 20px;
+}
+
+/*Decorative concentric rings */
+.screens-rings {
+  position: absolute;
+  inset: -10% -10%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid var(--pillar-yellow);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ring-1 {
+  width: 75%;
+  padding-top: 150%;
+}
+
+.ring-2 {
+  width: 95%;
+  padding-top: 115%;
+}
+
+.ring-3 {
+  width: 105%;
+  padding-top: 95%;
+}
+
+@media (max-width: 600px) {
+  .screens-container {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 20px;
   overflow: hidden;
 }
 
@@ -787,13 +827,15 @@ ul   { list-style: none; }
 }
 
 .ring-2 {
-  width: 95%;
+  width: 85%;
   padding-top: 115%;
 }
 
 .ring-3 {
-  width: 115%;
+  width: 100%;
   padding-top: 95%;
+}
+
 }
 
 /* Grid layout */
@@ -1082,11 +1124,45 @@ ul   { list-style: none; }
 
   .features-grid  { grid-template-columns: 1fr 1fr; }
 
-  .pricing-grid {
-    flex-direction: row;
-    align-items: stretch;
-  }
-  .pricing-card { flex: 1; }
+  .screens-container {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 20px;
+  overflow: hidden;
+}
+
+/*Decorative concentric rings */
+.screens-rings {
+  position: absolute;
+  inset: -10% -5%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid var(--pillar-yellow);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ring-1 {
+  width: 75%;
+  padding-top: 150%;
+}
+
+.ring-2 {
+  width: 85%;
+  padding-top: 115%;
+}
+
+.ring-3 {
+  width: 100%;
+  padding-top: 95%;
+}
 
   .screens-grid { grid-template-columns: repeat(4, 1fr); }
 
@@ -1168,6 +1244,46 @@ ul   { list-style: none; }
   /* Solution three-col */
   .solution-grid { grid-template-columns: repeat(3, 1fr); }
   .solution-grid .solution-card:last-child { grid-column: auto; }
+
+  .screens-container {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 20px;
+  overflow: visible;
+}
+
+/*Decorative concentric rings */
+.screens-rings {
+  position: absolute;
+  inset: -10% -15%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid var(--pillar-yellow);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ring-1 {
+  width: 75%;
+  padding-top: 150%;
+}
+
+.ring-2 {
+  width: 95%;
+  padding-top: 115%;
+}
+
+.ring-3 {
+  width: 106%;
+  padding-top: 95%;
+}
 
   /* Features three-col */
   .features-grid { grid-template-columns: repeat(3, 1fr); }
