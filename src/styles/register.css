@@ -26,19 +26,25 @@ body {
 .navbar {
   background: var(--pillar-white);
   border-bottom: 1px solid var(--pillar-border);
-  padding: 0 24px;
-  height: 64px;
+  padding: 0 50px;
   width: 90%;
   margin: 0 auto;
   border-radius: 30px;
-  box-shadow: var(--pillar-shadow);
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: sticky;
   top: 15px;
   z-index: 100;
+  transition: box-shadow var(--transition-fast);
 }
+
+.navbar.scrolled {
+  box-shadow: 0 2px 12px rgba(26, 46, 90, 0.08);
+}
+
+
 
 .nav-logo {
   display: flex;
@@ -55,7 +61,7 @@ body {
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .nav-hint {
@@ -63,26 +69,18 @@ body {
   color: var(--pillar-muted);
 }
 
-.nav-hint:hover {
-  color: var(--pillar-navy);
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.nav-login-btn {
+.nav-cta-link {
   font-size: 14px;
-  font-weight: 600;
-  color: var(--pillar-navy);
+  font-weight: 700;
   text-decoration: none;
-  padding: 6px 14px;
-  border-radius: var(--pillar-radius-sm);
-  transition: background 0.15s;
+  color: var(--pillar-navy);
+  transition: color var(--transition-fast);
 }
 
-.nav-login-btn:hover {
-  background: var(--pillar-bg);
+.nav-cta-link:hover {
+  color: var(--pillar-blue);
+  text-decoration: underline;
 }
-
 /*MAIN LAYOUT*/
 .register-main {
   flex: 1;
@@ -488,7 +486,11 @@ select:focus {
   }
 
   .nav-hint {
-    display: inline-block;
+    display: block;
+  }
+
+  .navbar {
+    padding: 0 24px;
   }
 
   .register-footer {
@@ -497,8 +499,12 @@ select:focus {
   }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 375px) {
   .hero-heading {
     font-size: 20px;
   }
+
+  .nav-hint {
+    display: none; 
+}
 }
