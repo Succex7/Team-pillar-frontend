@@ -553,3 +553,11 @@ input.is-error {
   }
 
 }
+
+@media (max-width: 320px) {
+    
+    .nav-hint {
+        display: inline-block;
+        font-size: 11px;
+  }   
+}
