@@ -450,6 +450,59 @@ select:focus {
 .toast.error  { background: #991b1b; }
 .toast.success { background: #14532d; }
 
+/* DIVIDER */
+.divider {
+  margin : 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--pillar-border);
+}
+
+.divider-text {
+  font-size: 13px;
+  color: var(--pillar-muted);
+  white-space: nowrap;
+}
+
+/* GOOGLE BUTTON */
+.btn-google {
+  width: 100%;
+  padding: 16px 24px;
+  background: var(--pillar-white);
+  color: var(--pillar-navy);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  margin: 6px 0;
+  border: 1.5px solid var(--pillar-border);
+  border-radius: var(--pillar-radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.btn-google:hover {
+  background: var(--pillar-bg);
+  border-color: rgba(26, 46, 90, 0.2);
+  box-shadow: 0 2px 8px rgba(26, 46, 90, 0.06);
+}
+
+.btn-google:active {
+  transform: scale(0.99);
+}
+
 /* FOOTER  */
 .register-footer {
   background: transparent;
