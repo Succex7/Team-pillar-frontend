@@ -527,9 +527,7 @@
 }
 
 
-/*
-   NAVIGATION BUTTONS (Next + Go back to Step 1)
-   */
+/* NAVIGATION BUTTONS (Next + Go back to Step 1)*/
 .nav-buttons {
   display: flex;
   flex-direction: column;
@@ -543,7 +541,7 @@
 .btn-next {
   width: 100%;
   padding: 18px 24px;
-  background: var(--pillar-navy);
+  background: var(--pillar-blue-shade);
   color: var(--pillar-white);
   font-family: var(--font-display);
   font-size: 15px;
@@ -563,7 +561,7 @@
 }
 
 .btn-next:hover {
-  background: var(--pillar-navy-mid);
+  background: var(--pillar-blue-mid);
 }
 
 .btn-go-back {
@@ -577,7 +575,7 @@
 }
 
 .btn-go-back:hover {
-  color: var(--pillar-navy);
+  color: var(--pillar-blue-shade);
 }
 
 

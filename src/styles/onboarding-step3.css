@@ -211,7 +211,7 @@ ul {
 }
 
 .option-item:hover {
-  border-color: rgba(26, 46, 90, 0.3);
+  border-color: rgba(23, 97, 255, 0.25);
   background: var(--pillar-white);
   box-shadow: 0 2px 12px rgba(26, 46, 90, 0.07);
 }
@@ -221,23 +221,23 @@ ul {
 }
 
 .option-item:focus-visible {
-  border-color: var(--pillar-navy);
+  border-color: var(--pillar-blue-shade);
   box-shadow: 0 0 0 3px rgba(26, 46, 90, 0.12);
 }
 
 /* Selected state */
 .option-item.selected {
-  border-color: var(--pillar-navy);
+  border-color: var(--pillar-blue-shade);
   background: var(--pillar-white);
-  box-shadow: 0 0 0 1px var(--pillar-navy), 0 4px 16px rgba(26, 46, 90, 0.10);
+  box-shadow: 0 0 0 1px var(--pillar-blue-shade), 0 4px 16px rgba(26, 46, 90, 0.10);
 }
 
 .option-item.selected .option-title {
-  color: var(--pillar-navy);
+  color: var(--pillar-blue-shade);
 }
 
 .option-item.selected .option-desc {
-  color: var(--pillar-navy-mid);
+  color: var(--pillar-blue-mid);
 }
 
 /* Option icon */
@@ -257,8 +257,8 @@ ul {
 }
 
 .option-item.selected .option-icon {
-  background: var(--pillar-navy);
-  border-color: var(--pillar-navy);
+  background: var(--pillar-blue-shade);
+  border-color: var(--pillar-blue-shade);
 }
 
 .option-item.selected .option-icon svg path,
@@ -336,7 +336,7 @@ ul {
 .btn-finish {
   width: 100%;
   padding: 17px 24px;
-  background: var(--pillar-navy);
+  background: var(--pillar-blue-shade);
   color: var(--pillar-white);
   font-family: var(--font-display);
   font-size: 15px;
@@ -356,8 +356,8 @@ ul {
 }
 
 .btn-finish:hover:not(:disabled) {
-  background: var(--pillar-navy-mid);
-  box-shadow: 0 4px 16px rgba(26, 46, 90, 0.25);
+  background: var(--pillar-blue-mid);
+  box-shadow: 0 4px 16px rgba(23, 97, 255, 0.25);
 }
 
 .btn-finish:active:not(:disabled) {
@@ -398,7 +398,7 @@ ul {
 }
 
 .back-link:hover {
-  color: var(--pillar-navy);
+  color: var(--pillar-blue-shade);
 }
 
 /* TOAST*/
