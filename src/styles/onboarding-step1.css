@@ -357,7 +357,7 @@ ul {
 .btn-next {
   width: 100%;
   padding: 18px 24px;
-  background: var(--pillar-navy);
+  background: var(--pillar-blue-shade);
   color: var(--pillar-white);
   font-family: var(--font-display);
   font-size: 15px;
@@ -377,8 +377,8 @@ ul {
 }
 
 .btn-next:hover:not(:disabled) {
-  background: var(--pillar-navy-mid);
-  box-shadow: 0 4px 16px rgba(26, 46, 90, 0.25);
+  background: var(--pillar-blue-mid);
+  box-shadow: 0 4px 16px rgba(23, 97, 255, 0.25);
 }
 
 .btn-next:active:not(:disabled) {
@@ -417,7 +417,7 @@ ul {
 }
 
 .back-link:hover {
-  color: var(--pillar-navy);
+  color: var(--pillar-blue-shade);
 }
 
 /*TOAST */

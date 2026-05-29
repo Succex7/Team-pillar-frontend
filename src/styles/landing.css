@@ -69,14 +69,14 @@ ul   { list-style: none; }
 .btn:active { transform: scale(0.98); }
 
 .btn-primary {
-  background: var(--pillar-navy);
+  background: var(--pillar-blue-shade);
   color: var(--pillar-white);
-  border-color: var(--pillar-navy);
+  border-color: var(--pillar-blue-shade);
 }
 .btn-primary:hover {
-  background: var(--pillar-navy-mid);
-  border-color: var(--pillar-navy-mid);
-  box-shadow: 0 4px 16px rgba(26,46,90,0.25);
+  background: var(--pillar-blue-mid);
+  border-color: var(--pillar-blue-mid);
+  box-shadow: 0 4px 16px rgba(19, 94, 255, 0.25);
 }
 
 .btn-ghost {

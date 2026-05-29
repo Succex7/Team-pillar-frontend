@@ -77,12 +77,12 @@ ul {
 .nav-cta-link {
   font-size: 14px;
   font-weight: 700;
-  color: var(--pillar-navy);
+  color: var(--pillar-blue-shade);
   transition: color var(--transition-fast);
 }
 
 .nav-cta-link:hover {
-  color: var(--pillar-blue);
+  color: var(--pillar-blue-mid);
   text-decoration: underline;
 }
 
@@ -335,8 +335,8 @@ input.is-error {
 }
 
 .checkbox-input:checked + .checkbox-custom {
-  background: var(--pillar-navy);
-  border-color: var(--pillar-navy);
+  background: var(--pillar-blue-shade);
+  border-color: var(--pillar-blue-shade);
 }
 
 .checkbox-input:checked + .checkbox-custom::after {
@@ -357,12 +357,12 @@ input.is-error {
 .forgot-link {
   font-size: 13px;
   font-weight: 600;
-  color: var(--pillar-navy);
+  color: var(--pillar-blue-shade);
   transition: color var(--transition-fast);
 }
 
 .forgot-link:hover {
-  color: var(--pillar-blue);
+  color: var(--pillar-blue-mid);
   text-decoration: underline;
 }
 
@@ -370,7 +370,7 @@ input.is-error {
 .btn-signin {
   width: 100%;
   padding: 17px 24px;
-  background: var(--pillar-navy);
+  background: var(--pillar-blue-shade);
   color: var(--pillar-white);
   font-family: var(--font-display);
   font-size: 15px;
@@ -390,8 +390,8 @@ input.is-error {
 }
 
 .btn-signin:hover:not(:disabled) {
-  background: var(--pillar-navy-mid);
-  box-shadow: 0 4px 14px rgba(26, 46, 90, 0.25);
+  background: var(--pillar-blue-mid);
+  box-shadow: 0 4px 14px rgba(23, 97, 255, 0.25);
 }
 
 .btn-signin:active:not(:disabled) {
@@ -465,7 +465,7 @@ input.is-error {
 
 .btn-google:hover {
   background: var(--pillar-bg);
-  border-color: rgba(26, 46, 90, 0.2);
+  border-color: rgba(25, 90, 231, 0.2);
   box-shadow: 0 2px 8px rgba(26, 46, 90, 0.06);
 }
 

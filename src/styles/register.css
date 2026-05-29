@@ -73,12 +73,12 @@ body {
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
-  color: var(--pillar-navy);
+  color: var(--pillar-blue-shade);
   transition: color var(--transition-fast);
 }
 
 .nav-cta-link:hover {
-  color: var(--pillar-blue);
+  color: var(--pillar-blue-mid);
   text-decoration: underline;
 }
 /*MAIN LAYOUT*/
@@ -361,7 +361,7 @@ select:focus {
 .submit-btn {
   width: 100%;
   padding: 17px;
-  background: var(--pillar-navy);
+  background: var(--pillar-blue-shade);
   color: var(--pillar-white);
   font-size: 15px;
   font-weight: 600;
@@ -379,8 +379,8 @@ select:focus {
 }
 
 .submit-btn:hover:not(:disabled) {
-  background: var(--pillar-navy-mid);
-  box-shadow: 0 4px 14px rgba(26, 46, 90, 0.25);
+  background: var(--pillar-blue-mid);
+  box-shadow: 0 4px 14px rgba(23, 97, 255, 0.25);
 }
 
 .submit-btn:active:not(:disabled) {
@@ -479,7 +479,7 @@ select:focus {
   font-family: var(--font-body);
   font-size: 15px;
   font-weight: 500;
-  margin: 6px 0;
+  margin: 16px 0;
   border: 1.5px solid var(--pillar-border);
   border-radius: var(--pillar-radius-sm);
   cursor: pointer;
@@ -495,7 +495,7 @@ select:focus {
 
 .btn-google:hover {
   background: var(--pillar-bg);
-  border-color: rgba(26, 46, 90, 0.2);
+  border-color: rgba(25, 90, 231, 0.2);
   box-shadow: 0 2px 8px rgba(26, 46, 90, 0.06);
 }
 
