@@ -267,36 +267,28 @@ async function handleSubmit(e) {
     phone:      phoneInput.value.trim(),
     email:      emailInput.value.trim(),
     password:   passwordInput.value,
-    university: universitySelect.value || null,
-    course:     courseInput.value.trim() || null,
   };
 
   setLoading(true);
 
   try {
-    const data = await authService.register(payload);
+  const data = await authService.register(payload);
 
-    // Save auth data to store and localStorage
-    localStorage.setItem('access_token', data.token);
-    userStore.setState({
-      profile: data.user,
-      token:   data.user,
-      role:    data.user?.role || 'student',
-    });
+  // Save user id temporarily for the OTP verification screen
+  sessionStorage.setItem('pending_verify_email', payload.email);
 
-    showToast(strings.auth?.registerSuccess || 'Account created! Redirecting…', 'success');
+  showToast('Account created! Check your email for a verification code.', 'success');
 
-    // Small delay so toast is visible before redirect
-    setTimeout(() => {
-      // Redirect to onboarding/subjects screen (next step)
-      window.location.href = '/pages/onboarding.html';
-    }, 1200);
+  // Redirect to OTP verification page
+  setTimeout(() => {
+    window.location.href = '/pages/verify-otp.html';
+  }, 1200);
 
-  } catch (err) {
-    const message = getErrorMessage(err);
-    showToast(message, 'error');
-    setLoading(false);
-  }
+} catch (err) {
+  const message = getErrorMessage(err);
+  showToast(message, 'error');
+  setLoading(false);
+}
 }
 
 //HELPERS

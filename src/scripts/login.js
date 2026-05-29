@@ -146,37 +146,37 @@ async function handleLogin(e) {
   setLoading(true);
 
   try {
-    const data = await authService.login(payload.email, payload.password);
+  const response = await authService.login(payload.email, payload.password);
 
-    // Store token based on "keep me signed in" choice
-    const storage = keepSignedIn.checked ? localStorage : sessionStorage;
-    storage.setItem('access_token', data.token);
+  const { token, user, expiresAt } = response.data;
 
-    // Always keep in localStorage for app-wide access
-    localStorage.setItem('access_token', data.token);
+  // Store token in memory (sessionStorage) — NOT localStorage per API docs
+  // Only use localStorage if "keep me signed in" is checked
+  const storage = keepSignedIn.checked ? localStorage : sessionStorage;
+  storage.setItem('access_token', token);
+  storage.setItem('token_expires_at', expiresAt);
 
-    userStore.setState({
-      profile: data.user,
-      token:   data.token,
-      role:    data.user?.role || 'student',
-    });
+  userStore.setState({
+    profile: user,
+    token:   token,
+    role:    user.role,
+  });
 
-    showToast(strings?.auth?.loginSuccess || 'Welcome back!', 'success');
+  showToast('Welcome back!', 'success');
 
-    setTimeout(() => {
-      // Check if onboarding was completed
-      const onboardingDone = localStorage.getItem('onboarding_step3_done');
-      if (onboardingDone) {
-        window.location.href = '/pages/dashboard.html';
-      } else {
-        window.location.href = '/pages/onboarding-step1.html';
-      }
-    }, 1000);
+  setTimeout(() => {
+    const onboardingDone = user.onboarding && Object.keys(user.onboarding).length > 0;
+    if (onboardingDone) {
+      window.location.href = '/pages/dashboard.html';
+    } else {
+      window.location.href = '/pages/onboarding-step1.html';
+    }
+  }, 1000);
 
-  } catch (err) {
-    showToast(getErrorMessage(err), 'error');
-    setLoading(false);
-  }
+} catch (err) {
+  showToast(getErrorMessage(err), 'error');
+  setLoading(false);
+}
 }
 
 // GOOGLE LOGIN
