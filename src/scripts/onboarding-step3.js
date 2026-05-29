@@ -1,6 +1,8 @@
 // Onboarding Step 3 — Study Hours Selection
 // Connected to steps 1 & 2 via seamless page transitions
 
+import { api }       from '../services/api.js';
+import { ENDPOINTS } from '../services/endpoints.js';
 import { userStore } from '../store/userStore.js';
 import { strings }   from '../strings.js';
 
@@ -261,23 +263,28 @@ async function handleFinish() {
   setFinishLoading(true);
 
   try {
-    const onboardingData = buildOnboardingPayload();
-    localStorage.setItem('onboarding_data',      JSON.stringify(onboardingData));
-    localStorage.setItem('onboarding_step3_done', '1');
+    const onboardingPayload = buildOnboardingPayload();
 
-    const currentProfile = userStore.getState().profile;
+    // Send all onboarding data to the backend in one call
+    const response = await api.post(ENDPOINTS.STUDENT_ONBOARDING, onboardingPayload);
+
+    // Update userStore with returned user data
+    const updatedUser = response.data;
+    const currentState = userStore.getState();
+
     userStore.setState({
-      profile: {
-        ...currentProfile,
-        studyHoursPerDay:   selectedValue,
-        onboardingComplete: true,
-      },
+      profile: updatedUser,
+      token:   currentState.token,
+      role:    updatedUser.role,
     });
+
+    // Save completion flag
+    localStorage.setItem('onboarding_step3_done', '1');
 
     showToast('Great! Setting up your study plan...', 'success');
 
     setTimeout(() => {
-      navigateTo('/pages/dashboard.html');
+      window.location.href = '/pages/dashboard.html';
     }, 1200);
 
   } catch (err) {
@@ -286,17 +293,18 @@ async function handleFinish() {
   }
 }
 
-// BUILD PAYLOAD
+// buildOnboardingPayload:
 function buildOnboardingPayload() {
   const step1Data = JSON.parse(sessionStorage.getItem('onboarding_step1_data') || '{}');
   const step2Data = JSON.parse(sessionStorage.getItem('onboarding_step2_data') || '{}');
 
+  const subjectNames = (step1Data.subjects || []).map(s => s.name || s.id);
+
   return {
-    subjects:           step1Data.subjects    || [],
-    targetScore:        step2Data.targetScore || null,
-    studyHoursPerDay:   selectedValue,
-    onboardingComplete: true,
-    completedAt:        new Date().toISOString(),
+    subjects:    subjectNames,
+    targetScore: step2Data.targetScore || null,
+    studyPlan:   [],    // AI will generate
+    schedule:    [],    // AI will generate
   };
 }
 
