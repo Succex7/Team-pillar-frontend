@@ -339,7 +339,7 @@ function bindNavbar() {
 
 //Active nav link based on scroll position
 function highlightActiveNavLink() {
-  const sections = ['hero', 'features', 'pricing'];
+  const sections = ['hero', 'how-it-works', 'features', 'pricing'];
   const navLinks = document.querySelectorAll('.nav-link');
 
   let currentSection = '';
