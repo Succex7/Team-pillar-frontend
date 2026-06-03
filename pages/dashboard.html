@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Overview — Pillar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/shell.css" />
+    <link rel="stylesheet" href="../src/styles/dashboard.css" />
+  </head>
+  <body>
+
+    <div class="app-layout">
+
+      <!-- Shell: sidebar + topbar injected here -->
+      <div id="shellRoot"></div>
+
+      <!-- Main content -->
+      <div class="main-content">
+
+        <div id="topbarRoot"></div>
+
+        <main class="page-content" id="pageContent">
+
+          <!-- Welcome + stats row -->
+          <div class="dashboard-welcome" id="dashboardWelcome">
+            <div class="welcome-text">
+              <h2 class="welcome-heading skeleton skeleton-text skeleton-text--mid" id="welcomeHeading"></h2>
+              <p class="welcome-sub skeleton skeleton-text skeleton-text--short" id="welcomeSub"></p>
+            </div>
+          </div>
+
+          <!-- Top 3 stat cards -->
+          <div class="stat-cards-row" id="statCardsRow">
+            <div class="stat-card skeleton-card" id="statCardScore">
+              <div class="skeleton skeleton-text skeleton-text--short" style="width:120px;height:12px;margin-bottom:8px;"></div>
+              <div class="skeleton skeleton-text skeleton-text--xl" style="width:80px;"></div>
+            </div>
+            <div class="stat-card skeleton-card" id="statCardConsistency">
+              <div class="skeleton skeleton-text skeleton-text--short" style="width:120px;height:12px;margin-bottom:8px;"></div>
+              <div class="skeleton skeleton-text skeleton-text--xl" style="width:60px;"></div>
+            </div>
+            <div class="stat-card skeleton-card" id="statCardSessions">
+              <div class="skeleton skeleton-text skeleton-text--short" style="width:100px;height:12px;margin-bottom:8px;"></div>
+              <div class="skeleton skeleton-text skeleton-text--xl" style="width:40px;"></div>
+            </div>
+          </div>
+
+          <!-- CTA cards row -->
+          <div class="cta-cards-row">
+            <a href="/pages/study-session.html" class="cta-card cta-card--blue" id="ctaStudy">
+              <div class="cta-card-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+              </div>
+              <div class="cta-card-text">
+                <p class="cta-card-title">Start Study Session</p>
+                <p class="cta-card-desc">Practice questions by topic with instant feedback</p>
+              </div>
+              <svg class="cta-card-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+
+            <a href="/pages/mock-tests.html" class="cta-card cta-card--dark" id="ctaMock">
+              <div class="cta-card-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+              </div>
+              <div class="cta-card-text">
+                <p class="cta-card-title">Start Mock Test</p>
+                <p class="cta-card-desc">Full UTME simulation with exam conditions</p>
+              </div>
+              <svg class="cta-card-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+          </div>
+
+          <!-- Subject performance -->
+          <div class="section-card" id="subjectPerformanceCard">
+            <div class="section-card-header">
+              <h3 class="section-card-title">Subject Performance</h3>
+              <a href="/pages/performance.html" class="section-card-link">View Details →</a>
+            </div>
+            <div class="subject-performance-list" id="subjectPerformanceList">
+              <!-- skeleton rows -->
+              <div class="subject-row-skeleton">
+                <div class="skeleton skeleton-text" style="width:120px;height:13px;"></div>
+                <div class="skeleton skeleton-text" style="width:100%;height:8px;border-radius:9999px;margin-top:6px;"></div>
+              </div>
+              <div class="subject-row-skeleton">
+                <div class="skeleton skeleton-text" style="width:100px;height:13px;"></div>
+                <div class="skeleton skeleton-text" style="width:100%;height:8px;border-radius:9999px;margin-top:6px;"></div>
+              </div>
+              <div class="subject-row-skeleton">
+                <div class="skeleton skeleton-text" style="width:80px;height:13px;"></div>
+                <div class="skeleton skeleton-text" style="width:100%;height:8px;border-radius:9999px;margin-top:6px;"></div>
+              </div>
+              <div class="subject-row-skeleton">
+                <div class="skeleton skeleton-text" style="width:90px;height:13px;"></div>
+                <div class="skeleton skeleton-text" style="width:100%;height:8px;border-radius:9999px;margin-top:6px;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom stats row -->
+          <div class="bottom-stats-row" id="bottomStatsRow">
+            <div class="bottom-stat-card skeleton-card">
+              <div class="skeleton skeleton-text" style="width:90px;height:11px;margin-bottom:8px;"></div>
+              <div class="skeleton skeleton-text skeleton-text--xl" style="width:70px;"></div>
+              <div class="skeleton skeleton-text skeleton-text--sm" style="width:100px;margin-top:4px;"></div>
+            </div>
+            <div class="bottom-stat-card skeleton-card">
+              <div class="skeleton skeleton-text" style="width:110px;height:11px;margin-bottom:8px;"></div>
+              <div class="skeleton skeleton-text skeleton-text--xl" style="width:80px;"></div>
+              <div class="skeleton skeleton-text skeleton-text--sm" style="width:80px;margin-top:4px;"></div>
+            </div>
+            <div class="bottom-stat-card skeleton-card">
+              <div class="skeleton skeleton-text" style="width:100px;height:11px;margin-bottom:8px;"></div>
+              <div class="skeleton skeleton-text skeleton-text--xl" style="width:50px;"></div>
+              <div class="skeleton skeleton-text skeleton-text--sm" style="width:110px;margin-top:4px;"></div>
+            </div>
+          </div>
+
+          <!-- AI Tutor Insights -->
+          <div class="ai-tutor-card" id="aiTutorCard">
+            <div class="ai-tutor-header">
+              <div class="ai-tutor-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 8v4l3 3"/>
+                </svg>
+              </div>
+              <div>
+                <p class="ai-tutor-title">AI Tutor Insights</p>
+                <p class="ai-tutor-desc">Personalized recommendations powered by AI</p>
+              </div>
+              <span class="pro-only-badge">⚡ PRO ONLY</span>
+            </div>
+            <div class="ai-tutor-body" id="aiTutorBody">
+              <!-- Populated by JS based on plan -->
+            </div>
+          </div>
+
+          <!-- Topics needing attention -->
+          <div class="section-card" id="weakTopicsCard">
+            <div class="section-card-header">
+              <h3 class="section-card-title">Topics Needing Attention</h3>
+            </div>
+            <div class="weak-topics-grid" id="weakTopicsGrid">
+              <!-- Skeleton -->
+              <div class="weak-topic-skeleton skeleton-card"></div>
+              <div class="weak-topic-skeleton skeleton-card"></div>
+              <div class="weak-topic-skeleton skeleton-card"></div>
+              <div class="weak-topic-skeleton skeleton-card"></div>
+            </div>
+          </div>
+
+        </main>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script type="module" src="../src/scripts/dashboard.js"></script>
+  </body>
+</html>
