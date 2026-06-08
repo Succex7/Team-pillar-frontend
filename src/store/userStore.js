@@ -7,6 +7,3 @@ export const userStore = createStore({
   streaks: 0,
   lastSession: null,
 });
-
-
-
