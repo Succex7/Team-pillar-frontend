@@ -106,13 +106,7 @@ function buildSidebarHTML(activeKey, user) {
     <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
       <div class="sidebar-logo">
         <a href="/pages/dashboard.html" class="sidebar-logo-link" aria-label="Pillar home">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 2L22 8H2L12 2Z" fill="#1a2e5a"/>
-            <rect x="4"    y="9"  width="3"  height="10" rx="1" fill="#1a2e5a"/>
-            <rect x="10.5" y="9"  width="3"  height="10" rx="1" fill="#1a2e5a"/>
-            <rect x="17"   y="9"  width="3"  height="10" rx="1" fill="#1a2e5a"/>
-            <rect x="2"    y="19" width="20" height="2"  rx="0.5" fill="#1a2e5a"/>
-          </svg>
+          <img src="/icon/logo.png" width="22" height="22">
           <span>Pillar</span>
         </a>
         <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close navigation">
@@ -141,7 +135,7 @@ function buildSidebarHTML(activeKey, user) {
         </a>
 
         <div class="sidebar-upgrade-card">
-          <div class="upgrade-card-icon" aria-hidden="true">⚡</div>
+          <div class="upgrade-card-icon" aria-hidden="true"><img src="/icon/energy-icon.png"></div>
           <p class="upgrade-card-title">Upgrade to Pro</p>
           <p class="upgrade-card-desc">Unlock AI Tutor, unlimited sessions, and more</p>
           <button type="button" class="upgrade-card-btn" id="sidebarUpgradeBtn">

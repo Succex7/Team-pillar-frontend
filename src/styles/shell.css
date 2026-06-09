@@ -184,7 +184,7 @@ img.lazy.loaded { opacity: 1; }
 }
 
 .nav-badge--start { background: #22c55e; color: white; }
-.nav-badge--pro   { background: var(--pillar-amber); color: white; }
+.nav-badge--pro   { background: var(--pillar-yellow); color: white; }
 
 /* SIDEBAR BOTTOM */
 .sidebar-bottom {
@@ -197,7 +197,7 @@ img.lazy.loaded { opacity: 1; }
 }
 
 .sidebar-upgrade-card {
-  background: var(--pillar-navy);
+  background: var(--pillar-blue-shade);
   border-radius: var(--pillar-radius-sm);
   padding: 14px 12px;
   display: flex;
@@ -224,7 +224,7 @@ img.lazy.loaded { opacity: 1; }
 .upgrade-card-btn {
   width: 100%;
   padding: 8px;
-  background: var(--pillar-amber);
+  background: var(--pillar-yellow);
   color: white;
   border: none;
   border-radius: var(--pillar-radius-xs);
@@ -234,7 +234,7 @@ img.lazy.loaded { opacity: 1; }
   transition: background var(--transition-fast);
 }
 
-.upgrade-card-btn:hover { background: #b45309; }
+.upgrade-card-btn:hover { background: rgb(255, 175, 37); }
 
 /* MAIN CONTENT COLUMN — takes full width on mobile */
 .main-content {
@@ -350,7 +350,7 @@ img.lazy.loaded { opacity: 1; }
 
 .plan-upgrade-btn {
   padding: 6px 12px;
-  background: var(--pillar-amber);
+  background: var(--pillar-yellow);
   color: white;
   border: none;
   border-radius: var(--pillar-radius-xs);
@@ -360,7 +360,7 @@ img.lazy.loaded { opacity: 1; }
   transition: background var(--transition-fast);
 }
 
-.plan-upgrade-btn:hover { background: #b45309; }
+.plan-upgrade-btn:hover { background: rgb(255, 175, 37)}
 
 .topbar-user {
   display: flex;
