@@ -6,6 +6,8 @@
 import { authService } from '../services/auth.service.js';
 import { userStore }   from '../store/userStore.js';
 import { strings }     from '../strings.js';
+import { api }       from '../services/api.js';
+import { ENDPOINTS } from '../services/endpoints.js';
 
 // DOM REFERENCES
 const loginForm       = document.getElementById('loginForm');
@@ -180,10 +182,9 @@ async function handleLogin(e) {
 }
 
 // GOOGLE LOGIN
-function bindGoogleLogin() {
-  if (!googleBtn) return;
-
-  googleBtn.addEventListener('click', handleGoogleLogin);
+function handleGoogleLogin() {
+  const apiBase = import.meta.env.VITE_API_BASE_URL.replace('/api/v1', '');
+  window.location.href = `${apiBase}/auth/google`;
 }
 
 async function handleGoogleLogin() {
