@@ -251,6 +251,10 @@ function validateAll() {
 
 // FORM SUBMISSION
 
+function bindFormSubmit() {
+  form.addEventListener('submit', handleSubmit);
+}
+
 async function handleSubmit(e) {
   e.preventDefault();
 
