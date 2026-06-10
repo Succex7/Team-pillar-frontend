@@ -43,6 +43,11 @@ function redirectIfLoggedIn() {
   }
 }
 
+function bindGoogleLogin() {
+  if (!googleBtn) return;
+  googleBtn.addEventListener('click', handleGoogleLogin);
+}
+
 // PASSWORD TOGGLE
 function bindPasswordToggle() {
   if (!togglePasswordBtn) return;
