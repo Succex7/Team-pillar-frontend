@@ -2,6 +2,8 @@
 import { authService }  from '../services/auth.service.js';
 import { userStore }    from '../store/userStore.js';
 import { strings }      from '../strings.js';
+import { api }       from '../services/api.js';
+import { ENDPOINTS } from '../services/endpoints.js';
 
 // DATA
 const UNIVERSITIES = [
@@ -87,10 +89,9 @@ function bindPasswordToggle() {
 }
 
 // GOOGLE LOGIN
-function bindGoogleLogin() {
-  if (!googleBtn) return;
-
-  googleBtn.addEventListener('click', handleGoogleLogin);
+function handleGoogleSignup() {
+  const apiBase = import.meta.env.VITE_API_BASE_URL.replace('/api/v1', '');
+  window.location.href = `${apiBase}/auth/google`;
 }
 
 async function handleGoogleLogin() {
@@ -248,7 +249,7 @@ function validateAll() {
   return results.every(Boolean);
 }
 
-// FORM SUBMISSIO
+// FORM SUBMISSION
 
 function bindFormSubmit() {
   form.addEventListener('submit', handleSubmit);
@@ -257,38 +258,50 @@ function bindFormSubmit() {
 async function handleSubmit(e) {
   e.preventDefault();
 
-  // Run all validations first
   const isValid = validateAll();
   if (!isValid) return;
-
-  // Collect form data dynamically
-  const payload = {
-    fullName:   fullNameInput.value.trim(),
-    phone:      phoneInput.value.trim(),
-    email:      emailInput.value.trim(),
-    password:   passwordInput.value,
-  };
 
   setLoading(true);
 
   try {
-  const data = await authService.register(payload);
+    // Step 1 — Register (API only takes name, email, password)
+    const registerPayload = {
+      name:     fullNameInput.value.trim(),
+      email:    emailInput.value.trim(),
+      password: passwordInput.value,
+    };
 
-  // Save user id temporarily for the OTP verification screen
-  sessionStorage.setItem('pending_verify_email', payload.email);
+    const registerResponse = await authService.register(registerPayload);
+    const { token, user }  = registerResponse.data;
 
-  showToast('Account created! Check your email for a verification code.', 'success');
+    // Store token immediately so next call is authenticated
+    localStorage.setItem('access_token', token);
 
-  // Redirect to OTP verification page
-  setTimeout(() => {
-    window.location.href = '/pages/verify-otp.html';
-  }, 1200);
+    // Step 2 — Save phone number via profile update (non-blocking)
+    const phone = phoneInput.value.trim();
+    if (phone) {
+      try {
+        await api.patch(ENDPOINTS.UPDATE_PROFILE, { phone });
+      } catch {
+        console.warn('Phone number could not be saved.');
+      }
+    }
 
-} catch (err) {
-  const message = getErrorMessage(err);
-  showToast(message, 'error');
-  setLoading(false);
-}
+    // Step 3 — Save email for OTP screen
+    sessionStorage.setItem('pending_verify_email', registerPayload.email);
+
+    userStore.setState({ profile: user, token, role: user.role });
+
+    showToast('Account created! Check your email for a verification code.', 'success');
+
+    setTimeout(() => {
+      window.location.href = '/pages/verify-otp.html';
+    }, 1200);
+
+  } catch (err) {
+    showToast(getErrorMessage(err), 'error');
+    setLoading(false);
+  }
 }
 
 //HELPERS
