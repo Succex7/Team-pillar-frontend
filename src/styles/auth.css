@@ -1,7 +1,5 @@
 /* src/styles/auth.css
-   Shared styles for all auth pages:
-   login, register, forgot-password, reset-password
-   Mobile-first. Uses tokens.css variables. */
+   Shared styles for forgot-password and reset-password */
 
 @import './tokens.css';
 
