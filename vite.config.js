@@ -6,6 +6,7 @@ export default defineConfig({
       input: {
         main:      'index.html',
         register:  'pages/register.html',
+        forgotpassword:  'pages/forgot-password.html',
         login:     'pages/login.html',
         dashboard: 'pages/dashboard.html',
         onboarding1: 'pages/onboarding-step1.html',
