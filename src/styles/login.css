@@ -72,6 +72,7 @@ ul {
 .nav-hint {
   font-size: 14px;
   color: var(--pillar-muted);
+  display: none;
 }
 
 .nav-cta-link {
@@ -552,12 +553,4 @@ input.is-error {
     padding: 64px 48px 80px;
   }
 
-}
-
-@media (max-width: 320px) {
-    
-    .nav-hint {
-        display: inline-block;
-        font-size: 11px;
-  }   
 }
