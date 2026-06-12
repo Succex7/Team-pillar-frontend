@@ -119,6 +119,7 @@ button { cursor: pointer; font-family: var(--font-body); }
 .nav-link:hover {
   background: var(--pillar-bg);
   color: var(--pillar-navy);
+  border-radius: var(--pillar-radius-xs); 
 }
 
 .nav-link--active {
@@ -133,32 +134,60 @@ button { cursor: pointer; font-family: var(--font-body); }
   gap: 8px;
 }
 
-.nav-login-btn {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--pillar-navy);
-  padding: 8px 16px;
-  border-radius: var(--pillar-radius-xs);
-  transition: background var(--transition-fast);
-}
-
-.nav-login-btn:hover {
-  background: var(--pillar-bg);
-}
-
-.nav-get-started-btn {
-  font-size: 14px;
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--font-display);
   font-weight: 600;
-  color: white;
-  background: var(--pillar-navy);
-  padding: 8px 20px;
   border-radius: var(--pillar-radius-sm);
-  transition: background var(--transition-fast);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast),
+    transform 0.1s ease;
+  border: 2px solid transparent;
+  white-space: nowrap;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 10px 20px;
+  line-height: 1;
 }
 
-.nav-get-started-btn:hover {
-  background: var(--pillar-navy-mid);
+.btn:active { transform: scale(0.98); }
+
+.btn-primary {
+  background: var(--pillar-blue-shade);
+  color: var(--pillar-white);
+  border-color: var(--pillar-blue-shade);
 }
+.btn-primary:hover {
+  background: var(--pillar-blue-mid);
+  border-color: var(--pillar-blue-mid);
+  box-shadow: 0 4px 16px rgba(19, 94, 255, 0.25);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--pillar-navy);
+  border-color: transparent;
+}
+.btn-ghost:hover { background: var(--pillar-bg); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--pillar-navy);
+  border-color: var(--pillar-border);
+}
+.btn-outline:hover {
+  background: var(--pillar-bg);
+  border-color: var(--pillar-blue-shade);
+}
+
+.btn-sm  { font-size: 13px; padding: 8px 16px; }
 
 /* HAMBURGER */
 .hamburger {
@@ -253,6 +282,7 @@ button { cursor: pointer; font-family: var(--font-body); }
 
 .mobile-login-btn:hover {
   background: var(--pillar-bg);
+  border-color: var(--pillar-blue-shade);
 }
 
 .mobile-start-btn {
@@ -262,7 +292,7 @@ button { cursor: pointer; font-family: var(--font-body); }
   font-size: 14px;
   font-weight: 600;
   color: white;
-  background: var(--pillar-navy);
+  background: var(--pillar-blue-shade);
   border-radius: var(--pillar-radius-sm);
   transition: background var(--transition-fast);
 }
@@ -772,7 +802,7 @@ button { cursor: pointer; font-family: var(--font-body); }
 
 .school-cta-btn {
   padding: 13px 24px;
-  background: var(--pillar-amber);
+  background: var(--pillar-yellow);
   color: white;
   border-radius: var(--pillar-radius-sm);
   font-size: 14px;
@@ -783,8 +813,8 @@ button { cursor: pointer; font-family: var(--font-body); }
 }
 
 .school-cta-btn:hover {
-  background: #b45309;
-  box-shadow: 0 4px 16px rgba(180, 83, 9, 0.3);
+  background: rgb(253, 168, 20);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
 /* FOOTER */
@@ -919,7 +949,7 @@ button { cursor: pointer; font-family: var(--font-body); }
 /* DESKTOP — 960px+ */
 @media (min-width: 960px) {
   .nav-inner    { padding: 0 40px; }
-  .nav-links    { display: flex; }
+  .nav-links    { display: flex;}
   .nav-cta      { display: flex; }
   .hamburger    { display: none; }
   .mobile-menu  { display: none; }
