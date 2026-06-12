@@ -3,15 +3,12 @@
 import { authService } from '../services/auth.service.js';
 import { userStore }   from '../store/userStore.js';
 import { strings }     from '../strings.js';
-import { api }         from '../services/api.js';
-import { ENDPOINTS }   from '../services/endpoints.js';
 
 // DOM REFERENCES
-const form           = document.getElementById('registerForm');
-const fullNameInput  = document.getElementById('fullName');
-const phoneInput     = document.getElementById('phone');
-const emailInput     = document.getElementById('email');
-const passwordInput  = document.getElementById('password');
+const form          = document.getElementById('registerForm');
+const fullNameInput = document.getElementById('fullName');
+const emailInput    = document.getElementById('email');
+const passwordInput = document.getElementById('password');
 
 const togglePasswordBtn = document.getElementById('togglePassword');
 const eyeOpen           = document.getElementById('eyeOpen');
@@ -39,7 +36,10 @@ function init() {
 
 // REDIRECT IF ALREADY LOGGED IN
 function redirectIfLoggedIn() {
-  const token = localStorage.getItem('access_token');
+  const token =
+    localStorage.getItem('access_token') ||
+    sessionStorage.getItem('access_token');
+
   if (token) {
     window.location.href = '/pages/dashboard.html';
   }
@@ -83,26 +83,27 @@ function bindNavbarScroll() {
   if (!navbar) return;
 
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 10) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
+    navbar.classList.toggle('scrolled', window.scrollY > 10);
   }, { passive: true });
 }
 
 
-// REAL-TIME FIELD VALIDATION
+// FORM VALIDATION
 function bindFormValidation() {
   fullNameInput.addEventListener('blur',  () => validateFullName());
-  phoneInput.addEventListener('blur',     () => validatePhone());
   emailInput.addEventListener('blur',     () => validateEmail());
   passwordInput.addEventListener('blur',  () => validatePassword());
 
+  fullNameInput.addEventListener('input', () => {
+    if (fullNameInput.classList.contains('is-error')) validateFullName();
+  });
+
+  emailInput.addEventListener('input', () => {
+    if (emailInput.classList.contains('is-error')) validateEmail();
+  });
+
   passwordInput.addEventListener('input', () => {
-    if (passwordInput.classList.contains('is-error')) {
-      validatePassword();
-    }
+    if (passwordInput.classList.contains('is-error')) validatePassword();
   });
 }
 
@@ -120,19 +121,6 @@ function validateFullName() {
     return setFieldError(fullNameInput, errorEl, 'Name can only contain letters, spaces, hyphens, and apostrophes');
   }
   return setFieldValid(fullNameInput, errorEl);
-}
-
-function validatePhone() {
-  const value   = phoneInput.value.trim();
-  const errorEl = document.getElementById('phoneError');
-
-  if (!value) {
-    return setFieldError(phoneInput, errorEl, 'Phone number is required');
-  }
-  if (!/^0[789][01]\d{8}$/.test(value)) {
-    return setFieldError(phoneInput, errorEl, 'Enter a valid Nigerian phone number (e.g. 08012345678)');
-  }
-  return setFieldValid(phoneInput, errorEl);
 }
 
 function validateEmail() {
@@ -155,14 +143,20 @@ function validatePassword() {
   if (!value) {
     return setFieldError(passwordInput, errorEl, 'Password is required');
   }
-  if (value.length < 8) {
-    return setFieldError(passwordInput, errorEl, 'Password must be at least 8 characters');
+  if (value.length < 6) {
+    return setFieldError(passwordInput, errorEl, 'Password must be at least 6 characters');
   }
   if (!/[A-Z]/.test(value)) {
-    return setFieldError(passwordInput, errorEl, 'Password must include at least one uppercase letter');
+    return setFieldError(passwordInput, errorEl, 'Must include at least one uppercase letter');
+  }
+  if (!/[a-z]/.test(value)) {
+    return setFieldError(passwordInput, errorEl, 'Must include at least one lowercase letter');
   }
   if (!/[0-9]/.test(value)) {
-    return setFieldError(passwordInput, errorEl, 'Password must include at least one number');
+    return setFieldError(passwordInput, errorEl, 'Must include at least one number');
+  }
+  if (!/[@$!%*?&]/.test(value)) {
+    return setFieldError(passwordInput, errorEl, 'Must include at least one special character (@$!%*?&)');
   }
   return setFieldValid(passwordInput, errorEl);
 }
@@ -184,7 +178,6 @@ function setFieldValid(input, errorEl) {
 function validateAll() {
   const results = [
     validateFullName(),
-    validatePhone(),
     validateEmail(),
     validatePassword(),
   ];
@@ -207,34 +200,28 @@ async function handleSubmit(e) {
   setLoading(true);
 
   try {
-    // Step 1 — Register (API only accepts name, email, password)
-    const registerPayload = {
+    // API accepts: name, email, password ONLY
+    const payload = {
       name:     fullNameInput.value.trim(),
       email:    emailInput.value.trim(),
       password: passwordInput.value,
     };
 
-    const registerResponse = await authService.register(registerPayload);
-    const { token, user }  = registerResponse.data;
+    const response = await authService.register(payload);
 
-    // Store token so the next PATCH call is authenticated
-    localStorage.setItem('access_token', token);
+    // Register returns user data but NO token
+    // Token only comes after OTP email verification + login
+    // response.data shape: { id, name, email, role, emailVerified, isPro, onboarding, createdAt }
+    const user = response.data;
 
-    // Step 2 — Save phone number via profile update (non-blocking)
-    const phone = phoneInput.value.trim();
-    if (phone) {
-      try {
-        await api.patch(ENDPOINTS.UPDATE_PROFILE, { phone });
-      } catch {
-        // Non-critical — don't block registration if this fails
-        console.warn('Phone number could not be saved.');
-      }
-    }
+    // Save email so OTP verification screen knows who to verify
+    sessionStorage.setItem('pending_verify_email', payload.email);
 
-    // Step 3 — Persist email for OTP verification screen
-    sessionStorage.setItem('pending_verify_email', registerPayload.email);
-
-    userStore.setState({ profile: user, token, role: user.role });
+    userStore.setState({
+      profile: user,
+      token:   null,
+      role:    user.role,
+    });
 
     showToast('Account created! Check your email for a verification code.', 'success');
 
@@ -280,7 +267,6 @@ function getErrorMessage(err) {
     || strings?.errors?.generic
     || 'Something went wrong. Please try again.';
 }
-
 
 // BOOT
 init();
