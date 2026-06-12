@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>
+  eruda.init();
+</script> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Mock Tests - Pillar</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/shell.css" />
+    <link rel="stylesheet" href="../src/styles/study-sessions.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
+   
+</head>
+<body>
+    <main class="main-container">
+        <!-- section 1, study sessions header-->
+        <section class="study-sessions-heading">
+            <div class="study-sessions">
+                <h2>Study Sessions</h2>
+                <p>Practice questions by topic with instant feedback</p>
+            </div>
+            <div class="sessions-remaining-box">
+                <i class="ph-bold ph-warning-circle"></i>
+                <p class="sessions-left"><span class="sessions-count">3</span> of 3 sessions remaining today</p>
+            </div>
+        </section>
+        
+        <!-- start session now-->
+        <section class="start-session-section">
+            <h3>Start Session Now</h3>
+            <div class="info-image-text-box">
+                <div class="choose-subject-topic">
+                    <div class="choose-subject">
+                        <label for="subjects">select subject</label>
+                        <input list="subjects-list" name="subjects" id="subjects">
+                        <datalist id="subjects-list">
+                          <option value="Maths">
+                          <option value="English">
+                         <option value="Chemistry">
+                        </datalist>
+                    </div>
+                    <div class="choose-topic">
+                        <div class="choose-topics">
+                        <label for="topics">select subject</label>
+                        <input list="topics-list" name="topics" id="topics">
+                        <datalist id="topics-list">
+                            
+                        </datalist>
+                    </div>
+                    </div>
+                </div>
+               
+            </div>
+            <button class="start-session-btn">
+                <img src="../public/icon/play.svg" alt="">Start Session Now</button>
+            <!-- end of mock test about box-->
+        </section>
+        
+        <!-- section 2, past mock tests section -->
+        <section class="past-mock-tests-section">
+            <h3>Past Mock Tests</h3>
+            <article class="past-mock-tests-box">
+                <div class="mock-tests-listing">
+              <!-- take this out after testing-->
+                    <div class="icon-subj-stat">
+                      <i class="ph-bold ph-book-open book"></i>
+                      <div class="all-subj">
+                          <h4>All 4 Subjects</h4>
+                          <div class="all-subj-stats">
+                              <p>Score:60% </p>
+                              <p>Accuracy:24%</p>
+                             <div class="all-subj-stats-time">
+                               <i class="ph ph-clock clock"></i>
+                              <p>yesterday,9:00am</p>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <button class="rvw-btn">
+                      Review
+                      <i class="ph-bold ph-arrow-right"></i>
+                  </button>     
+                  </div>             
+           <!-- where the mock tests listings go-->
+            </article>
+        </section>
+        
+        <!-- section 3, mock stats section-->
+       <article class="mock-stats-section">
+         <div class="mock-stats-header">
+              <img src="../public/icon/stats.svg" alt="">
+              <h3>Your Mock Stats</h3>
+         </div>
+          <section class="stats">
+              <!-- average mock stats-->
+              <div class="avg-mock mock-stats">
+                  <p>Average Mock Score</p>
+                  <p><span class="average-score scores"></span> /400</p>
+              </div>
+              <!-- highest mock stats-->
+              <div class="hgst-mock mock-stats">
+                  <p>Highest Mock Score</p>
+                  <p><span class="highest-score scores"></span> /400</p>
+              </div>
+              <!-- total mock count stats -->
+              <div class="total-mock mock-stats">
+                 <p>Total Mocks Taken</p>
+                 <p class="mocks-count scores">0</p>
+              </div>
+       </article>
+        
+        <!-- section 4, streak section -->
+        <article class="streak-section">
+            <div class="streak-box-main-content">
+                <div class="this-week-box">
+                    <img src="../public/icon/fire.svg" alt="">
+                    <h3>This Week</h3>
+                </div>
+                <p class="mocks-complt">Mocks Completed</p>
+                <h2 class="mocks-complt-count scores-two">0</h2>
+                <div class="avg-best-box">
+                    <div class="avg-score-box">
+                        <p>Average Score</p>
+                        <p><span class="avg-score scores-two"></span> /400</p>
+                    </div>
+                    <div class="best-score-box">
+                         <p>Best Score</p>
+                         <p><span class="best-score scores-two"></span> /400</p>
+                    </div>
+                </div>
+            </div>
+            <!-- keep it up-->
+            <div class="keep-it-up-section">
+                <i class="ph-bold ph-check-circle check"></i>
+                <div>
+                    <class="motivation">Keep it Up! You’re improving.</h4>
+                    <h4 class="streak-count">4 week streak active!</h4>
+                </div>
+            </div>
+        </article>
+    </section>
+    </main>
+    <!-- the side bars -->
+   <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script type="module" src="../src/scripts/mock-tests.js"></script>
+</body>
+</html>
