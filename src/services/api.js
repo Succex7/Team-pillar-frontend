@@ -1,6 +1,4 @@
-// src/services/api.js
 // Central HTTP client for all API calls
-// Uses full URLs from endpoints.js — does NOT prepend BASE_URL again
 
 async function request(url, options = {}) {
   // Check both localStorage (keep signed in) and sessionStorage (session only)
