@@ -93,7 +93,7 @@ ul   { list-style: none; }
 }
 .btn-outline:hover {
   background: var(--pillar-bg);
-  border-color: var(--pillar-navy);
+  border-color: var(--pillar-blue-shade);
 }
 
 .btn-outline-white {

@@ -1,7 +1,10 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// Central HTTP client for all API calls
 
-async function request(endpoint, options = {}) {
-  const token = localStorage.getItem('access_token');
+async function request(url, options = {}) {
+  // Check both localStorage (keep signed in) and sessionStorage (session only)
+  const token =
+    localStorage.getItem('access_token') ||
+    sessionStorage.getItem('access_token');
 
   const headers = {
     'Content-Type': 'application/json',
@@ -14,23 +17,42 @@ async function request(endpoint, options = {}) {
     headers,
   };
 
-  const response = await fetch(`${BASE_URL}${endpoint}`, config);
+  try {
+    const response = await fetch(url, config);
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw { status: response.status, ...error };
+    // Handle empty responses (e.g. 204 No Content)
+    if (response.status === 204) {
+      return { data: null };
+    }
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      const err     = new Error(data?.message || 'Request failed');
+      err.status    = response.status;
+      err.data      = data;
+      err.message   = data?.message || err.message;
+      throw err;
+    }
+
+    return data;
+
+  } catch (err) {
+    // Re-throw structured errors as-is
+    if (err.status) throw err;
+
+    // Network error (no internet, CORS, server down)
+    const networkErr    = new Error('Network error. Check your connection.');
+    networkErr.status   = 0;
+    networkErr.isNetwork = true;
+    throw networkErr;
   }
-
-  return response.json();
 }
 
 export const api = {
-  get: (endpoint) => request(endpoint),
-  post: (endpoint, body) =>
-    request(endpoint, { method: 'POST', body: JSON.stringify(body) }),
-  put: (endpoint, body) =>
-    request(endpoint, { method: 'PUT', body: JSON.stringify(body) }),
-  delete: (endpoint) => request(endpoint, { method: 'DELETE' }),
-  patch: (url, body) =>
-    request(url, { method: 'PATCH', body: JSON.stringify(body) }),
+  get:    (url)       => request(url, { method: 'GET' }),
+  post:   (url, body) => request(url, { method: 'POST',   body: JSON.stringify(body) }),
+  put:    (url, body) => request(url, { method: 'PUT',    body: JSON.stringify(body) }),
+  patch:  (url, body) => request(url, { method: 'PATCH',  body: JSON.stringify(body) }),
+  delete: (url)       => request(url, { method: 'DELETE' }),
 };

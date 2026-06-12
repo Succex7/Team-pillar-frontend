@@ -33,10 +33,22 @@ function formatScore(val, max) {
 
 // INIT
 async function init() {
+  handleOAuthRedirect(); 
+
   initShell('overview', 'Dashboard Overview', 'Track your UTME preparation progress');
 
   await loadDashboard();
   initLazyImages();
+}
+
+function handleOAuthRedirect() {
+  const params = new URLSearchParams(window.location.search);
+  const token  = params.get('token');
+
+  if (token) {
+    localStorage.setItem('access_token', token);
+    window.history.replaceState({}, '', window.location.pathname);
+  }
 }
 
 // FETCH DASHBOARD DATA

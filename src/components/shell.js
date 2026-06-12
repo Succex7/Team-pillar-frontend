@@ -106,15 +106,15 @@ function buildSidebarHTML(activeKey, user) {
     <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
       <div class="sidebar-logo">
         <a href="/pages/dashboard.html" class="sidebar-logo-link" aria-label="Pillar home">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 2L22 8H2L12 2Z" fill="#1a2e5a"/>
-            <rect x="4"    y="9"  width="3"  height="10" rx="1" fill="#1a2e5a"/>
-            <rect x="10.5" y="9"  width="3"  height="10" rx="1" fill="#1a2e5a"/>
-            <rect x="17"   y="9"  width="3"  height="10" rx="1" fill="#1a2e5a"/>
-            <rect x="2"    y="19" width="20" height="2"  rx="0.5" fill="#1a2e5a"/>
-          </svg>
+          <img src="/icon/logo.png" width="22" height="22">
           <span>Pillar</span>
         </a>
+        <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close navigation">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </div>
 
       <nav class="sidebar-nav">
@@ -135,7 +135,7 @@ function buildSidebarHTML(activeKey, user) {
         </a>
 
         <div class="sidebar-upgrade-card">
-          <div class="upgrade-card-icon" aria-hidden="true">⚡</div>
+          <div class="upgrade-card-icon" aria-hidden="true"><img src="/icon/energy-icon.png"></div>
           <p class="upgrade-card-title">Upgrade to Pro</p>
           <p class="upgrade-card-desc">Unlock AI Tutor, unlimited sessions, and more</p>
           <button type="button" class="upgrade-card-btn" id="sidebarUpgradeBtn">
@@ -212,15 +212,17 @@ function getInitials(name) {
 export function initShell(pageKey, pageTitle, pageSubtitle) {
   guardAuth();
 
-  const user        = userStore.getState().profile;
-  const shellRoot   = document.getElementById('shellRoot');
-  const contentRoot = document.getElementById('contentRoot');
+  const user       = userStore.getState().profile;
+  const shellRoot  = document.getElementById('shellRoot');
+  const topbarRoot = document.getElementById('topbarRoot');
 
   if (!shellRoot) return;
 
-  shellRoot.innerHTML =
-    buildSidebarHTML(pageKey, user) +
-    buildTopbarHTML(pageTitle, pageSubtitle, user);
+  shellRoot.innerHTML = buildSidebarHTML(pageKey, user);
+
+  if (topbarRoot) {
+    topbarRoot.innerHTML = buildTopbarHTML(pageTitle, pageSubtitle, user);
+  }
 
   bindSidebarToggle();
   bindUpgradeButtons();
@@ -240,23 +242,26 @@ function guardAuth() {
 // SIDEBAR MOBILE TOGGLE
 function bindSidebarToggle() {
   const menuBtn = document.getElementById('topbarMenuBtn');
+  const closeBtn = document.getElementById('sidebarCloseBtn');
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('sidebarOverlay');
 
   if (!menuBtn || !sidebar || !overlay) return;
 
+  function setMenuState(isOpen) {
+    sidebar.classList.toggle('sidebar--open', isOpen);
+    overlay.classList.toggle('sidebar-overlay--visible', isOpen);
+    menuBtn.setAttribute('aria-expanded', String(isOpen));
+    menuBtn.classList.toggle('is-open', isOpen);
+    document.body.classList.toggle('sidebar-is-open', isOpen);
+  }
+
   function openSidebar() {
-    sidebar.classList.add('sidebar--open');
-    overlay.classList.add('sidebar-overlay--visible');
-    menuBtn.setAttribute('aria-expanded', 'true');
-    document.body.classList.add('sidebar-is-open');
+    setMenuState(true);
   }
 
   function closeSidebar() {
-    sidebar.classList.remove('sidebar--open');
-    overlay.classList.remove('sidebar-overlay--visible');
-    menuBtn.setAttribute('aria-expanded', 'false');
-    document.body.classList.remove('sidebar-is-open');
+    setMenuState(false);
   }
 
   menuBtn.addEventListener('click', () => {
@@ -264,7 +269,20 @@ function bindSidebarToggle() {
     isOpen ? closeSidebar() : openSidebar();
   });
 
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeSidebar);
+  }
+
   overlay.addEventListener('click', closeSidebar);
+
+  document.addEventListener('click', (e) => {
+    const clickedInsideSidebar = sidebar.contains(e.target);
+    const clickedMenu = menuBtn.contains(e.target);
+
+    if (sidebar.classList.contains('sidebar--open') && !clickedInsideSidebar && !clickedMenu) {
+      closeSidebar();
+    }
+  });
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeSidebar();
@@ -276,7 +294,7 @@ function bindUpgradeButtons() {
   const btns = document.querySelectorAll('#sidebarUpgradeBtn, #topbarUpgradeBtn');
   btns.forEach(btn => {
     btn.addEventListener('click', () => {
-      window.location.href = '/pages/billing.html';
+      window.location.href = '/pages/pricing.html';
     });
   });
 }
