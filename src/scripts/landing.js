@@ -216,58 +216,6 @@ function renderFeatures() {
   });
 }
 
-// PRICING — render cards dynamically
-
-function renderPricing() {
-  const grid = document.getElementById('pricingGrid');
-  if (!grid) return;
-
-  PRICING_PLANS.forEach((plan, index) => {
-    const card = document.createElement('div');
-    card.className = `pricing-card reveal${plan.featured ? ' featured' : ''}`;
-    card.setAttribute('data-delay', String(index * 100));
-
-    const checkColor = plan.featured ? 'rgba(255,255,255,0.9)' : '#16a34a';
-    const crossColor = plan.featured ? 'rgba(255,255,255,0.35)' : '#d1d5db';
-
-    const checkSVG = (color) => `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M20 6L9 17l-5-5" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>`;
-
-    const crossSVG = (color) => `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M18 6L6 18M6 6l12 12" stroke="${color}" stroke-width="2" stroke-linecap="round"/>
-      </svg>`;
-
-    const featuresHTML = plan.features.map(f => `
-      <li class="pricing-feature">
-        ${f.included ? checkSVG(checkColor) : crossSVG(crossColor)}
-        ${f.text}
-      </li>
-    `).join('');
-
-    const btnClass = plan.featured
-      ? 'btn btn-cta pricing-cta'
-      : 'btn btn-outline pricing-cta';
-
-    card.innerHTML = `
-      ${plan.badge ? `<div class="pricing-badge">${plan.badge}</div>` : ''}
-      <p class="pricing-name">${plan.name}</p>
-      <p class="pricing-price">${plan.price}</p>
-      <p class="pricing-period">${plan.period}</p>
-      <ul class="pricing-features" role="list">
-        ${featuresHTML}
-      </ul>
-      <a href="${plan.cta.href}" class="${btnClass}">
-        ${plan.cta.label}
-      </a>
-    `;
-
-    grid.appendChild(card);
-  });
-}
-
 // FOOTER LINKS
 function renderFooterLinks() {
   const grid = document.getElementById('footerLinksGrid');

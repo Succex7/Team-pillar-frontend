@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pricing Plans — Pillar</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/base.css" />
+    <link rel="stylesheet" href="../src/styles/pricing.css" />
+  </head>
+
+  <body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+      <div class="nav-inner">
+
+        <a href="../index.html" class="nav-logo" aria-label="Pillar home">
+          <img src="/icon/logo.png" alt="Pillar Logo" width="22" height="22" />
+          <span>Pillar</span>
+        </a>
+
+        <ul class="nav-links" role="list">
+          <li><a href="../index.html#features" class="nav-link">Features</a></li>
+          <li><a href="../index.html#how-it-works" class="nav-link">How it works</a></li>
+          <li><a href="../index.html#for-schools" class="nav-link">For Schools</a></li>
+          <li><a href="../pages/pricing.html" class="nav-link nav-link--active" aria-current="page">Pricing</a></li>
+        </ul>
+
+        <div class="nav-cta">
+          <a href="../pages/login.html" class="nav-login-btn">Log In</a>
+          <a href="../pages/register.html" class="nav-get-started-btn">Get Started</a>
+        </div>
+
+        <!-- Hamburger — mobile only -->
+        <button
+          type="button"
+          class="hamburger"
+          id="hamburger"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="mobileMenu"
+        >
+          <span class="ham-line"></span>
+          <span class="ham-line"></span>
+          <span class="ham-line"></span>
+        </button>
+
+      </div>
+
+      <!-- Mobile menu -->
+      <div class="mobile-menu" id="mobileMenu" role="menu" aria-hidden="true">
+        <a href="../index.html#features"    class="mobile-link" role="menuitem">Features</a>
+        <a href="../index.html#how-it-works" class="mobile-link" role="menuitem">How it works</a>
+        <a href="../index.html#for-schools"  class="mobile-link" role="menuitem">For Schools</a>
+        <a href="../pages/pricing.html"     class="mobile-link" role="menuitem">Pricing</a>
+        <div class="mobile-cta">
+            <a href="../pages/register.html" class="mobile-start-btn">Get Started Free</a>
+            <a href="../pages/login.html"    class="mobile-login-btn">Sign In</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main>
+
+      <!-- HERO SECTION -->
+      <section class="pricing-hero" aria-labelledby="pricingHeroTitle">
+        <p class="section-badge">PRICING PLANS</p>
+        <h1 class="pricing-hero-title" id="pricingHeroTitle">
+          Flexible Plans for Every Student
+        </h1>
+        <p class="pricing-hero-sub">
+          Choose the roadmap that fits your UTME goals. From foundation
+          practice to intensive mock mastery.
+        </p>
+
+        <!-- Billing toggle -->
+        <div class="billing-toggle" role="group" aria-label="Billing period">
+          <button
+            type="button"
+            class="toggle-btn toggle-btn--active"
+            id="toggleMonthly"
+            aria-pressed="true"
+          >Monthly</button>
+          <button
+            type="button"
+            class="toggle-btn"
+            id="toggleYearly"
+            aria-pressed="false"
+          >
+            Yearly
+            <span class="save-badge">SAVE 20%</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- PLANS SECTION -->
+      <section class="plans-section" aria-labelledby="plansTitle">
+        <h2 class="sr-only" id="plansTitle">Available plans</h2>
+
+        <!-- Loading state -->
+        <div class="plans-grid" id="plansGrid" aria-live="polite">
+          <!-- Skeleton cards while loading -->
+          <div class="plan-card skeleton-card" aria-hidden="true">
+            <div class="skeleton sk-text sk-w-50" style="height:16px;margin-bottom:8px;"></div>
+            <div class="skeleton sk-text sk-w-30" style="height:12px;margin-bottom:20px;"></div>
+            <div class="skeleton sk-text sk-w-70" style="height:40px;margin-bottom:24px;"></div>
+            <div class="skeleton sk-text sk-w-100" style="height:12px;margin-bottom:8px;"></div>
+            <div class="skeleton sk-text sk-w-100" style="height:12px;margin-bottom:8px;"></div>
+            <div class="skeleton sk-text sk-w-70" style="height:12px;margin-bottom:32px;"></div>
+            <div class="skeleton sk-text sk-w-100" style="height:48px;border-radius:8px;"></div>
+          </div>
+          <div class="plan-card skeleton-card" aria-hidden="true">
+            <div class="skeleton sk-text sk-w-50" style="height:16px;margin-bottom:8px;"></div>
+            <div class="skeleton sk-text sk-w-30" style="height:12px;margin-bottom:20px;"></div>
+            <div class="skeleton sk-text sk-w-70" style="height:40px;margin-bottom:24px;"></div>
+            <div class="skeleton sk-text sk-w-100" style="height:12px;margin-bottom:8px;"></div>
+            <div class="skeleton sk-text sk-w-100" style="height:12px;margin-bottom:8px;"></div>
+            <div class="skeleton sk-text sk-w-70" style="height:12px;margin-bottom:32px;"></div>
+            <div class="skeleton sk-text sk-w-100" style="height:48px;border-radius:8px;"></div>
+          </div>
+          <div class="plan-card skeleton-card" aria-hidden="true">
+            <div class="skeleton sk-text sk-w-50" style="height:16px;margin-bottom:8px;"></div>
+            <div class="skeleton sk-text sk-w-30" style="height:12px;margin-bottom:20px;"></div>
+            <div class="skeleton sk-text sk-w-70" style="height:40px;margin-bottom:24px;"></div>
+            <div class="skeleton sk-text sk-w-100" style="height:12px;margin-bottom:8px;"></div>
+            <div class="skeleton sk-text sk-w-100" style="height:12px;margin-bottom:8px;"></div>
+            <div class="skeleton sk-text sk-w-70" style="height:12px;margin-bottom:32px;"></div>
+            <div class="skeleton sk-text sk-w-100" style="height:48px;border-radius:8px;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMPARE FEATURES TABLE -->
+      <section class="compare-section" aria-labelledby="compareTitle">
+        <h2 class="compare-title" id="compareTitle">Compare Features</h2>
+        <div class="compare-table-wrapper" role="region" aria-label="Feature comparison table" tabindex="0">
+          <table class="compare-table" aria-label="Plan features comparison">
+            <thead>
+              <tr>
+                <th scope="col" class="compare-th-feature">Features</th>
+                <th scope="col" class="compare-th-plan">Free</th>
+                <th scope="col" class="compare-th-plan">Standard</th>
+                <th scope="col" class="compare-th-plan compare-th-pro">Pro</th>
+              </tr>
+            </thead>
+            <tbody id="compareTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- FAQ SECTION -->
+      <section class="faq-section" aria-labelledby="faqTitle">
+        <h2 class="faq-title" id="faqTitle">Common Questions</h2>
+        <div class="faq-list" id="faqList" role="list">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- SCHOOL CTA -->
+      <section class="school-cta-section">
+        <div class="school-cta-card">
+          <div class="school-cta-text">
+            <h2 class="school-cta-title">Looking for a school-wide solution?</h2>
+            <p class="school-cta-desc">
+              Empower your entire classroom with Pillar's institutional dashboard.
+              Track every student's progress and identify learning gaps instantly.
+            </p>
+          </div>
+          <a href="mailto:support@pillarcbt.com" class="school-cta-btn">
+            Contact Sales Team
+          </a>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="../index.html" class="footer-logo">
+            <img src="/icon/logo-white.png" alt="Pillar Logo" width="22" height="22" />
+            <span>Pillar</span>
+          </a>
+          <p class="footer-tagline">Professional UTME Preparation for Nigerian Excellence.</p>
+        </div>
+
+        <div class="footer-links-grid">
+          <div class="footer-col">
+            <p class="footer-col-title">PRODUCT</p>
+            <ul class="footer-link-list">
+              <li><a href="../index.html#features" class="footer-link">Features</a></li>
+              <li><a href="../pages/pricing.html"  class="footer-link">Study Plans</a></li>
+              <li><a href="../index.html#mock-tests" class="footer-link">Mock Tests</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <p class="footer-col-title">COMPANY</p>
+            <ul class="footer-link-list">
+              <li><a href="#" class="footer-link">Privacy Policy</a></li>
+              <li><a href="#" class="footer-link">Terms of Service</a></li>
+              <li><a href="mailto:support@pillarcbt.com" class="footer-link">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <p class="footer-col-title">SUPPORT</p>
+            <ul class="footer-link-list">
+              <li><a href="#" class="footer-link">Help Center</a></li>
+              <li><a href="#" class="footer-link">Cookie Settings</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2024 Pillar Education. Professional UTME Preparation for Nigerian Excellence.</p>
+      </div>
+    </footer>
+
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script type="module" src="../src/scripts/pricing.js"></script>
+  </body>
+</html>
