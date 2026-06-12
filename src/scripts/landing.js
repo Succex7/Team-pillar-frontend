@@ -130,7 +130,6 @@ const FOOTER_LINKS = [
 function init() {
   renderMarquee();
   renderFeatures();
-  renderPricing();
   renderFooterLinks();
   setCurrentYear();
   bindNavbar();
@@ -287,7 +286,7 @@ function bindNavbar() {
 
 //Active nav link based on scroll position
 function highlightActiveNavLink() {
-  const sections = ['hero', 'how-it-works', 'features', 'pricing'];
+  const sections = ['hero', 'how-it-works', 'features', ];
   const navLinks = document.querySelectorAll('.nav-link');
 
   let currentSection = '';
