@@ -193,8 +193,8 @@ button { cursor: pointer; font-family: var(--font-body); }
 }
 
 .billing-plan-card--pro {
-  background: var(--pillar-amber);
-  border-color: var(--pillar-amber);
+  background: var(--pillar-yellow);
+  border-color: var(--pillar-yellow);
 }
 
 .billing-plan-card--pro .plan-name,
