@@ -294,7 +294,7 @@ function bindUpgradeButtons() {
   const btns = document.querySelectorAll('#sidebarUpgradeBtn, #topbarUpgradeBtn');
   btns.forEach(btn => {
     btn.addEventListener('click', () => {
-      window.location.href = '/pages/pricing.html';
+      window.location.href = '/pages/billing.html';
     });
   });
 }

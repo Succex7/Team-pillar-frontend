@@ -14,6 +14,7 @@ export default defineConfig({
         onboarding2:   'pages/onboarding-step2.html',
         onboarding3:   'pages/onboarding-step3.html',
         pricing:   'pages/pricing.html',
+        billing:   'pages/billing.html',
       },
     },
   },
