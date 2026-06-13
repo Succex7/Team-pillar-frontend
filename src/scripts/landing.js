@@ -4,18 +4,18 @@
 // DATA
 
 const UNIVERSITIES = [
-  { name: 'UNILAG',   logo: '/src/assets/logos/unilag.png'   },
-  { name: 'UI',       logo: '/src/assets/logos/ui.png'       },
-  { name: 'OAU',      logo: '/src/assets/logos/oau.png'      },
-  { name: 'UNIBEN',   logo: '/src/assets/logos/uniben.png'   },
-  { name: 'UNN',      logo: '/src/assets/logos/unn.png'      },
-  { name: 'FUNAAB',   logo: '/src/assets/logos/funaab.png'   },
-  { name: 'UNIPORT',  logo: '/src/assets/logos/uniport.png'  },
-  { name: 'ABU',      logo: '/src/assets/logos/abu.png'      },
-  { name: 'UNILORIN', logo: '/src/assets/logos/unilorin.png' },
-  { name: 'LASU',     logo: '/src/assets/logos/lasu.png'     },
-  { name: 'FUTA',     logo: '/src/assets/logos/futa.png'     },
-  { name: 'UNIZIK',   logo: '/src/assets/logos/unizik.png'   },
+  { name: 'UNILAG',   logo: '/logos/unilag.png'   },
+  { name: 'UI',       logo: '/logos/ui.png'       },
+  { name: 'OAU',      logo: '/logos/oau.png'      },
+  { name: 'UNIBEN',   logo: '/logos/uniben.png'   },
+  { name: 'UNN',      logo: '/logos/unn.png'      },
+  { name: 'FUNAAB',   logo: '/logos/funaab.png'   },
+  { name: 'UNIPORT',  logo: '/logos/uniport.png'  },
+  { name: 'ABU',      logo: '/logos/abu.png'      },
+  { name: 'UNILORIN', logo: '/logos/unilorin.png' },
+  { name: 'LASU',     logo: '/logos/lasu.png'     },
+  { name: 'FUTA',     logo: '/logos/futa.png'     },
+  { name: 'UNIZIK',   logo: '/logos/unizik.png'   },
 ];
 
 const FEATURES = [
@@ -26,7 +26,7 @@ const FEATURES = [
         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
       </svg>`,
     },
-    preview: '/src/assets/images/solution-weak.png',
+    preview: '/images/solution-weak.png',
     title: 'Adaptive Learning',
     desc: 'Our AI identifies your weak spots and creates a personalized study path to fix them fast.',
   },
@@ -37,7 +37,7 @@ const FEATURES = [
         <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
       </svg>`,
     },
-    preview: '/src/assets/images/solution-mock.png',
+    preview: '/images/solution-mock.png',
     title: 'CBT Simulation',
     desc: 'Practice with an interface identical to the official JAMB CBT environment to build exam-day confidence.',
   },
@@ -48,7 +48,7 @@ const FEATURES = [
         <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
       </svg>`,
     },
-    preview: '/src/assets/images/feature-analytics.png',
+    preview: '/images/feature-analytics.png',
     title: 'Performance Analytics',
     desc: 'Detailed breakdowns of your speed, accuracy, and subject-level mastery with beautiful chart.',
   },
@@ -59,7 +59,7 @@ const FEATURES = [
         <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
       </svg>`,
     },
-    preview: '/src/assets/images/feature-ai.png',
+    preview: '/images/feature-ai.png',
     title: 'AI Explanations',
     desc: 'Stuck on a question? Get instant, detailed step-by-step explanations powered by our proprietary AI tutor.',
   },
@@ -73,7 +73,7 @@ const FEATURES = [
         <path d="M18 2H6v7a6 6 0 0012 0V2z"/>
       </svg>`,
     },
-    preview: '/src/assets/images/feature-gamification.png',
+    preview: '/images/feature-gamification.png',
     title: 'Gamification',
     desc: 'Earn points, climb the leaderboard, and unlock badges. Study becomes as addictive as your favorite game.',
   },
@@ -84,7 +84,7 @@ const FEATURES = [
         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
       </svg>`,
     },
-    preview: '/src/assets/images/feature-school.png',
+    preview: '/images/feature-school.png',
     title: 'School Dashboard',
     desc: 'For administrators: Track the performance of all your students in real-time and provide targeted help.',
   },
@@ -97,7 +97,7 @@ const FOOTER_LINKS = [
       { label: 'Features',    href: '#features'    },
       { label: 'Study Plans', href: '#study-plans' },
       { label: 'Mock Tests',  href: '#mock-tests'  },
-      { label: 'Pricing',     href: '#pricing'     },
+      { label: 'Pricing',     href: './pages/pricing.html'     },
     ],
   },
   {
@@ -130,7 +130,6 @@ const FOOTER_LINKS = [
 function init() {
   renderMarquee();
   renderFeatures();
-  renderPricing();
   renderFooterLinks();
   setCurrentYear();
   bindNavbar();
@@ -216,58 +215,6 @@ function renderFeatures() {
   });
 }
 
-// PRICING — render cards dynamically
-
-function renderPricing() {
-  const grid = document.getElementById('pricingGrid');
-  if (!grid) return;
-
-  PRICING_PLANS.forEach((plan, index) => {
-    const card = document.createElement('div');
-    card.className = `pricing-card reveal${plan.featured ? ' featured' : ''}`;
-    card.setAttribute('data-delay', String(index * 100));
-
-    const checkColor = plan.featured ? 'rgba(255,255,255,0.9)' : '#16a34a';
-    const crossColor = plan.featured ? 'rgba(255,255,255,0.35)' : '#d1d5db';
-
-    const checkSVG = (color) => `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M20 6L9 17l-5-5" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>`;
-
-    const crossSVG = (color) => `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M18 6L6 18M6 6l12 12" stroke="${color}" stroke-width="2" stroke-linecap="round"/>
-      </svg>`;
-
-    const featuresHTML = plan.features.map(f => `
-      <li class="pricing-feature">
-        ${f.included ? checkSVG(checkColor) : crossSVG(crossColor)}
-        ${f.text}
-      </li>
-    `).join('');
-
-    const btnClass = plan.featured
-      ? 'btn btn-cta pricing-cta'
-      : 'btn btn-outline pricing-cta';
-
-    card.innerHTML = `
-      ${plan.badge ? `<div class="pricing-badge">${plan.badge}</div>` : ''}
-      <p class="pricing-name">${plan.name}</p>
-      <p class="pricing-price">${plan.price}</p>
-      <p class="pricing-period">${plan.period}</p>
-      <ul class="pricing-features" role="list">
-        ${featuresHTML}
-      </ul>
-      <a href="${plan.cta.href}" class="${btnClass}">
-        ${plan.cta.label}
-      </a>
-    `;
-
-    grid.appendChild(card);
-  });
-}
-
 // FOOTER LINKS
 function renderFooterLinks() {
   const grid = document.getElementById('footerLinksGrid');
@@ -339,7 +286,7 @@ function bindNavbar() {
 
 //Active nav link based on scroll position
 function highlightActiveNavLink() {
-  const sections = ['hero', 'how-it-works', 'features', 'pricing'];
+  const sections = ['hero', 'how-it-works', 'features', ];
   const navLinks = document.querySelectorAll('.nav-link');
 
   let currentSection = '';

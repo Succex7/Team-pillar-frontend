@@ -19,9 +19,13 @@
   --pillar-yellow: #f59e0b;
   --pillar-error:#dc2626;
   --pillar-success:#16a34a;
-  --pillar-shadow: 0 2px 16px rgba(26,46,90,0.08);
+  --pillar-shadow: 0 18px 30px rgba(15, 23, 42, 0.08);
+  --pillar-shadow-soft: 0 10px 24px rgba(15, 23, 42, 0.06);
   --pillar-radius: 12px;
-  --pillar-radius-sm: 8px;
+  --pillar-radius-sm: 10px;
+  --pillar-radius-xs: 8px;
+  --transition-fast: 160ms ease;
+  --transition-base: 220ms ease;
   --font-display: 'Sora', sans-serif;
   --font-body: 'Inter', sans-serif;
 }

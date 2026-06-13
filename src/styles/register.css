@@ -539,7 +539,7 @@ select:focus {
   }
 
   .nav-hint {
-    display: block;
+    display: none;
   }
 
   .navbar {
@@ -550,14 +550,4 @@ select:focus {
     font-size: 10px;
     gap: 8px;
   }
-}
-
-@media (max-width: 375px) {
-  .hero-heading {
-    font-size: 20px;
-  }
-
-  .nav-hint {
-    display: none; 
-}
 }
