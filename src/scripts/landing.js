@@ -97,7 +97,7 @@ const FOOTER_LINKS = [
       { label: 'Features',    href: '#features'    },
       { label: 'Study Plans', href: '#study-plans' },
       { label: 'Mock Tests',  href: '#mock-tests'  },
-      { label: 'Pricing',     href: '#pricing'     },
+      { label: 'Pricing',     href: './pages/pricing.html'     },
     ],
   },
   {

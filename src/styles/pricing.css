@@ -410,8 +410,8 @@ button { cursor: pointer; font-family: var(--font-body); }
 
 /* Pro card highlight */
 .plan-card--pro {
-  background: var(--pillar-amber);
-  border-color: var(--pillar-amber);
+  background: var(--pillar-yellow);
+  border-color: var(--pillar-yellow);
   color: white;
 }
 
@@ -820,38 +820,26 @@ button { cursor: pointer; font-family: var(--font-body); }
 /* FOOTER */
 .footer {
   background: var(--pillar-navy-dark);
-  color: rgba(255, 255, 255, 0.8);
-  padding: 56px 0 28px;
+  color: rgba(255,255,255,0.8);
+  margin-top: 80px;
+  padding: 60px 0 32px;
 }
 
-.footer-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 20px;
+.footer-top {
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  padding-bottom: 40px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  margin-bottom: 24px;
-}
-
-.footer-logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-display);
-  font-size: 17px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 10px;
+  gap: 36px;
+  padding: 40px 25px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 28px;
 }
 
 .footer-tagline {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255,255,255,0.45);
+  margin-top: 10px;
+  max-width: 200px;
   line-height: 1.6;
-  max-width: 220px;
 }
 
 .footer-links-grid {
@@ -865,7 +853,7 @@ button { cursor: pointer; font-family: var(--font-body); }
   font-weight: 700;
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255,255,255,0.35);
   margin-bottom: 14px;
 }
 
@@ -877,24 +865,41 @@ button { cursor: pointer; font-family: var(--font-body); }
 
 .footer-link {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255,255,255,0.6);
   transition: color var(--transition-fast);
 }
-
-.footer-link:hover {
-  color: white;
-}
+.footer-link:hover { color: white; }
 
 .footer-bottom {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 25px;
+  align-items: flex-start;
 }
 
 .footer-copy {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255,255,255,0.3);
 }
+
+.footer-badges {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.footer-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+}
+
+.footer-dot { color: rgba(255,255,255,0.12); }
+
 
 /* TOAST */
 .toast {
@@ -929,16 +934,13 @@ button { cursor: pointer; font-family: var(--font-body); }
     grid-template-columns: 1fr 1fr;
   }
 
-  .footer-links-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  .footer-links-grid { grid-template-columns: repeat(4, 1fr); }
 
-  .footer-inner {
+  .footer-bottom {
     flex-direction: row;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
   }
-
   .school-cta-card {
     flex-direction: row;
     align-items: center;
@@ -958,6 +960,14 @@ button { cursor: pointer; font-family: var(--font-body); }
     grid-template-columns: repeat(3, 1fr);
     align-items: start;
   }
+
+  /* Footer top row */
+  .footer-top {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .footer-brand { max-width: 220px; }
 
   .compare-section,
   .faq-section,
