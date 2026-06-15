@@ -17,6 +17,7 @@ export default defineConfig({
         billing:   'pages/billing.html',
         settings:   'pages/settings.html',
         forschools:   'pages/for-schools.html',
+        performance:   'pages/performance.html',
       },
     },
   },
