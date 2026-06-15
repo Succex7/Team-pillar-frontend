@@ -35,7 +35,7 @@ function formatScore(val, max) {
 // INIT
 async function init() {
   handleOAuthRedirect();
-  initShell('overview', 'Dashboard Overview', 'Track your UTME preparation progress');
+  await initShell('overview', 'Dashboard Overview', 'Track your UTME preparation progress');
   await loadDashboard();
   initLazyImages();
 }
