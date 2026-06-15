@@ -49,7 +49,7 @@ const toast = document.getElementById('toast');
 
 // INIT
 async function init() {
-  initShell('settings', 'Settings', 'Manage your account preferences');
+  await initShell('settings', 'Settings', 'Manage your account preferences');
   await loadProfile();
   bindPasswordToggles();
   bindProfileForm();

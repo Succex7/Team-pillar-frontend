@@ -403,6 +403,14 @@ img.lazy.loaded { opacity: 1; }
 }
 
 /* PAGE CONTENT AREA */
+.page-body,
+.main-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
 .page-content {
   flex: 1;
   padding: 20px 16px 40px;
@@ -574,6 +582,12 @@ img.lazy.loaded { opacity: 1; }
     min-width: 0;
     height: 100vh;
     padding-top: 60px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .page-body {
+    height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
   }
