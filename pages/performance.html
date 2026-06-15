@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Performance — Pillar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/shell.css" />
+    <link rel="stylesheet" href="../src/styles/performance.css" />
+    <link rel="icon" type="image/png" href="../icon/logo-white.png" />
+  </head>
+  <body>
+
+    <div class="app-layout">
+      <div id="shellRoot"></div>
+
+      <div class="page-body">
+        <div id="topbarRoot"></div>
+
+        <main class="page-content">
+
+          <!-- TOP STAT CARDS ROW -->
+          <div class="perf-stat-cards" id="perfStatCards">
+            <div class="perf-stat-card skeleton-card">
+              <div class="skeleton sk-text" style="width:60px;height:12px;margin-bottom:6px;"></div>
+              <div class="skeleton sk-text" style="width:80px;height:28px;margin-bottom:4px;"></div>
+              <div class="skeleton sk-text" style="width:100px;height:11px;"></div>
+            </div>
+            <div class="perf-stat-card skeleton-card">
+              <div class="skeleton sk-text" style="width:60px;height:12px;margin-bottom:6px;"></div>
+              <div class="skeleton sk-text" style="width:70px;height:28px;margin-bottom:4px;"></div>
+              <div class="skeleton sk-text" style="width:110px;height:11px;"></div>
+            </div>
+            <div class="perf-stat-card skeleton-card">
+              <div class="skeleton sk-text" style="width:80px;height:12px;margin-bottom:6px;"></div>
+              <div class="skeleton sk-text" style="width:90px;height:28px;margin-bottom:4px;"></div>
+              <div class="skeleton sk-text" style="width:90px;height:11px;"></div>
+            </div>
+            <div class="perf-stat-card skeleton-card">
+              <div class="skeleton sk-text" style="width:70px;height:12px;margin-bottom:6px;"></div>
+              <div class="skeleton sk-text" style="width:40px;height:28px;margin-bottom:4px;"></div>
+              <div class="skeleton sk-text" style="width:100px;height:11px;"></div>
+            </div>
+          </div>
+
+          <!-- TWO COLUMN LAYOUT -->
+          <div class="perf-two-col">
+
+            <!-- LEFT COLUMN -->
+            <div class="perf-left">
+
+              <!-- Score Trajectory -->
+              <div class="card" id="scoreTrajectoryCard">
+                <div class="card-header">
+                  <div>
+                    <h2 class="card-title">Score trajectory</h2>
+                    <p class="card-subtitle">Predicted UTME score over last 8 sessions</p>
+                  </div>
+                  <a href="/pages/mock-tests.html" class="card-link">View all →</a>
+                </div>
+                <div class="chart-area" id="scoreChart">
+                  <div class="skeleton" style="width:100%;height:180px;border-radius:8px;"></div>
+                </div>
+              </div>
+
+              <!-- Topic Mastery Heatmap -->
+              <div class="card" id="heatmapCard">
+                <div class="card-header">
+                  <div>
+                    <h2 class="card-title">Topic mastery heatmap</h2>
+                    <p class="card-subtitle">Accuracy by topic across the last 7 sessions</p>
+                  </div>
+                </div>
+                <div class="heatmap-wrapper" id="heatmapWrapper">
+                  <div class="skeleton" style="width:100%;height:220px;border-radius:8px;"></div>
+                </div>
+                <div class="heatmap-legend">
+                  <span class="legend-label">Low</span>
+                  <div class="legend-dots">
+                    <div class="legend-dot legend-dot--1"></div>
+                    <div class="legend-dot legend-dot--2"></div>
+                    <div class="legend-dot legend-dot--3"></div>
+                    <div class="legend-dot legend-dot--4"></div>
+                    <div class="legend-dot legend-dot--5"></div>
+                  </div>
+                  <span class="legend-label">High mastery</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="perf-right">
+
+              <!-- Subject Performance -->
+              <div class="card" id="subjectPerformanceCard">
+                <div class="card-header">
+                  <div>
+                    <h2 class="card-title">Subject performance</h2>
+                    <p class="card-subtitle">Mastery breakdown · Updated today</p>
+                  </div>
+                  <a href="/pages/study-session.html" class="card-link">View all →</a>
+                </div>
+                <div class="subject-perf-list" id="subjectPerfList">
+                  <div class="skeleton" style="width:100%;height:14px;border-radius:4px;margin-bottom:12px;"></div>
+                  <div class="skeleton" style="width:100%;height:14px;border-radius:4px;margin-bottom:12px;"></div>
+                  <div class="skeleton" style="width:100%;height:14px;border-radius:4px;margin-bottom:12px;"></div>
+                  <div class="skeleton" style="width:100%;height:14px;border-radius:4px;"></div>
+                </div>
+              </div>
+
+              <!-- Weak Topics -->
+              <div class="card" id="weakTopicsCard">
+                <div class="card-header">
+                  <div>
+                    <h2 class="card-title">Weak topics</h2>
+                    <p class="card-subtitle" id="weakTopicsSubtitle">Flagged for priority review</p>
+                  </div>
+                  <span class="flagged-badge" id="flaggedBadge"></span>
+                </div>
+                <div class="weak-topics-list" id="weakTopicsList">
+                  <div class="skeleton" style="width:100%;height:56px;border-radius:8px;margin-bottom:10px;"></div>
+                  <div class="skeleton" style="width:100%;height:56px;border-radius:8px;margin-bottom:10px;"></div>
+                  <div class="skeleton" style="width:100%;height:56px;border-radius:8px;"></div>
+                </div>
+              </div>
+
+              <!-- Recent Mock Tests -->
+              <div class="card" id="recentMocksCard">
+                <div class="card-header">
+                  <div>
+                    <h2 class="card-title">Recent mock tests</h2>
+                    <p class="card-subtitle">Last 3 sessions</p>
+                  </div>
+                  <a href="/pages/mock-tests.html" class="card-link">View all →</a>
+                </div>
+                <div class="recent-mocks-list" id="recentMocksList">
+                  <div class="skeleton" style="width:100%;height:60px;border-radius:8px;margin-bottom:10px;"></div>
+                  <div class="skeleton" style="width:100%;height:60px;border-radius:8px;margin-bottom:10px;"></div>
+                  <div class="skeleton" style="width:100%;height:60px;border-radius:8px;"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </main>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script type="module" src="../src/scripts/performance.js"></script>
+  </body>
+</html>
