@@ -4,10 +4,10 @@
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
 <script>
   eruda.init();
-</script> 
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Mock Tests - Pillar</title>
+    <title>Study Sessions - Pillar</title>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -26,56 +26,50 @@
                 <p>Practice questions by topic with instant feedback</p>
             </div>
             <div class="sessions-remaining-box">
-                <i class="ph-bold ph-warning-circle"></i>
+                <i class="ph-bold ph-warning-circle warning"></i>
                 <p class="sessions-left"><span class="sessions-count">3</span> of 3 sessions remaining today</p>
             </div>
-        </section>
+        </section>        
         
         <!-- start session now-->
         <section class="start-session-section">
             <h3>Start Session Now</h3>
-            <div class="info-image-text-box">
-                <div class="choose-subject-topic">
-                    <div class="choose-subject">
-                        <label for="subjects">select subject</label>
-                        <input list="subjects-list" name="subjects" id="subjects">
-                        <datalist id="subjects-list">
-                          <option value="Maths">
-                          <option value="English">
-                         <option value="Chemistry">
-                        </datalist>
-                    </div>
-                    <div class="choose-topic">
-                        <div class="choose-topics">
-                        <label for="topics">select subject</label>
-                        <input list="topics-list" name="topics" id="topics">
-                        <datalist id="topics-list">
-                            
-                        </datalist>
-                    </div>
-                    </div>
-                </div>
-               
+                 <!-- choose subjects-->
+            <div class="choose-subject choosing">
+                 <label for="subjects">select subject</label>
+                 <input list="subjects-list" name="subjects" id="subjects">
+                 <datalist id="subjects-list">
+                        <option value="Maths">
+                        <option value="English">
+                        <option value="Chemistry">
+                 </datalist>
             </div>
-            <button class="start-session-btn">
-                <img src="../public/icon/play.svg" alt="">Start Session Now</button>
-            <!-- end of mock test about box-->
-        </section>
+                 <!-- choose topic -->
+           <div class="choose-topic choosing">
+                     <label for="topics">select subject</label>
+                    <input list="topics-list" name="topics" id="topics">
+                    <datalist id="topics-list">
+                            
+                   </datalist>
+          </div>
+          <button class="start-session-btn">
+                <img src="/icon/play.svg" alt="">Start Session Now</button>
+      </section>
         
-        <!-- section 2, past mock tests section -->
-        <section class="past-mock-tests-section">
-            <h3>Past Mock Tests</h3>
-            <article class="past-mock-tests-box">
-                <div class="mock-tests-listing">
+        <!-- section 2, past study session section -->
+        <section class="past-study-session-section">
+            <h3>Recent Sessions</h3>
+            <article class="past-study-session-box">
+                <div class="study-sessions-listing">
               <!-- take this out after testing-->
                     <div class="icon-subj-stat">
                       <i class="ph-bold ph-book-open book"></i>
                       <div class="all-subj">
-                          <h4>All 4 Subjects</h4>
-                          <div class="all-subj-stats">
+                          <h4 class="subj-name">Mathematics</h4>
+                          <div class="subj-stats">
                               <p>Score:60% </p>
                               <p>Accuracy:24%</p>
-                             <div class="all-subj-stats-time">
+                             <div class="subj-stats-time">
                                <i class="ph ph-clock clock"></i>
                               <p>yesterday,9:00am</p>
                             </div>
@@ -88,68 +82,153 @@
                       <i class="ph-bold ph-arrow-right"></i>
                   </button>     
                   </div>             
-           <!-- where the mock tests listings go-->
+           <!-- where the study session listings go-->
+            <div class="study-sessions-listing">
+              <!-- take this out after testing-->
+                    <div class="icon-subj-stat">
+                      <i class="ph-bold ph-book-open book"></i>
+                      <div class="all-subj">
+                          <h4 class="subj-name">Mathematics</h4>
+                          <div class="subj-stats">
+                              <p>Score:60% </p>
+                              <p>Accuracy:24%</p>
+                             <div class="subj-stats-time">
+                               <i class="ph ph-clock clock"></i>
+                              <p>yesterday,9:00am</p>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <button class="rvw-btn">
+                      Review
+                      <i class="ph-bold ph-arrow-right"></i>
+                  </button>     
+                  </div>            
+                   <div class="study-sessions-listing">
+              <!-- take this out after testing-->
+                    <div class="icon-subj-stat">
+                      <i class="ph-bold ph-book-open book"></i>
+                      <div class="all-subj">
+                          <h4 class="subj-name">Mathematics</h4>
+                          <div class="subj-stats">
+                              <p>Score:60% </p>
+                              <p>Accuracy:24%</p>
+                             <div class="subj-stats-time">
+                               <i class="ph ph-clock clock"></i>
+                              <p>yesterday,9:00am</p>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <button class="rvw-btn">
+                      Review
+                      <i class="ph-bold ph-arrow-right"></i>
+                  </button>     
+                  </div>            
+                   <div class="study-sessions-listing">
+              <!-- take this out after testing-->
+                    <div class="icon-subj-stat">
+                      <i class="ph-bold ph-book-open book"></i>
+                      <div class="all-subj">
+                          <h4 class="subj-name">Mathematics</h4>
+                          <div class="subj-stats">
+                              <p>Score:60% </p>
+                              <p>Accuracy:24%</p>
+                             <div class="subj-stats-time">
+                               <i class="ph ph-clock clock"></i>
+                              <p>yesterday,9:00am</p>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <button class="rvw-btn">
+                      Review
+                      <i class="ph-bold ph-arrow-right"></i>
+                  </button>     
+                  </div>            
+           <!-- faux -->
             </article>
         </section>
         
-        <!-- section 3, mock stats section-->
-       <article class="mock-stats-section">
-         <div class="mock-stats-header">
-              <img src="../public/icon/stats.svg" alt="">
-              <h3>Your Mock Stats</h3>
+        <!-- section 3, suggested for you section-->
+       <article class="suggestions-section">
+         <div class="suggested-header">
+             <div class="icon-suggested">
+                 <img src="/icon/stats.svg" alt="">
+                 <h3>Suggested For You</h3>
+             </div>
+             <p>Based on your weak areas</p>  
          </div>
-          <section class="stats">
-              <!-- average mock stats-->
-              <div class="avg-mock mock-stats">
-                  <p>Average Mock Score</p>
-                  <p><span class="average-score scores"></span> /400</p>
+          <section class="suggestions-container">
+              <!-- remove this-->
+              <div class="suggestion">
+                 <h4 class="sugg-topic">Mathematics</h4>
+                 <p class="sugg-subj">chemistry</p>
+                 <div class="accuracy-practice">
+                     <p class="accuracy">
+                         <i class="ph-fill ph-circle"></i> <span class="weak-areas-accuracy">58%</span> accuracy
+                    </p>
+                    <button class="practice">Practice<i class="ph-bold ph-arrow-right"></i></button>
+                 </div>
               </div>
-              <!-- highest mock stats-->
-              <div class="hgst-mock mock-stats">
-                  <p>Highest Mock Score</p>
-                  <p><span class="highest-score scores"></span> /400</p>
+              <div class="suggestion">
+                 <h4 class="sugg-topic">Mathematics</h4>
+                 <p class="sugg-subj">chemistry</p>
+                 <div class="accuracy-practice">
+                     <p class="accuracy">
+                         <i class="ph-fill ph-circle"></i> <span class="weak-areas-accuracy">58%</span> accuracy
+                    </p>
+                    <button class="practice">Practice<i class="ph-bold ph-arrow-right"></i></button>
+                 </div>
               </div>
-              <!-- total mock count stats -->
-              <div class="total-mock mock-stats">
-                 <p>Total Mocks Taken</p>
-                 <p class="mocks-count scores">0</p>
+              <div class="suggestion">
+                 <h4 class="sugg-topic">Mathematics</h4>
+                 <p class="sugg-subj">chemistry</p>
+                 <div class="accuracy-practice">
+                     <p class="accuracy">
+                         <i class="ph-fill ph-circle"></i> <span class="weak-areas-accuracy">58%</span> accuracy
+                    </p>
+                    <button class="practice">Practice<i class="ph-bold ph-arrow-right"></i></button>
+                 </div>
               </div>
+              <!-- remove this -->
+           </section>
        </article>
         
         <!-- section 4, streak section -->
         <article class="streak-section">
             <div class="streak-box-main-content">
                 <div class="this-week-box">
-                    <img src="../public/icon/fire.svg" alt="">
+                    <img src="/icon/fire.svg" alt="">
                     <h3>This Week</h3>
                 </div>
-                <p class="mocks-complt">Mocks Completed</p>
-                <h2 class="mocks-complt-count scores-two">0</h2>
-                <div class="avg-best-box">
-                    <div class="avg-score-box">
-                        <p>Average Score</p>
-                        <p><span class="avg-score scores-two"></span> /400</p>
+                <p class="questions-prac">Questions Practiced</p>
+                <h2 class="ques-count streak-counts">287</h2>
+                <div class="sess-avg-box">
+                    <div class="sess-box">
+                        <p>Sessions</p>
+                        <h4 class="sessions streak-counts">23</h4>
                     </div>
-                    <div class="best-score-box">
-                         <p>Best Score</p>
-                         <p><span class="best-score scores-two"></span> /400</p>
+                    <div class="avg-box">
+                         <p>Average Score</p>
+                         <h4 class="avg-score streak-counts">78%</p>
                     </div>
                 </div>
             </div>
             <!-- keep it up-->
             <div class="keep-it-up-section">
                 <i class="ph-bold ph-check-circle check"></i>
-                <div>
-                    <class="motivation">Keep it Up! You’re improving.</h4>
-                    <h4 class="streak-count">4 week streak active!</h4>
-                </div>
+                 <h4 class="streak-count">4 week streak active!</h4>
             </div>
+          </div>
         </article>
-    </section>
     </main>
-    <!-- the side bars -->
+   <!-- toast -->
    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
 
-    <script type="module" src="../src/scripts/mock-tests.js"></script>
+    <script type="module" src="../src/scripts/study-sessions.js"></script>
 </body>
 </html>
