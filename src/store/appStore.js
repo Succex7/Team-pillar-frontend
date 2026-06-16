@@ -30,3 +30,4 @@ export const appStore = createStore({
   isAuthenticated: false,  // is user logged in?
   isOnline: navigator.onLine, // internet connection status
 });
+
