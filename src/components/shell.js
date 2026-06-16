@@ -124,7 +124,11 @@ function buildSidebarHTML(activeKey, user) {
       </nav>
 
       <div class="sidebar-bottom">
-        <a href="/pages/settings.html" class="nav-item nav-item--settings">
+        <a
+          href="/pages/settings.html"
+          class="nav-item nav-item--settings ${activeKey === 'settings' ? 'nav-item--active' : ''}"
+          aria-current="${activeKey === 'settings' ? 'page' : 'false'}"
+        >
           <span class="nav-item-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="3"/>
@@ -209,10 +213,10 @@ function getInitials(name) {
 }
 
 // INIT SHELL
-export function initShell(pageKey, pageTitle, pageSubtitle) {
+export async function initShell(pageKey, pageTitle, pageSubtitle) {
   guardAuth();
 
-  const user       = userStore.getState().profile;
+  const user = await ensureUserProfile();
   const shellRoot  = document.getElementById('shellRoot');
   const topbarRoot = document.getElementById('topbarRoot');
 
@@ -226,6 +230,33 @@ export function initShell(pageKey, pageTitle, pageSubtitle) {
 
   bindSidebarToggle();
   bindUpgradeButtons();
+}
+
+async function ensureUserProfile() {
+  const existing = userStore.getState().profile;
+
+  if (existing?.name || existing?.email) {
+    return existing;
+  }
+
+  try {
+    const response = await authService.getMe();
+    const payload = response?.data?.data ?? response?.data ?? response;
+    const user = payload?.user ?? payload;
+
+    if (user) {
+      userStore.setState({
+        profile: user,
+        token: userStore.getState().token || localStorage.getItem('access_token') || sessionStorage.getItem('access_token'),
+        role: user.role ?? userStore.getState().role,
+      });
+      return user;
+    }
+  } catch {
+    // Fall back to whatever is stored; the shell will render safely.
+  }
+
+  return existing;
 }
 
 // GUARD — redirect to login if not authenticated
@@ -294,7 +325,7 @@ function bindUpgradeButtons() {
   const btns = document.querySelectorAll('#sidebarUpgradeBtn, #topbarUpgradeBtn');
   btns.forEach(btn => {
     btn.addEventListener('click', () => {
-      window.location.href = '/pages/pricing.html';
+      window.location.href = '/pages/billing.html';
     });
   });
 }

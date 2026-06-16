@@ -35,17 +35,7 @@ function formatScore(val, max) {
 // INIT
 async function init() {
   handleOAuthRedirect();
-
-  if (!getStoredToken()) {
-    renderDashboardFallback();
-    showToast('Please sign in to view your dashboard.', 'error');
-    setTimeout(() => {
-      window.location.replace('/pages/login.html');
-    }, 800);
-    return;
-  }
-
-  initShell('overview', 'Dashboard Overview', 'Track your UTME preparation progress');
+  await initShell('overview', 'Dashboard Overview', 'Track your UTME preparation progress');
   await loadDashboard();
   initLazyImages();
 }
@@ -59,33 +49,10 @@ function handleOAuthRedirect() {
   }
 }
 
-function getStoredToken() {
-  return localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
-}
-
-function clearAuthSession() {
-  localStorage.removeItem('access_token');
-  sessionStorage.removeItem('access_token');
-  sessionStorage.removeItem('token_expires_at');
-}
-
-function redirectToLogin() {
-  window.location.replace('/pages/login.html');
-}
-
 
 // FETCH DASHBOARD DATA
 async function loadDashboard() {
   try {
-    const token = getStoredToken();
-
-    if (!token) {
-      renderDashboardFallback();
-      showToast('Please sign in to view your dashboard.', 'error');
-      setTimeout(redirectToLogin, 800);
-      return;
-    }
-
     const response = await api.get(ENDPOINTS.STUDENT_DASHBOARD);
 
     // API response shape: { success, message, data: { user, predictedScore, ... } }
@@ -93,14 +60,6 @@ async function loadDashboard() {
 
     renderDashboard(data);
   } catch (err) {
-    if (err?.status === 401 || err?.status === 403) {
-      clearAuthSession();
-      renderDashboardFallback();
-      showToast('Your session has expired. Please sign in again.', 'error');
-      setTimeout(redirectToLogin, 1000);
-      return;
-    }
-
     showToast('Failed to load dashboard data. Please refresh.', 'error');
     renderDashboardFallback();
   }
