@@ -1,8 +1,4 @@
 // src/scripts/study-sessions.js
-// Study Sessions page — fully dynamic, backend-ready
-// Handles: shell init, subject/topic dropdowns, session start,
-// recent sessions, suggested for you, this week stats
-
 import { initShell } from '../components/shell.js';
 import { userStore } from '../store/userStore.js';
 import { api }       from '../services/api.js';
@@ -204,7 +200,7 @@ async function handleStartSession() {
 
   // Check daily session limit (FREE_DAILY_LIMIT = 3)
   if (sessionsUsedToday >= FREE_DAILY_LIMIT) {
-    showToast('You've used all 3 sessions for today. Come back tomorrow!', 'error');
+    showToast("You've used all 3 sessions for today. Come back tomorrow!", 'error');
     return;
   }
 
@@ -418,14 +414,7 @@ function formatSessionDate(isoString) {
   return `${monthStr}, ${timeStr}`;
 }
 
-// ─────────────────────────────────────────────
-// 4. SUGGESTED FOR YOU
-// Purpose: Find weak areas (accuracy < 60%) from session history,
-//          deduplicate by subject+topic, render cards.
-//          Uses overflow-scroll so all suggestions are always visible.
-// No dedicated backend endpoint — derived entirely on frontend.
-// ─────────────────────────────────────────────
-
+// SUGGESTED FOR YOU
 function buildSuggestions(sessions) {
   // Group sessions by subject (and topic if available)
   // Calculate average accuracy per group
@@ -472,7 +461,6 @@ function renderSuggestions(weakAreas) {
   const container = document.querySelector('.suggestions-container');
   if (!container) return;
 
-  // Clear dummy HTML
   container.innerHTML = '';
 
   // Empty state
@@ -512,7 +500,7 @@ function renderSuggestions(weakAreas) {
       </div>
     `;
 
-    // Practice button: pre-fills subject (and topic if available), then starts session
+    // Practice button: pre-fills subject then starts session
     const practiceBtn = card.querySelector('.practice');
     practiceBtn?.addEventListener('click', () => {
       handlePracticeFromSuggestion(area.subjectId, area.subjectName, area.topic);
@@ -522,8 +510,6 @@ function renderSuggestions(weakAreas) {
   });
 }
 
-// When "Practice →" is clicked from a suggestion card,
-// pre-fill the subject input and topic, then trigger session start
 async function handlePracticeFromSuggestion(subjectId, subjectName, topic) {
   const subjectInput = document.getElementById('subjects');
   const topicInput   = document.getElementById('topics');
@@ -535,41 +521,28 @@ async function handlePracticeFromSuggestion(subjectId, subjectName, topic) {
   subjectInput?.dispatchEvent(new Event('change'));
 
   // Small delay to let topics populate, then start
-  // (if no topics endpoint, this is instant)
   await new Promise(resolve => setTimeout(resolve, 300));
 
-  // Now kick off session start
   handleStartSession();
 }
 
-// ─────────────────────────────────────────────
-// 5. THIS WEEK STATS
-// Purpose: Fetch dashboard data and populate the streak card.
-//          Questions practiced, sessions count, average score, streak.
-// Endpoint: GET /student/me/dashboard?period=week
-// Streak:   POST /streaks (ping to update, then read currentStreak)
-// ─────────────────────────────────────────────
-
+// THIS WEEK STATS
 async function loadWeekStats() {
   try {
     // Ping streak first to make sure it's up to date for today's visit
-    // POST /streaks — backend handles consecutive day logic
     api.post(ENDPOINTS.STREAKS, {}).catch(() => {
-      // Streak ping failure is non-critical — don't block the page
     });
 
     // Fetch dashboard stats for this week
     const res  = await api.get(`${ENDPOINTS.STUDENT_DASHBOARD}?period=week`);
     const data = res.data ?? res;
 
-    // data.stats: { totalSessions, averageScore, studyStreak, questionsAnswered }
     const stats = data.stats ?? {};
 
     // Populate the streak card
     renderWeekStats(stats);
 
   } catch (err) {
-    // Non-critical — don't show toast, just leave the card with defaults
     renderWeekStats({});
   }
 }
@@ -595,7 +568,6 @@ function renderWeekStats(stats) {
   }
 
   // Streak count
-  // studyStreak comes from dashboard; we also pinged /streaks above
   const streakEl   = document.querySelector('.streak-count');
   const checkIcon  = document.querySelector('.keep-it-up-section .check');
   const streak     = stats.studyStreak ?? 0;
@@ -608,19 +580,13 @@ function renderWeekStats(stats) {
     }
   }
     
-   //  If streak is 0, change icon to a motivational one instead of a checkmark
+   //  If streak is 0, change icon to a motivation
   if (checkIcon && streak === 0) {
     checkIcon.className = 'ph-bold ph-rocket-launch check';
   }
 }
 
-// ─────────────────────────────────────────────
-// UI HELPERS
-// ─────────────────────────────────────────────
-
 // Shows a toast notification
-// Usage: showToast('Something went wrong', 'error')
-//        showToast('Session started!', 'success')
 function showToast(message, type = '') {
   const toast = document.getElementById('toast');
   if (!toast) return;
@@ -631,7 +597,7 @@ function showToast(message, type = '') {
   setTimeout(() => toast.classList.remove('show'), 3500);
 }
 
-// Toggles the start button between loading and normal state
+// loading state
 function setButtonLoading(btn, isLoading) {
   if (!btn) return;
   if (isLoading) {
@@ -647,7 +613,4 @@ function setButtonLoading(btn, isLoading) {
   }
 }
 
-// ─────────────────────────────────────────────
-// BOOT
-// ─────────────────────────────────────────────
 init();
