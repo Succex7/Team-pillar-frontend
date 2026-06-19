@@ -16,7 +16,7 @@ const ICON_COLOURS = [
 const STREAK_MESSAGES = {
   zero:     { text: 'Take your first mock today!',    icon: 'ph-bold ph-rocket-launch' },
   low:      { text: 'Good start — keep it going!',    icon: 'ph-bold ph-trend-up'      },
-  mid:      { text: 'Keep it up! You're improving.', icon: 'ph-bold ph-check-circle'  },
+  mid:      { text: "Keep it up! You're improving.", icon: 'ph-bold ph-check-circle'  },
   high:     { text: 'On fire! Don\'t stop now 🔥',    icon: 'ph-bold ph-fire'          },
   legend:   { text: 'Legendary streak! JAMB ready.',  icon: 'ph-bold ph-trophy'        },
 };
