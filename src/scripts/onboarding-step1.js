@@ -2,12 +2,7 @@
 // Handles: subject rendering, selection logic, progress bar,
 //          validation, session persistence, seamless navigation
 
-import { api }       from '../services/api.js';
-import { ENDPOINTS } from '../services/endpoints.js';
-
-
 // DATA
-
 const SUBJECTS = [
   {
     id:          'use-of-english',
@@ -106,62 +101,15 @@ const remainingBadge = document.getElementById('remainingBadge');
 const toast          = document.getElementById('toast');
 const pageOverlay    = document.getElementById('pageOverlay');
 
-
 // INIT
-
-
-async function init() {
-  await loadSubjects();       // fetch from API
+function init() {
   restoreSavedSelection();
+  renderSubjects();
   updateProgress();
   updateNextButton();
 }
 
-async function loadSubjects() {
-  try {
-    const response = await api.get(ENDPOINTS.GET_SUBJECTS);
-    const subjectsFromApi = response.data || response;
-
-    // Map API response to your internal format
-    // Keep Use of English as compulsory
-    SUBJECTS.length = 0; // clear the hardcoded array
-
-    subjectsFromApi.forEach((subject) => {
-      SUBJECTS.push({
-        id:         subject.id,
-        name:       subject.name,
-        compulsory: subject.name === 'Use of English',
-        icon:       getIconForSubject(subject.name), // keep your existing icon logic
-      });
-    });
-
-    // Pre-select Use of English
-    SUBJECTS.filter(s => s.compulsory).forEach(s => selectedIds.add(s.id));
-
-  } catch (err) {
-    // If API fails, fall back to hardcoded list silently
-    console.warn('Could not load subjects from API, using defaults.', err);
-  }
-}
-
-function getIconForSubject(name) {
-  const iconMap = {
-    'Use of English': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`,
-    'Mathematics':    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h.01M15 9h.01M9 15h.01M15 15h.01M12 9v6"/></svg>`,
-    'Biology':        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c4.97 0 9-3.582 9-8 0-2.91-1.64-5.455-4.125-6.965"/><path d="M3 14c0 4.418 4.03 8 9 8"/></svg>`,
-    'Chemistry':      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M9 3v7l-5 9.5A2 2 0 005.76 22h12.48A2 2 0 0020 19.5L15 10V3M9 3h6"/></svg>`,
-    'Physics':        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4.09 12.97H11L10 22L20.91 11.03H14L13 2Z"/></svg>`,
-    'Economics':      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>`,
-    'Government':     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L22 8H2L12 2Z"/><rect x="4" y="9" width="3" height="10" rx="1"/><rect x="10.5" y="9" width="3" height="10" rx="1"/><rect x="17" y="9" width="3" height="10" rx="1"/></svg>`,
-    'Literature':     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>`,
-  };
-  // Default icon if subject not in map
-  return iconMap[name] || `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>`;
-}
-
-
 // RESTORE SAVED — if user navigated back from step 2
-
 function restoreSavedSelection() {
   const saved = sessionStorage.getItem('onboarding_step1_subjects');
   if (!saved) return;
@@ -177,7 +125,6 @@ function restoreSavedSelection() {
     // Ignore parse errors — start fresh
   }
 }
-
 
 // RENDER SUBJECTS DYNAMICALLY
 function renderSubjects() {

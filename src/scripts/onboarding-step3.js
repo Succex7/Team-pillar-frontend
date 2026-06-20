@@ -58,6 +58,17 @@ const STUDY_HOURS_OPTIONS = [
   },
 ];
 
+const SUBJECT_NAME_TO_ID = new Map([
+  ['use of english', 'use-of-english'],
+  ['mathematics', 'mathematics'],
+  ['biology', 'biology'],
+  ['chemistry', 'chemistry'],
+  ['government', 'government'],
+  ['physics', 'physics'],
+  ['economics', 'economics'],
+  ['literature', 'literature'],
+]);
+
 // STATE
 let selectedValue = null;
 
@@ -263,23 +274,40 @@ async function handleFinish() {
   setFinishLoading(true);
 
   try {
-    const onboardingPayload = buildOnboardingPayload();
+    const subjectCatalog = await fetchSubjectCatalog();
+
+    if (!subjectCatalog.length) {
+      showToast('We could not load your subject list from the server. Please refresh and try again.', 'error');
+      setFinishLoading(false);
+      return;
+    }
+
+    const onboardingPayload = buildOnboardingPayload(subjectCatalog);
+
+    if (!onboardingPayload?.onboarding?.subjects?.length) {
+      showToast('Your subject selection could not be verified. Please go back and select your subjects again.', 'error');
+      setFinishLoading(false);
+      return;
+    }
 
     // Send all onboarding data to the backend in one call
     const response = await api.post(ENDPOINTS.STUDENT_ONBOARDING, onboardingPayload);
 
     // Update userStore with returned user data
-    const updatedUser = response.data;
+    const updatedUser = response?.data || response;
     const currentState = userStore.getState();
 
     userStore.setState({
-      profile: updatedUser,
-      token:   currentState.token,
-      role:    updatedUser.role,
+      profile: updatedUser?.user || updatedUser,
+      token:   currentState.token || updatedUser?.token || null,
+      role:    updatedUser?.role || currentState.role || 'student',
     });
 
     // Save completion flag
+    sessionStorage.setItem('onboarding_step3_done', '1');
     localStorage.setItem('onboarding_step3_done', '1');
+
+    sessionStorage.setItem('onboarding_step3_data', JSON.stringify(onboardingPayload));
 
     showToast('Great! Setting up your study plan...', 'success');
 
@@ -293,19 +321,235 @@ async function handleFinish() {
   }
 }
 
-// buildOnboardingPayload:
-function buildOnboardingPayload() {
-  const step1Data = JSON.parse(sessionStorage.getItem('onboarding_step1_data') || '{}');
-  const step2Data = JSON.parse(sessionStorage.getItem('onboarding_step2_data') || '{}');
+async function fetchSubjectCatalog() {
+  try {
+    const response = await api.get(ENDPOINTS.GET_SUBJECTS);
+    const data = response?.data || response;
 
-  const subjectNames = (step1Data.subjects || []).map(s => s.name || s.id);
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data?.subjects)) return data.subjects;
+    if (Array.isArray(data?.data)) return data.data;
+
+    return [];
+  } catch (err) {
+    console.warn('Failed to load subject catalog for onboarding:', err);
+    return [];
+  }
+}
+
+function buildOnboardingPayload(subjectCatalog = []) {
+  const step1Data = parseStoredJson('onboarding_step1_data', {});
+  const step2Data = parseStoredJson('onboarding_step2_data', {});
+
+  const rawStoredSubjects = sessionStorage.getItem('onboarding_step1_subjects');
+  const legacySubjects = parseStoredLiteral(rawStoredSubjects || '');
+  const selectedSubjects = toArray(step1Data.subjects).length
+    ? step1Data.subjects
+    : legacySubjects;
+
+  const subjectIds = resolveSubjectIds(selectedSubjects, subjectCatalog);
+  const studyHours = selectedValue || sessionStorage.getItem('onboarding_step3_hours');
+  const targetScore = Number(step2Data.targetScore) || null;
 
   return {
-    subjects:    subjectNames,
-    targetScore: step2Data.targetScore || null,
-    studyPlan:   [],    // AI will generate
-    schedule:    [],    // AI will generate
+    onboarding: {
+      subjects: subjectIds,
+      targetScore,
+      studyHours,
+      dailyStudyHours: studyHours,
+      studyPlan: [],
+      schedule: [],
+      onboardingComplete: true,
+    },
   };
+}
+
+function resolveSubjectIds(selectedSubjects, subjectCatalog) {
+  const normalizedCandidates = normalizeSubjectCandidates(selectedSubjects);
+
+  const fromCatalog = subjectCatalog
+    .map((subject) => ({
+      id: subject?._id || subject?.id || null,
+      name: subject?.name || subject?.subjectName || '',
+      slug: subject?.slug || subject?.code || '',
+    }))
+    .filter((subject) => subject.id)
+    .filter((subject) => normalizedCandidates.some((candidate) =>
+      matchesSubjectCandidate(subject, candidate)
+    ));
+
+  if (fromCatalog.length) {
+    return [...new Set(fromCatalog.map((subject) => subject.id))];
+  }
+
+  return normalizeSubjectIds(selectedSubjects);
+}
+
+function matchesSubjectCandidate(subject, candidate) {
+  const haystacks = [
+    subject.name,
+    subject.slug,
+    subject.id,
+    candidate.name,
+    candidate.slug,
+    candidate.id,
+    candidate.normalized,
+  ].filter(Boolean).map((value) => canonicalizeSubjectToken(value));
+
+  const candidateToken = canonicalizeSubjectToken(candidate.normalized || candidate.slug || candidate.id || candidate.name);
+
+  return haystacks.some((value) => value === candidateToken || value.includes(candidateToken) || candidateToken.includes(value));
+}
+
+function canonicalizeSubjectToken(value) {
+  return String(normalizeSubjectId(value) || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function normalizeSubjectCandidates(selectedSubjects) {
+  const entries = Array.isArray(selectedSubjects) ? selectedSubjects : [selectedSubjects];
+
+  return entries
+    .map((entry) => {
+      if (typeof entry === 'string') {
+        return {
+          name: entry,
+          slug: entry,
+          id: entry,
+          normalized: normalizeSubjectId(entry),
+        };
+      }
+
+      if (entry && typeof entry === 'object') {
+        return {
+          name: entry.name || entry.subjectName || '',
+          slug: entry.slug || entry.code || '',
+          id: entry._id || entry.id || entry.subjectId || entry.value || '',
+          normalized: normalizeSubjectId(entry.name || entry.subjectName || entry._id || entry.id || entry.subjectId || entry.value || ''),
+        };
+      }
+
+      return null;
+    })
+    .filter(Boolean);
+}
+
+function normalizeSubjectIds(rawSubjects) {
+  const entries = toArray(rawSubjects);
+
+  const normalized = entries.flatMap((entry) => {
+    if (typeof entry === 'string') {
+      const parsedList = toArray(parseStoredLiteral(entry));
+      if (parsedList.length > 1 || (parsedList.length === 1 && parsedList[0]?.includes(','))) {
+        return parsedList.flatMap((item) => toArray(normalizeSubjectId(item))).filter(Boolean);
+      }
+
+      const directId = normalizeSubjectId(entry);
+      return toArray(directId).filter(Boolean);
+    }
+
+    if (entry && typeof entry === 'object') {
+      const candidate = entry._id || entry.id || entry.subjectId || entry.value || null;
+      const id = normalizeSubjectId(candidate || entry.name || entry.label || '');
+      return toArray(id).filter(Boolean);
+    }
+
+    return [];
+  });
+
+  return [...new Set(normalized)];
+}
+
+function normalizeSubjectId(value) {
+  if (Array.isArray(value)) {
+    return value.flatMap((item) => toArray(normalizeSubjectId(item))).filter(Boolean);
+  }
+
+  if (!value) return null;
+
+  if (typeof value === 'object') {
+    return normalizeSubjectId(value._id || value.id || value.subjectId || value.value || value.name || value.label);
+  }
+
+  const trimmed = String(value).trim();
+
+  if (!trimmed) return null;
+
+  try {
+    const parsed = JSON.parse(trimmed);
+    if (Array.isArray(parsed)) {
+      return parsed.flatMap((item) => toArray(normalizeSubjectId(item))).filter(Boolean);
+    }
+    if (parsed && typeof parsed === 'object') {
+      return normalizeSubjectId(parsed._id || parsed.id || parsed.value || parsed.name || parsed.label);
+    }
+  } catch {
+    // Ignore invalid JSON and continue with the string normalization below.
+  }
+
+  const lowered = trimmed.toLowerCase();
+  const mapped = SUBJECT_NAME_TO_ID.get(lowered) || SUBJECT_NAME_TO_ID.get(lowered.replace(/[_-]+/g, ' '));
+
+  if (mapped) return mapped;
+
+  return trimmed
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .toLowerCase();
+}
+
+function parseStoredJson(key, fallback = {}) {
+  const rawValue = sessionStorage.getItem(key);
+
+  if (rawValue === null || rawValue === undefined) return fallback;
+
+  try {
+    return JSON.parse(rawValue) ?? fallback;
+  } catch {
+    const parsed = parseStoredLiteral(rawValue);
+    return parsed ?? fallback;
+  }
+}
+
+function parseStoredLiteral(value) {
+  if (typeof value !== 'string') return value;
+
+  const trimmed = value.trim();
+
+  if (!trimmed) return '';
+
+  if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+    const matches = trimmed.match(/'([^']*)'|"([^"]*)"|([^,\[\]\s]+)/g);
+
+    if (matches) {
+      return matches.map((item) => item.replace(/^['"]|['"]$/g, '').trim()).filter(Boolean);
+    }
+  }
+
+  return trimmed;
+}
+
+function toArray(value) {
+  if (Array.isArray(value)) return value;
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (!trimmed) return [];
+
+    try {
+      const parsed = JSON.parse(trimmed);
+      return Array.isArray(parsed) ? parsed : [parsed];
+    } catch {
+      const matches = trimmed.match(/'([^']*)'|"([^"]*)"|([^,\[\]\s]+)/g);
+      return matches
+        ? matches.map((item) => item.replace(/^['"]|['"]$/g, '').trim()).filter(Boolean)
+        : [trimmed];
+    }
+  }
+
+  return value == null ? [] : [value];
 }
 
 // SEAMLESS TRANSITION
@@ -350,12 +594,29 @@ function showToast(message, type = '') {
 }
 
 function getErrorMessage(err) {
-  const map = {
-    400: 'Invalid data. Please try again.',
-    401: 'Your session has expired. Please log in again.',
-    500: strings?.errors?.generic || 'Something went wrong. Please try again.',
-  };
-  return map[err?.status] || err?.message || 'Something went wrong. Please try again.';
+  const backendMessage = err?.data?.message || err?.message;
+
+  if (err?.status === 400) {
+    return backendMessage || 'Invalid onboarding data. Please review your selections and try again.';
+  }
+
+  if (err?.status === 401) {
+    return 'Your session has expired. Please sign in again.';
+  }
+
+  if (err?.status === 403) {
+    return 'You are not allowed to complete onboarding right now.';
+  }
+
+  if (err?.status === 422) {
+    return backendMessage || 'The onboarding details are incomplete. Please review your selections.';
+  }
+
+  if (err?.status >= 500) {
+    return backendMessage || strings?.errors?.generic || 'Our server is unavailable right now. Please try again in a moment.';
+  }
+
+  return backendMessage || 'Something went wrong. Please try again.';
 }
 
 // BOOT

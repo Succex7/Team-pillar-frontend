@@ -1,4 +1,5 @@
-// Factory function (call this to create any store)
+// appStore logic
+
 export function createStore(initialState) {
   let state = { ...initialState };
   const listeners = [];
@@ -15,7 +16,6 @@ export function createStore(initialState) {
 
     subscribe(fn) {
       listeners.push(fn);
-      // Returns an unsubscribe function
       return () => {
         const index = listeners.indexOf(fn);
         if (index > -1) listeners.splice(index, 1);
@@ -24,9 +24,13 @@ export function createStore(initialState) {
   };
 }
 
-// The main global app store (for the things every page needs)
+// Global app store — internet + auth status
 export const appStore = createStore({
-  user: null,              // logged-in user object
-  isAuthenticated: false,  // is user logged in?
-  isOnline: navigator.onLine, // internet connection status
+  user:            null,
+  isAuthenticated: false,
+  isOnline:        navigator.onLine,
 });
+
+// Keep isOnline in sync automatically
+window.addEventListener('online',  () => appStore.setState({ isOnline: true }));
+window.addEventListener('offline', () => appStore.setState({ isOnline: false }));

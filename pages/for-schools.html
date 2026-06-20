@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pillar for Schools — UTME Preparation at Scale</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/base.css" />
+    <link rel="stylesheet" href="../src/styles/for-schools.css" />
+    <link rel="icon" type="image/png" href="../icon/logo-white.png" />
+  </head>
+  <body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+      <div class="nav-inner">
+
+        <a href="../index.html" class="nav-logo" aria-label="Pillar home">
+          <img src="/icon/logo.png" width="22px" height="22px" alt="Pillar Logo" />
+          <span>Pillar</span>
+        </a>
+
+        <ul class="nav-links" role="list">
+          <li><a href="../index.html#features"    class="nav-link">Features</a></li>
+          <li><a href="../index.html#how-it-works" class="nav-link">How it works</a></li>
+          <li><a href="../pages/for-schools.html" class="nav-link nav-link--active" aria-current="page">For Schools</a></li>
+          <li><a href="../pages/pricing.html"     class="nav-link">Pricing</a></li>
+        </ul>
+
+        <div class="nav-cta">
+          <a href="../pages/register.html" class="btn btn-primary btn-sm">Get Started Free →</a>
+          <a href="../pages/login.html" class="btn btn-ghost btn-outline btn-sm">Sign In</a>
+        </div>
+
+        <button
+          type="button"
+          class="hamburger"
+          id="hamburger"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="mobileMenu"
+        >
+          <span class="ham-line"></span>
+          <span class="ham-line"></span>
+          <span class="ham-line"></span>
+        </button>
+
+      </div>
+
+      <div class="mobile-menu" id="mobileMenu" role="menu" aria-hidden="true">
+        <a href="../index.html#features"    class="mobile-link" role="menuitem">Features</a>
+        <a href="../index.html#how-it-works" class="mobile-link" role="menuitem">How it Works</a>
+        <a href="../pages/for-schools.html" class="mobile-link" role="menuitem">For Schools</a>
+        <a href="../pages/pricing.html"     class="mobile-link" role="menuitem">Pricing</a>
+        <div class="mobile-cta">
+          <a href="../pages/register.html" class="btn btn-primary btn-sm">Get Started Free →</a>
+          <a href="../pages/login.html" class="btn btn-ghost btn-outline btn-sm">Sign In</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+
+      <!-- HERO -->
+      <section class="schools-hero" aria-labelledby="heroTitle">
+        <div class="schools-hero-inner">
+          <div class="schools-hero-content">
+            <span class="hero-badge">FOR SCHOOLS & INSTITUTIONS</span>
+            <h1 class="hero-title" id="heroTitle">
+              Prepare Every Student.<br/>
+              Track Every Score.
+            </h1>
+            <p class="hero-sub">
+              Give your school a competitive edge. Pillar's institutional dashboard
+              helps teachers monitor student progress, identify weak areas,
+              and boost UTME scores across the entire class.
+            </p>
+            <div class="hero-actions">
+              <a href="#contact" class="btn btn-primary">Get a Free Demo →</a>
+              <a href="#features" class="btn btn-outline">See Features</a>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="hero-stats-grid">
+            <div class="hero-stat-card">
+              <p class="hero-stat-number" id="statStudents">50,000+</p>
+              <p class="hero-stat-label">Students Prepared</p>
+            </div>
+            <div class="hero-stat-card">
+              <p class="hero-stat-number">94%</p>
+              <p class="hero-stat-label">Score Improvement Rate</p>
+            </div>
+            <div class="hero-stat-card">
+              <p class="hero-stat-number">300+</p>
+              <p class="hero-stat-label">Avg. Score Achieved</p>
+            </div>
+            <div class="hero-stat-card">
+              <p class="hero-stat-number">10,000+</p>
+              <p class="hero-stat-label">Past JAMB Questions</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURES -->
+      <section class="schools-features" id="features" aria-labelledby="featuresTitle">
+        <div class="section-inner">
+          <div class="section-header">
+            <span class="section-badge">BUILT FOR EDUCATORS</span>
+            <h2 class="section-title" id="featuresTitle">Everything Your School Needs</h2>
+            <p class="section-sub">
+              One dashboard for teachers. One platform for students.
+              Real results before exam day.
+            </p>
+          </div>
+
+          <div class="features-grid" id="featuresGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section class="how-it-works" aria-labelledby="howTitle">
+        <div class="section-inner">
+          <div class="section-header">
+            <span class="section-badge">SIMPLE SETUP</span>
+            <h2 class="section-title" id="howTitle">Up and Running in 3 Steps</h2>
+          </div>
+
+          <ol class="steps-list" id="stepsList">
+            <!-- Populated by JS -->
+          </ol>
+        </div>
+      </section>
+
+      <!-- TESTIMONIALS -->
+      <section class="testimonials-section" aria-labelledby="testimonialsTitle">
+        <div class="section-inner">
+          <div class="section-header">
+            <span class="section-badge">WHAT SCHOOLS SAY</span>
+            <h2 class="section-title" id="testimonialsTitle">Trusted by Schools Across Nigeria</h2>
+          </div>
+
+          <div class="testimonials-grid" id="testimonialsGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- PRICING CTA -->
+      <section class="schools-pricing-cta" aria-labelledby="pricingCtaTitle">
+        <div class="section-inner">
+          <div class="pricing-cta-card">
+            <div class="pricing-cta-text">
+              <h2 class="pricing-cta-title" id="pricingCtaTitle">
+                Flexible Pricing for Every School Size
+              </h2>
+              <p class="pricing-cta-sub">
+                From 50 to 5,000 students — we have a plan that fits your school's
+                budget and goals. Volume discounts available for larger institutions.
+              </p>
+              <ul class="pricing-cta-list">
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Bulk student seat pricing
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Dedicated school admin dashboard
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Priority onboarding and training
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Monthly performance reports
+                </li>
+              </ul>
+            </div>
+            <a href="#contact" class="btn btn-primary btn-primary-amber">Request Pricing →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT / DEMO FORM -->
+      <section class="contact-section" id="contact" aria-labelledby="contactTitle">
+        <div class="section-inner contact-inner">
+
+          <div class="contact-info">
+            <span class="section-badge">GET IN TOUCH</span>
+            <h2 class="contact-title" id="contactTitle">
+              Book a Free Demo for Your School
+            </h2>
+            <p class="contact-sub">
+              Our team will walk you through everything, answer your questions,
+              and set up a pilot program at no cost.
+            </p>
+            <div class="contact-details">
+              <div class="contact-detail-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                <span>schools@pillarcbt.com</span>
+              </div>
+              <div class="contact-detail-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006 6l1.27-.73a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+                </svg>
+                <span>Response within 24 hours</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-form-wrapper">
+            <form id="schoolContactForm" class="contact-form" novalidate>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="contactName">Your Name</label>
+                  <input
+                    type="text"
+                    id="contactName"
+                    name="contactName"
+                    placeholder="Principal / HOD Name"
+                    aria-describedby="contactNameError"
+                  />
+                  <span class="field-error" id="contactNameError" role="alert"></span>
+                </div>
+                <div class="form-group">
+                  <label for="contactEmail">Email Address</label>
+                  <input
+                    type="email"
+                    id="contactEmail"
+                    name="contactEmail"
+                    placeholder="school@example.edu.ng"
+                    aria-describedby="contactEmailError"
+                  />
+                  <span class="field-error" id="contactEmailError" role="alert"></span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="schoolName">School Name</label>
+                  <input
+                    type="text"
+                    id="schoolName"
+                    name="schoolName"
+                    placeholder="e.g. Federal Government College Lagos"
+                    aria-describedby="schoolNameError"
+                  />
+                  <span class="field-error" id="schoolNameError" role="alert"></span>
+                </div>
+                <div class="form-group">
+                  <label for="studentCount">Approx. Number of Students</label>
+                  <div class="select-wrapper">
+                    <select id="studentCount" name="studentCount" aria-label="Number of students">
+                      <option value="">Select range</option>
+                      <option value="1-50">1 – 50</option>
+                      <option value="51-200">51 – 200</option>
+                      <option value="201-500">201 – 500</option>
+                      <option value="501-1000">501 – 1,000</option>
+                      <option value="1000+">1,000+</option>
+                    </select>
+                    <svg class="select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="message">Message <span class="label-optional">(Optional)</span></label>
+                <textarea
+                  id="message"
+                  name="message"
+                  placeholder="Tell us about your school's needs, any specific requirements, or questions you have..."
+                  rows="4"
+                  aria-describedby="messageHint"
+                ></textarea>
+                <span class="field-hint" id="messageHint">We'll get back to you within 24 hours</span>
+              </div>
+
+              <button type="submit" class="btn-submit" id="submitContactBtn">
+                <span id="submitContactText">Send Message →</span>
+                <span class="btn-loader hidden" id="submitContactLoader" aria-hidden="true"></span>
+              </button>
+
+            </form>
+
+            <!-- Success state -->
+            <div class="contact-success hidden" id="contactSuccess">
+              <div class="success-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+              <h3 class="success-title">Message Sent!</h3>
+              <p class="success-sub">
+                Thanks for reaching out. Our schools team will contact you
+                within 24 hours to arrange a demo.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="../index.html" class="footer-logo">
+            <img src="/icon/logo-white.png" width="22px" height="22px" alt="Pillar Logo" />
+            <span>Pillar</span>
+          </a>
+          <p class="footer-tagline">Professional UTME Preparation for Nigerian Excellence.</p>
+        </div>
+
+        <div class="footer-links-grid">
+          <div class="footer-col">
+            <p class="footer-col-title">PRODUCT</p>
+            <ul class="footer-link-list">
+              <li><a href="../index.html#features"  class="footer-link">Features</a></li>
+              <li><a href="../pages/pricing.html"   class="footer-link">Pricing</a></li>
+              <li><a href="../index.html#mock-tests" class="footer-link">Mock Tests</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <p class="footer-col-title">SCHOOLS</p>
+            <ul class="footer-link-list">
+              <li><a href="../pages/for-schools.html" class="footer-link">For Schools</a></li>
+              <li><a href="#contact"                  class="footer-link">Book a Demo</a></li>
+              <li><a href="mailto:schools@pillarcbt.com" class="footer-link">Contact Sales</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <p class="footer-col-title">COMPANY</p>
+            <ul class="footer-link-list">
+              <li><a href="#" class="footer-link">Privacy Policy</a></li>
+              <li><a href="#" class="footer-link">Terms of Service</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2024 Pillar Education. Professional UTME Preparation for Nigerian Excellence.</p>
+        <div class="footer-badges">
+          <span class="footer-badge">JAMB OFFICIAL</span>
+          <span class="footer-dot">·</span>
+          <span class="footer-badge">NERDC COMPLIANT</span>
+          <span class="footer-dot">·</span>
+          <span class="footer-badge">CBT PREP</span>
+        </div>
+      </div>
+    </footer>
+
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script type="module" src="../src/scripts/for-schools.js"></script>
+  </body>
+</html>

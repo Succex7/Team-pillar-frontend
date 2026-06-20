@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="../src/styles/tokens.css" />
     <link rel="stylesheet" href="../src/styles/base.css" />
     <link rel="stylesheet" href="../src/styles/pricing.css" />
+    <link rel="icon" type="image/png" href="../icon/logo-white.png" />
   </head>
 
   <body>
@@ -31,7 +32,7 @@
         <ul class="nav-links" role="list">
           <li><a href="../index.html#features" class="nav-link">Features</a></li>
           <li><a href="../index.html#how-it-works" class="nav-link">How it works</a></li>
-          <li><a href="../index.html#for-schools" class="nav-link">For Schools</a></li>
+          <li><a href="../pages/for-schools.html" class="nav-link">For Schools</a></li>
           <li><a href="../pages/pricing.html" class="nav-link nav-link--active" aria-current="page">Pricing</a></li>
         </ul>
 
@@ -60,7 +61,7 @@
       <div class="mobile-menu" id="mobileMenu" role="menu" aria-hidden="true">
         <a href="../index.html#features"    class="mobile-link" role="menuitem">Features</a>
         <a href="../index.html#how-it-works" class="mobile-link" role="menuitem">How it works</a>
-        <a href="../index.html#for-schools"  class="mobile-link" role="menuitem">For Schools</a>
+        <a href="../pages/for-schools.html"  class="mobile-link" role="menuitem">For Schools</a>
         <a href="../pages/pricing.html"     class="mobile-link" role="menuitem">Pricing</a>
         <div class="mobile-cta">
             <a href="../pages/register.html" class="mobile-start-btn">Get Started Free →</a>
@@ -186,46 +187,36 @@
 
     </main>
 
-    <!-- FOOTER -->
+    <!-- FOOTER-->
     <footer class="footer" role="contentinfo">
-      <div class="footer-inner">
-        <div class="footer-brand">
-          <a href="../index.html" class="footer-logo">
-            <img src="/icon/logo-white.png" alt="Pillar Logo" width="22" height="22" />
-            <span>Pillar</span>
-          </a>
-          <p class="footer-tagline">Professional UTME Preparation for Nigerian Excellence.</p>
+      <div class="container">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <a href="/" class="nav-logo footer-logo">
+
+              <img src="/icon/logo-white.png" alt="Pillar logo" width="20" height="20" aria-hidden="true" />
+              <span style="color:white;">Pillar</span>
+            </a>
+            <p class="footer-tagline">
+              Nigeria's most intelligent UTME preparation platform.
+            </p>
+          </div>
+
+          <div class="footer-links-grid" id="footerLinksGrid">
+            <!-- Populated by JS -->
+          </div>
         </div>
 
-        <div class="footer-links-grid">
-          <div class="footer-col">
-            <p class="footer-col-title">PRODUCT</p>
-            <ul class="footer-link-list">
-              <li><a href="../index.html#features" class="footer-link">Features</a></li>
-              <li><a href="../pages/pricing.html"  class="footer-link">Study Plans</a></li>
-              <li><a href="../index.html#mock-tests" class="footer-link">Mock Tests</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <p class="footer-col-title">COMPANY</p>
-            <ul class="footer-link-list">
-              <li><a href="#" class="footer-link">Privacy Policy</a></li>
-              <li><a href="#" class="footer-link">Terms of Service</a></li>
-              <li><a href="mailto:support@pillarcbt.com" class="footer-link">Contact Us</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <p class="footer-col-title">SUPPORT</p>
-            <ul class="footer-link-list">
-              <li><a href="#" class="footer-link">Help Center</a></li>
-              <li><a href="#" class="footer-link">Cookie Settings</a></li>
-            </ul>
+        <div class="footer-bottom">
+          <p class="footer-copy">© <span id="currentYear"></span> Pillar. All rights reserved.</p>
+          <div class="footer-badges">
+            <span class="footer-badge">JAMB OFFICIAL</span>
+            <span class="footer-dot">·</span>
+            <span class="footer-badge">NERDC COMPLIANT</span>
+            <span class="footer-dot">·</span>
+            <span class="footer-badge">CBT PREP</span>
           </div>
         </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p class="footer-copy">© 2024 Pillar Education. Professional UTME Preparation for Nigerian Excellence.</p>
       </div>
     </footer>
 
