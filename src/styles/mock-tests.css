@@ -100,12 +100,11 @@ body {
   max-height: calc(4 * 110px + 3 * 24px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  -webkit-overflow-scrolling: touch;
--moz-overflow-scrolling: touch;
--webkit-scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
--webkit-scrollbar-width: thin;
-scrollbar-width: thin;
-scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
+  -moz-overflow-scrolling: touch;
+  -webkit-scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
+  -webkit-scrollbar-width: thin;
+   scrollbar-width: thin;
+   scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
 }
 
 .past-mock-tests-box::-webkit-scrollbar {
@@ -377,14 +376,6 @@ scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
     flex-direction: row;
     align-items: center;
   }
-
-/* .info-image-text-box {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(8px, 2vw, 16px);
-    align-items: center;
-  }
-*/
 
   .info-image-text-box img {
     display: flex;
