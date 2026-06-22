@@ -1,54 +1,43 @@
-// src/scripts/study-sessions.js
+// src/scripts/study-session.js
 import { initShell } from '../components/shell.js';
 import { userStore } from '../store/userStore.js';
 import { api }       from '../services/api.js';
 import { ENDPOINTS } from '../services/endpoints.js';
 
-// Free plan allows 3 practice sessions per day
 const FREE_DAILY_LIMIT = 3;
 
-// Icon colour rotation order for recent session cards
 const ICON_COLOURS = [
-  { bg: '#FFF7ED', color: '#F97316' }, // orange
-  { bg: '#F0FDF4', color: '#22C55E' }, // green
-  { bg: '#FAF5FF', color: '#A855F7' }, // purple
-  { bg: '#EFF6FF', color: '#3B82F6' }, // blue
+  { bg: '#FFF7ED', color: '#F97316' },
+  { bg: '#F0FDF4', color: '#22C55E' },
+  { bg: '#FAF5FF', color: '#A855F7' },
+  { bg: '#EFF6FF', color: '#3B82F6' },
 ];
 
-// Anything below this accuracy is flagged as a weak area
 const WEAK_AREA_THRESHOLD = 60;
-
-// Maximum suggestions to show in "Suggested For You"
 const MAX_SUGGESTIONS = 10;
 
 let userSubjects   = [];
 let allSubjects    = [];
 let currentTopics  = [];
-
-// Tracks sessions used today (derived from session history)
 let sessionsUsedToday = 0;
 
 async function init() {
-  // Render shell 
   await initShell(
     'study-session',
     'Study Sessions',
     'Adaptive · up to 30 min · 5 subjects'
   );
 
-  // Load all page data in parallel for speed
   await Promise.allSettled([
     loadUserAndSubjects(),
     loadRecentSessions(),
     loadWeekStats(),
   ]);
 
-  // button event
   bindStartSession();
 }
 
-//USER PROFILE + SUBJECTS
-
+// USER PROFILE + SUBJECTS
 async function loadUserAndSubjects() {
   try {
     const meRes  = await api.get(ENDPOINTS.GET_ME);
@@ -57,7 +46,6 @@ async function loadUserAndSubjects() {
 
     const selectedSubjectIds = user?.selectedSubjects ?? [];
 
-    // Store user in userStore for shell to use
     if (user) {
       userStore.setState({ profile: user });
     }
@@ -65,13 +53,11 @@ async function loadUserAndSubjects() {
     const subjRes  = await api.get(ENDPOINTS.GET_SUBJECTS);
     const subjData = subjRes.data ?? subjRes;
 
-    allSubjects = Array.isArray(subjData) ? subjData : [];
-
+    allSubjects  = Array.isArray(subjData) ? subjData : [];
     userSubjects = allSubjects.filter(subj =>
       selectedSubjectIds.includes(subj._id)
     );
 
-    // Fallback
     if (userSubjects.length === 0 && selectedSubjectIds.length > 0) {
       userSubjects = allSubjects.filter(s => s.isActive);
     }
@@ -81,90 +67,68 @@ async function loadUserAndSubjects() {
   } catch (err) {
     showToast('Could not load your subjects. Please refresh.', 'error');
 
-    // Fallback: reading from sessionStorage saved during onboarding step 1
     const saved = sessionStorage.getItem('onboarding_step1_data');
     if (saved) {
       try {
-        const step1 = JSON.parse(saved);
-        // step1.subjects = [{ id, name }]
+        const step1  = JSON.parse(saved);
         userSubjects = step1.subjects.map(s => ({ _id: s.id, name: s.name }));
         populateSubjectDropdown(userSubjects);
       } catch {
-        // Nothing
+        // ignore
       }
     }
   }
 }
 
+// Populates the subject <select> dropdown
 function populateSubjectDropdown(subjects) {
-  const datalist = document.getElementById('subjects-list');
-  const input    = document.getElementById('subjects');
-  if (!datalist || !input) return;
+  const select = document.getElementById('subjects');
+  if (!select) return;
 
-  // Clear old options
-  datalist.innerHTML = '';
+  // Clear old options but keep the placeholder
+  select.innerHTML = '<option value="" disabled selected>Select a subject</option>';
 
   subjects.forEach(subj => {
     const option   = document.createElement('option');
-    option.value   = subj.name;
-    
-    datalist.appendChild(option);
+    option.value   = subj._id;
+    option.textContent = subj.name;
+    select.appendChild(option);
   });
 
-  // When subject changes, load topics for that subject
-  input.addEventListener('change', handleSubjectChange);
+  select.addEventListener('change', handleSubjectChange);
 }
 
 // TOPIC DROPDOWN
 async function handleSubjectChange() {
-  const input        = document.getElementById('subjects');
-  const topicInput   = document.getElementById('topics');
-  const topicList    = document.getElementById('topics-list');
-  if (!input || !topicInput || !topicList) return;
+  const select     = document.getElementById('subjects');
+  const topicSelect = document.getElementById('topics');
+  if (!select || !topicSelect) return;
 
-  const selectedName = input.value.trim();
+  const selectedId = select.value;
+  const subject    = userSubjects.find(s => s._id === selectedId);
 
-  const subject = userSubjects.find(
-    s => s.name.toLowerCase() === selectedName.toLowerCase()
-  );
+  // Reset topic dropdown
+  topicSelect.innerHTML = '<option value="">All Topics</option>';
+  currentTopics = [];
 
-  if (!subject) {
-    // clear topics if wrong subject is typed
-    topicList.innerHTML = '';
-    topicInput.value    = '';
-    currentTopics       = [];
-    return;
-  }
+  if (!subject) return;
 
-  // Clear previous topics
-  topicList.innerHTML = '';
-  topicInput.value    = '';
-  currentTopics       = [];
-
-  // Replace with real topics endpoint when available
   try {
     const topicsRes  = await api.get(`${ENDPOINTS.GET_SUBJECTS}/${subject._id}/topics`);
     const topicsData = topicsRes.data ?? topicsRes;
     const topics     = Array.isArray(topicsData) ? topicsData : [];
-    
+
     currentTopics = topics;
 
-    if (topics.length > 0) {
-      // Add "All Topics" as first option
-      const allOpt   = document.createElement('option');
-      allOpt.value   = 'All Topics';
-      topicList.appendChild(allOpt);
+    topics.forEach(topic => {
+      const option       = document.createElement('option');
+      option.value       = topic._id ?? topic;
+      option.textContent = topic.name ?? topic;
+      topicSelect.appendChild(option);
+    });
 
-      topics.forEach(topic => {
-        const option = document.createElement('option');
-        option.value = topic.name ?? topic;
-        topicList.appendChild(option);
-      });
-
-      topicInput.value = 'All Topics';
-    }
   } catch {
-   // if no topics endpoints
+    // Topics endpoint not available yet — topic select stays as "All Topics"
     currentTopics = [];
   }
 }
@@ -177,63 +141,54 @@ function bindStartSession() {
 }
 
 async function handleStartSession() {
-  const subjectInput = document.getElementById('subjects');
-  const topicInput   = document.getElementById('topics');
-  if (!subjectInput) return;
+  const subjectSelect = document.getElementById('subjects');
+  const topicSelect   = document.getElementById('topics');
+  if (!subjectSelect) return;
 
-  const selectedSubjectName = subjectInput.value.trim();
+  const selectedId = subjectSelect.value;
 
-  // if no selected subject
-  if (!selectedSubjectName) {
+  if (!selectedId) {
     showToast('Please select a subject to start.', 'error');
     return;
   }
 
-  // if subject selected doesn't match one of their enrolled subjects
-  const subject = userSubjects.find(
-    s => s.name.toLowerCase() === selectedSubjectName.toLowerCase()
-  );
+  const subject = userSubjects.find(s => s._id === selectedId);
   if (!subject) {
     showToast('Please choose a subject from your enrolled list.', 'error');
     return;
   }
 
-  // Check daily session limit (FREE_DAILY_LIMIT = 3)
   if (sessionsUsedToday >= FREE_DAILY_LIMIT) {
     showToast("You've used all 3 sessions for today. Come back tomorrow!", 'error');
     return;
   }
 
-  // Get optional topic
-  const topicValue  = topicInput?.value?.trim() || '';
+  const topicValue   = topicSelect?.value || '';
   const selectedTopic = currentTopics.find(
-    t => (t.name ?? t).toLowerCase() === topicValue.toLowerCase()
+    t => (t._id ?? t) === topicValue
   );
 
-  // Show loading state
   const btn = document.querySelector('.start-session-btn');
   setButtonLoading(btn, true);
 
   try {
     const body = { subjectId: subject._id };
 
-    if (selectedTopic && topicValue !== 'All Topics') {
+    if (selectedTopic && topicValue) {
       body.topicId = selectedTopic._id ?? selectedTopic;
     }
 
     const res  = await api.post(ENDPOINTS.SESSION_START, body);
     const data = res.data ?? res;
-    
-    // The practice page will read these from sessionStorage
-    sessionStorage.setItem('active_session_id',      data.sessionId);
-    sessionStorage.setItem('active_session_subject',  JSON.stringify(subject));
-    sessionStorage.setItem('active_session_topic',    topicValue || '');
+
+    sessionStorage.setItem('active_session_id',       data.sessionId);
+    sessionStorage.setItem('active_session_subject',   JSON.stringify(subject));
+    sessionStorage.setItem('active_session_topic',     topicValue || '');
     sessionStorage.setItem('active_session_questions', JSON.stringify(data.questions ?? []));
 
     window.location.href = '/pages/practice-session.html';
 
   } catch (err) {
-    // Handle freemium limit error from Backend 
     if (err.status === 403) {
       showToast('Session limit reached. Upgrade to Pro for unlimited sessions.', 'error');
     } else {
@@ -243,64 +198,49 @@ async function handleStartSession() {
   }
 }
 
-// ─────────────────────────────────────────────
-// 3. RECENT SESSIONS
+// RECENT SESSIONS
 async function loadRecentSessions() {
   try {
-    const res     = await api.get(ENDPOINTS.PRACTICE_SESSIONS);
-    const resData = res.data ?? res;
-
-    // API returns an array of sessions
+    const res      = await api.get(ENDPOINTS.PRACTICE_SESSIONS);
+    const resData  = res.data ?? res;
     const sessions = Array.isArray(resData) ? resData : [];
 
-    // Derive how many sessions the student has taken TODAY
-    // We compare session startTime to today's date
     const todayStr = new Date().toDateString();
     sessionsUsedToday = sessions.filter(s => {
       const sessionDate = new Date(s.startTime ?? s.createdAt);
       return sessionDate.toDateString() === todayStr;
     }).length;
 
-    // Update the sessions remaining badge 
     updateSessionsRemaining(sessionsUsedToday);
-    // Render the recent sessions list
     renderRecentSessions(sessions);
-    // Build "Suggested For You" from weak areas in session data,no backend endpoint 
     buildSuggestions(sessions);
 
   } catch (err) {
     showToast('Could not load recent sessions.', 'error');
-    // Still show empty state so the page doesn't just look broken
     renderRecentSessions([]);
     buildSuggestions([]);
   }
 }
 
-// Updates the "X of 3 sessions remaining today" badge
 function updateSessionsRemaining(usedToday) {
   const countEl = document.querySelector('.sessions-count');
   if (!countEl) return;
 
-  const remaining = Math.max(0, FREE_DAILY_LIMIT - usedToday);
-
-  // Update count text
+  const remaining   = Math.max(0, FREE_DAILY_LIMIT - usedToday);
   countEl.textContent = remaining;
 
-  // Update the full badge text
   const sessionText = countEl.closest('.sessions-left');
   if (sessionText) {
     sessionText.innerHTML = `<span class="sessions-count">${remaining}</span> of ${FREE_DAILY_LIMIT} sessions remaining today`;
   }
 }
 
-// Renders the list of recent session cards
 function renderRecentSessions(sessions) {
   const container = document.querySelector('.past-study-session-box');
   if (!container) return;
-  
+
   container.innerHTML = '';
 
-  // Empty state — shown until student completes their first session
   if (sessions.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
@@ -312,37 +252,22 @@ function renderRecentSessions(sessions) {
     return;
   }
 
-  // Render each session as a card, if >4, the CSS makes it scrollable
   sessions.forEach((session, index) => {
-    const card = buildSessionCard(session, index);
-    container.appendChild(card);
+    container.appendChild(buildSessionCard(session, index));
   });
 }
 
-// Builds a single recent session card element
 function buildSessionCard(session, index) {
-  // Get subject name — session has subjectId
-  const subject = allSubjects.find(s => s._id === session.subjectId)
-    ?? { name: 'Unknown Subject' };
-
-  // Get topic from analytics if available
-  const topic = session.analytics?.topMistakeTopic ?? session.topic ?? '';
-
-  // Score and accuracy
+  const subject  = allSubjects.find(s => s._id === session.subjectId) ?? { name: 'Unknown Subject' };
+  const topic    = session.analytics?.topMistakeTopic ?? session.topic ?? '';
   const score    = session.score ?? 0;
   const accuracy = session.analytics?.accuracy ?? 0;
 
-  // Score colour: green if ≥ 70%, yellow if below
   const scoreColour    = score    >= 70 ? '#22C55E' : '#F59E0B';
   const accuracyColour = accuracy >= 70 ? '#22C55E' : '#F59E0B';
+  const iconStyle      = ICON_COLOURS[index % ICON_COLOURS.length];
+  const dateStr        = formatSessionDate(session.startTime ?? session.createdAt);
 
-  // Icon colour rotates through ICON_COLOURS array using modulo
-  const iconStyle = ICON_COLOURS[index % ICON_COLOURS.length];
-
-  // date/time
-  const dateStr = formatSessionDate(session.startTime ?? session.createdAt);
-
-  // Build card div
   const card = document.createElement('div');
   card.className = 'study-sessions-listing';
 
@@ -370,76 +295,55 @@ function buildSessionCard(session, index) {
     </button>
   `;
 
-  // Review button will navigate to results page
-  const reviewBtn = card.querySelector('.rvw-btn');
-  reviewBtn?.addEventListener('click', () => handleReview(session.id ?? session._id));
+  card.querySelector('.rvw-btn')?.addEventListener('click', () =>
+    handleReview(session.id ?? session._id)
+  );
 
   return card;
 }
 
-// Redirects to the session result/review page
 function handleReview(sessionId) {
   if (!sessionId) return;
-  // Save the session ID so the review page knows what to load
   sessionStorage.setItem('review_session_id', sessionId);
   window.location.href = '/pages/session-result.html';
 }
 
 // DATE FORMATTER
-// Converts ISO timestamp → "Today, 9:30 AM" / "Dec 15, 2:45 PM"
-
 function formatSessionDate(isoString) {
   if (!isoString) return '—';
 
-  const date  = new Date(isoString);
-  const now   = new Date();
-
-  const isToday     = date.toDateString() === now.toDateString();
-  const yesterday   = new Date(now);
+  const date      = new Date(isoString);
+  const now       = new Date();
+  const yesterday = new Date(now);
   yesterday.setDate(now.getDate() - 1);
-  const isYesterday = date.toDateString() === yesterday.toDateString();
 
-  // Format time as "9:30 AM"
   const timeStr = date.toLocaleTimeString('en-US', {
-    hour:   'numeric',
-    minute: '2-digit',
-    hour12: true,
+    hour: 'numeric', minute: '2-digit', hour12: true,
   });
 
-  if (isToday)     return `Today, ${timeStr}`;
-  if (isYesterday) return `Yesterday, ${timeStr}`;
+  if (date.toDateString() === now.toDateString())       return `Today, ${timeStr}`;
+  if (date.toDateString() === yesterday.toDateString()) return `Yesterday, ${timeStr}`;
 
-  // Older: "Dec 15, 2:45 PM"
   const monthStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   return `${monthStr}, ${timeStr}`;
 }
 
 // SUGGESTED FOR YOU
 function buildSuggestions(sessions) {
-  // Group sessions by subject (and topic if available)
-  // Calculate average accuracy per group
   const groups = {};
 
   sessions.forEach(session => {
     const subject = allSubjects.find(s => s._id === session.subjectId)
       ?? { _id: session.subjectId, name: 'Unknown' };
-
     const topic   = session.analytics?.topMistakeTopic ?? '';
-    // Key: "subjectId|topic" so same subject with different topics are separate entries
     const key     = `${subject._id}|${topic}`;
 
     if (!groups[key]) {
-      groups[key] = {
-        subjectId:   subject._id,
-        subjectName: subject.name,
-        topic,
-        accuracies:  [],
-      };
+      groups[key] = { subjectId: subject._id, subjectName: subject.name, topic, accuracies: [] };
     }
     groups[key].accuracies.push(session.analytics?.accuracy ?? 0);
   });
 
-  // Calculate average accuracy for each group
   const weakAreas = Object.values(groups)
     .map(group => ({
       ...group,
@@ -447,11 +351,8 @@ function buildSuggestions(sessions) {
         group.accuracies.reduce((sum, a) => sum + a, 0) / group.accuracies.length
       ),
     }))
-    // Only keep areas below the threshold
     .filter(g => g.avgAccuracy < WEAK_AREA_THRESHOLD)
-    // Sort by worst accuracy first
     .sort((a, b) => a.avgAccuracy - b.avgAccuracy)
-    // Cap at MAX_SUGGESTIONS
     .slice(0, MAX_SUGGESTIONS);
 
   renderSuggestions(weakAreas);
@@ -463,10 +364,9 @@ function renderSuggestions(weakAreas) {
 
   container.innerHTML = '';
 
-  // Empty state
   if (weakAreas.length === 0) {
     container.innerHTML = `
-      <div class="empty-state empty-state--light">
+      <div class="empty-state">
         <i class="ph-bold ph-chart-line-up empty-icon"></i>
         <p class="empty-title">No weak areas yet</p>
         <p class="empty-desc">Complete sessions and we'll highlight topics to revisit here.</p>
@@ -476,11 +376,8 @@ function renderSuggestions(weakAreas) {
   }
 
   weakAreas.forEach(area => {
-    const card = document.createElement('div');
-    card.className = 'suggestion';
-
-    // Accuracy dot colour
-    // Yellow for 40–59%, red for below 40%
+    const card      = document.createElement('div');
+    card.className  = 'suggestion';
     const dotColour = area.avgAccuracy < 40 ? '#EF4444' : '#F59E0B';
 
     card.innerHTML = `
@@ -500,28 +397,24 @@ function renderSuggestions(weakAreas) {
       </div>
     `;
 
-    // Practice button: pre-fills subject then starts session
-    const practiceBtn = card.querySelector('.practice');
-    practiceBtn?.addEventListener('click', () => {
-      handlePracticeFromSuggestion(area.subjectId, area.subjectName, area.topic);
-    });
+    card.querySelector('.practice')?.addEventListener('click', () =>
+      handlePracticeFromSuggestion(area.subjectId, area.subjectName, area.topic)
+    );
 
     container.appendChild(card);
   });
 }
 
 async function handlePracticeFromSuggestion(subjectId, subjectName, topic) {
-  const subjectInput = document.getElementById('subjects');
-  const topicInput   = document.getElementById('topics');
+  const subjectSelect = document.getElementById('subjects');
+  const topicSelect   = document.getElementById('topics');
 
-  if (subjectInput) subjectInput.value = subjectName;
-  if (topicInput && topic)   topicInput.value = topic;
+  if (subjectSelect) subjectSelect.value = subjectId;
+  subjectSelect?.dispatchEvent(new Event('change'));
 
-  // Trigger the change event so topics load properly
-  subjectInput?.dispatchEvent(new Event('change'));
-
-  // Small delay to let topics populate, then start
   await new Promise(resolve => setTimeout(resolve, 300));
+
+  if (topicSelect && topic) topicSelect.value = topic;
 
   handleStartSession();
 }
@@ -529,17 +422,12 @@ async function handlePracticeFromSuggestion(subjectId, subjectName, topic) {
 // THIS WEEK STATS
 async function loadWeekStats() {
   try {
-    // Ping streak first to make sure it's up to date for today's visit
-    api.post(ENDPOINTS.STREAKS, {}).catch(() => {
-    });
+    api.post(ENDPOINTS.STREAKS, {}).catch(() => {});
 
-    // Fetch dashboard stats for this week
-    const res  = await api.get(`${ENDPOINTS.STUDENT_DASHBOARD}?period=week`);
-    const data = res.data ?? res;
-
+    const res   = await api.get(`${ENDPOINTS.STUDENT_DASHBOARD}?period=week`);
+    const data  = res.data ?? res;
     const stats = data.stats ?? {};
 
-    // Populate the streak card
     renderWeekStats(stats);
 
   } catch (err) {
@@ -548,68 +436,56 @@ async function loadWeekStats() {
 }
 
 function renderWeekStats(stats) {
-  // Questions practiced this week
-  const quesCountEl = document.querySelector('.ques-count');
-  if (quesCountEl) {
-    quesCountEl.textContent = stats.questionsAnswered ?? '—';
-  }
+fillStat(document.querySelector('.ques-count'),             stats.questionsAnswered, '0');
+fillStat(document.querySelector('.sessions.streak-counts'), stats.totalSessions,     '0');
 
-  // Sessions this week
-  const sessionsEl = document.querySelector('.sessions.streak-counts');
-  if (sessionsEl) {
-    sessionsEl.textContent = stats.totalSessions ?? '—';
-  }
+  const avg    = stats.averageScore;
+  const avgEl  = document.querySelector('.avg-score.streak-counts');
+  fillStat(avgEl, avg != null ? `${avg}%` : null, '—');
 
-  // Average score this week
-  const avgScoreEl = document.querySelector('.avg-score.streak-counts');
-  if (avgScoreEl) {
-    const avg = stats.averageScore;
-    avgScoreEl.textContent = avg != null ? `${avg}%` : '—';
-  }
-
-  // Streak count
-  const streakEl   = document.querySelector('.streak-count');
-  const checkIcon  = document.querySelector('.keep-it-up-section .check');
-  const streak     = stats.studyStreak ?? 0;
+  const streak    = stats.studyStreak ?? 0;
+  const streakEl  = document.querySelector('.streak-count');
+  const checkIcon = document.querySelector('.keep-it-up-section .check');
 
   if (streakEl) {
-    if (streak > 0) {
-      streakEl.textContent = `${streak} week streak active!`;
-    } else {
-      streakEl.textContent = 'Start your streak today!';
-    }
+    streakEl.textContent = streak > 0 ? `${streak} week streak active!` : 'Start your streak today!';
   }
-    
-   //  If streak is 0, change icon to a motivation
+
   if (checkIcon && streak === 0) {
     checkIcon.className = 'ph-bold ph-rocket-launch check';
   }
 }
 
-// Shows a toast notification
+// UI HELPERS
+
+// fillStat: sets an element's text and toggles .stat-empty
+// when value is null/undefined the placeholder (-- or 0) shows faintly
+// when value is real the element renders bold at full opacity
+function fillStat(el, value, placeholder = '--') {
+  if (!el) return;
+  const isEmpty    = value == null;
+  el.textContent   = isEmpty ? placeholder : value;
+  el.classList.toggle('stat-empty', isEmpty);
+}
+
 function showToast(message, type = '') {
   const toast = document.getElementById('toast');
   if (!toast) return;
   toast.textContent = message;
   toast.className   = `toast ${type}`.trim();
-  void toast.offsetWidth; // force reflow so animation restarts
+  void toast.offsetWidth;
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 3500);
 }
 
-// loading state
 function setButtonLoading(btn, isLoading) {
   if (!btn) return;
   if (isLoading) {
-    btn.disabled = true;
-    btn.innerHTML = `
-      <span class="btn-spinner"></span> Starting...
-    `;
+    btn.disabled  = true;
+    btn.innerHTML = `<span class="btn-spinner"></span> Starting...`;
   } else {
-    btn.disabled = false;
-    btn.innerHTML = `
-      <img src="/icon/play.svg" alt=""> Start Session Now
-    `;
+    btn.disabled  = false;
+    btn.innerHTML = `<img src="/icon/play.svg" alt=""> Start Session Now`;
   }
 }
 

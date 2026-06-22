@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>
-  eruda.init();
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Study Sessions - Pillar</title>
+    <title>Study Session - Pillar</title>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../src/styles/tokens.css" />
     <link rel="stylesheet" href="../src/styles/shell.css" />
-    <link rel="stylesheet" href="../src/styles/study-sessions.css" />
+    <link rel="stylesheet" href="../src/styles/study-session.css" />
+    <link rel="icon" type="image/png" href="../icon/logo-white.png" />
     <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
    
 </head>
@@ -35,21 +32,19 @@
         <section class="start-session-section">
             <h3>Start Session Now</h3>
                  <!-- choose subjects-->
-            <div class="choose-subject choosing">
-                 <label for="subjects">select subject</label>
-                 <input list="subjects-list" name="subjects" id="subjects">
-                 <datalist id="subjects-list">
-                       
-                 </datalist>
-            </div>
-                 <!-- choose topic -->
-           <div class="choose-topic choosing">
-                     <label for="topics">select topic</label>
-                    <input list="topics-list" name="topics" id="topics">
-                    <datalist id="topics-list">
-                            
-                   </datalist>
-          </div>
+                   <div class="choosing">
+                       <label for="subjects">Select subject</label>
+                       <select id="subjects">
+                           <option value="" disabled selected>Select a subject</option>
+                        </select>
+                   </div>
+<!-- Topic -->
+                   <div class="choosing">
+                      <label for="topics">Select topic (optional)</label>
+                      <select id="topics">
+                         <option value="">All Topics</option>
+                    </select>
+                  </div>
           <button class="start-session-btn">
                 <img src="/icon/play.svg" alt="">Start Session Now</button>
       </section>
@@ -107,6 +102,6 @@
    <!-- toast -->
    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
 
-    <script type = "module" src="../src/scripts/study-sessions.js"></script>
+    <script type = "module" src="../src/scripts/study-session.js"></script>
 </body>
 </html>
