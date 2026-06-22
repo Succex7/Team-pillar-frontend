@@ -22,7 +22,6 @@ body {
   border-radius: var(--pillar-radius);
 }
 
-/* Image hidden on mobile — shown from 768px up */
 .info-image-text-box img {
   display: none;
 }
@@ -67,7 +66,7 @@ body {
 }
 
 .start-session-btn:hover {
-  background: #21c564b6;
+  background: #4ade80;
 }
 
 .past-mock-tests-section {
@@ -91,6 +90,7 @@ body {
   max-height: calc(4 * 110px + 3 * 24px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  -webkit-scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
   scrollbar-width: thin;
   scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
 }
@@ -103,6 +103,7 @@ body {
 }
 .past-mock-tests-box::-webkit-scrollbar-thumb {
   background: hsla(228, 21%, 80%, 1);
+  -webkit-border-radius: 4px;
   border-radius: 4px;
 }
 
@@ -164,7 +165,6 @@ body {
   cursor: pointer;
 }
 
-
 .mock-stats-section {
   display: flex;
   flex-direction: column;
@@ -210,7 +210,6 @@ body {
   font-weight: 700;
   font-size: 1.8rem;
 }
-
 
 .streak-section {
   display: flex;
@@ -316,17 +315,27 @@ body {
   line-height: 1.6;
 }
 
+.stat-empty {
+  opacity: 0.35;
+  font-weight: 400 !important;
+}
+
 .btn-spinner {
   display: inline-block;
   width: 16px;
   height: 16px;
   border: 2px solid hsla(0, 0%, 100%, 0.4);
   border-top-color: #ffffff;
+  -webkit-border-radius: 50%;
   border-radius: 50%;
+  -webkit-animation: spin 0.7s linear infinite;
   animation: spin 0.7s linear infinite;
   vertical-align: middle;
 }
 
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+}
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
@@ -393,12 +402,14 @@ body {
   .mock-stats-section {
     grid-area: stats;
     max-width: 100%;
+    -webkit-align-self: start;
     align-self: start;
   }
 
   .streak-section {
     grid-area: streak;
     max-width: 100%;
+    -webkit-align-self: start;
     align-self: start;
   }
 

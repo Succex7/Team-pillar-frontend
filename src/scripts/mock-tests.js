@@ -4,39 +4,34 @@ import { userStore } from '../store/userStore.js';
 import { api }       from '../services/api.js';
 import { ENDPOINTS } from '../services/endpoints.js';
 
-// Icon colour rotation for past mock test cards
 const ICON_COLOURS = [
-  { bg: '#FFF7ED', color: '#F97316' }, // orange
-  { bg: '#F0FDF4', color: '#22C55E' }, // green
-  { bg: '#FAF5FF', color: '#A855F7' }, // purple
-  { bg: '#EFF6FF', color: '#3B82F6' }, // blue
+  { bg: '#FFF7ED', color: '#F97316' },
+  { bg: '#F0FDF4', color: '#22C55E' },
+  { bg: '#FAF5FF', color: '#A855F7' },
+  { bg: '#EFF6FF', color: '#3B82F6' },
 ];
 
-// Motivational messages shown in the streak card
 const STREAK_MESSAGES = {
-  zero:     { text: 'Take your first mock today!',    icon: 'ph-bold ph-rocket-launch' },
-  low:      { text: 'Good start — keep it going!',    icon: 'ph-bold ph-trend-up'      },
-  mid:      { text: "Keep it up! You're improving.", icon: 'ph-bold ph-check-circle'  },
-  high:     { text: 'On fire! Don\'t stop now 🔥',    icon: 'ph-bold ph-fire'          },
-  legend:   { text: 'Legendary streak! JAMB ready.',  icon: 'ph-bold ph-trophy'        },
+  zero:   { text: 'Take your first mock today!',    icon: 'ph-bold ph-rocket-launch' },
+  low:    { text: 'Good start — keep it going!',    icon: 'ph-bold ph-trend-up'      },
+  mid:    { text: "Keep it up! You're improving.",  icon: 'ph-bold ph-check-circle'  },
+  high:   { text: "On fire! Don't stop now 🔥",     icon: 'ph-bold ph-fire'          },
+  legend: { text: 'Legendary streak! JAMB ready.',  icon: 'ph-bold ph-trophy'        },
 };
 
 async function init() {
-
   await initShell(
     'mock-test',
     'Mock Tests',
     'Full UTME simulation · 160 questions · 4 subjects · 2 hours'
   );
 
-  // Load all sections 
   await Promise.allSettled([
     loadMockHistory(),
     loadMockStats(),
     loadWeekStats(),
   ]);
 
-  // start button
   bindStartMock();
 }
 
@@ -52,24 +47,18 @@ async function handleStartMock() {
   setButtonLoading(btn, true);
 
   try {
-    // backend reads selectedSubjects from the user's profile
     const res  = await api.post(ENDPOINTS.MOCK_START, {});
     const data = res.data ?? res;
 
-    // Save everything the mock quiz page will need
-    // sessionId is used to submit answers when done
     sessionStorage.setItem('mock_session_id',        data.sessionId);
     sessionStorage.setItem('mock_session_questions', JSON.stringify(data.questions ?? []));
 
-    // Redirect to the mock quiz page
     window.location.href = '/pages/mock-quiz.html';
 
   } catch (err) {
-    // 403 = freemium limit reached (max 3 mocks for free users)
     if (err.status === 403) {
       showToast('Mock test limit reached. Upgrade to Pro for unlimited mocks!', 'error');
     } else if (err.status === 400) {
-      // 400 = onboarding not complete or subjects not selected
       showToast('Please complete subject selection in onboarding first.', 'error');
     } else {
       showToast('Could not start mock test. Please try again.', 'error');
@@ -83,13 +72,9 @@ async function loadMockHistory() {
   try {
     const res     = await api.get(ENDPOINTS.MOCK_HISTORY);
     const resData = res.data ?? res;
-
-    // sessions is the array of past mock tests
     const sessions = Array.isArray(resData.sessions)
       ? resData.sessions
-      : Array.isArray(resData)
-        ? resData
-        : [];
+      : Array.isArray(resData) ? resData : [];
 
     renderMockHistory(sessions);
 
@@ -105,7 +90,6 @@ function renderMockHistory(sessions) {
 
   container.innerHTML = '';
 
-  // Empty state — shown until student completes their first mock
   if (sessions.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
@@ -117,20 +101,15 @@ function renderMockHistory(sessions) {
     return;
   }
 
-  // Overflow-scroll kicks in after 4 cards via CSS
   sessions.forEach((session, index) => {
-    const card = buildMockCard(session, index);
-    container.appendChild(card);
+    container.appendChild(buildMockCard(session, index));
   });
 }
 
-// Builds a single past mock test card element
 function buildMockCard(session, index) {
-  // compositeScore is out of 400 (UTME standard)
   const compositeScore = session.compositeScore ?? 0;
+  const subjectScores  = session.subjectScores ?? [];
 
-  // accuracy = total correct / total questions * 100
-  const subjectScores = session.subjectScores ?? [];
   let accuracy = 0;
   if (subjectScores.length > 0) {
     const totalCorrect = subjectScores.reduce((sum, s) => sum + (s.correct ?? 0), 0);
@@ -138,17 +117,11 @@ function buildMockCard(session, index) {
     accuracy = totalQs > 0 ? Math.round((totalCorrect / totalQs) * 100) : 0;
   }
 
-  // Convert compositeScore/400 to a percentage 
-  const scorePercent = Math.round((compositeScore / 400) * 100);
-
-  // Colour: green if score ≥ 70% of 400 (i.e. ≥ 280), yellow if below
-  const scoreColour    = scorePercent    >= 70 ? '#22C55E' : '#F59E0B';
-  const accuracyColour = accuracy >= 70 ? '#22C55E' : '#F59E0B';
-
-  // Icon colour rotates through array using modulo
-  const iconStyle = ICON_COLOURS[index % ICON_COLOURS.length];
-
-  const dateStr = formatDate(session.createdAt);
+  const scorePercent   = Math.round((compositeScore / 400) * 100);
+  const scoreColour    = scorePercent >= 70 ? '#22C55E' : '#F59E0B';
+  const accuracyColour = accuracy    >= 70 ? '#22C55E' : '#F59E0B';
+  const iconStyle      = ICON_COLOURS[index % ICON_COLOURS.length];
+  const dateStr        = formatDate(session.createdAt);
 
   const card = document.createElement('div');
   card.className = 'mock-tests-listing';
@@ -175,14 +148,13 @@ function buildMockCard(session, index) {
     </button>
   `;
 
-  // Review button: save sessionId and go to results page
-  const reviewBtn = card.querySelector('.rvw-btn');
-  reviewBtn?.addEventListener('click', () => handleReview(session.sessionId));
+  card.querySelector('.rvw-btn')?.addEventListener('click', () =>
+    handleReview(session.sessionId)
+  );
 
   return card;
 }
 
-// Saves session ID and redirects to review/results page
 function handleReview(sessionId) {
   if (!sessionId) return;
   sessionStorage.setItem('review_mock_session_id', sessionId);
@@ -194,59 +166,36 @@ async function loadMockStats() {
   try {
     const res  = await api.get(ENDPOINTS.MOCK_STATS);
     const data = res.data ?? res;
-
     renderMockStats(data);
-
   } catch (err) {
     renderMockStats({});
   }
 }
 
 function renderMockStats(data) {
-  // Average mock score (out of 400)
-  const avgEl = document.querySelector('.average-score');
-  if (avgEl) {
-    avgEl.textContent = data.avgMockScore ?? '—';
-  }
-
-  // Highest mock score (out of 400)
-  const highEl = document.querySelector('.highest-score');
-  if (highEl) {
-    highEl.textContent = data.highestMockScore ?? '—';
-  }
-
-  // Total mocks taken (all time)
-  const totalEl = document.querySelector('.mocks-count');
-  if (totalEl) {
-    totalEl.textContent = data.totalMocksTaken ?? '—';
-  }
+  // Scores /400 — use '--' when empty (zero would look like a real score)
+  fillStat(document.querySelector('.average-score'),  data.avgMockScore,     '--');
+  fillStat(document.querySelector('.highest-score'),  data.highestMockScore, '--');
+  // Count — use '0' when empty (zero is a real meaningful count here)
+  fillStat(document.querySelector('.mocks-count'),    data.totalMocksTaken,  '0');
 }
 
 // THIS WEEK STATS + STREAK
 async function loadWeekStats() {
   try {
-    // Ping streak so it updates for today's visit (fire and forget)
     api.post(ENDPOINTS.STREAKS, {}).catch(() => {});
 
-    // Fetch mock history to derive weekly stats
     const histRes     = await api.get(ENDPOINTS.MOCK_HISTORY);
     const histData    = histRes.data ?? histRes;
     const allSessions = Array.isArray(histData.sessions)
       ? histData.sessions
-      : Array.isArray(histData)
-        ? histData
-        : [];
+      : Array.isArray(histData) ? histData : [];
 
-    // Filter to sessions from the week
-    const weekSessions = filterThisWeek(allSessions);
-
-    // Derive weekly metrics
+    const weekSessions   = filterThisWeek(allSessions);
     const mocksCompleted = weekSessions.length;
 
     const avgScore = mocksCompleted > 0
-      ? Math.round(
-          weekSessions.reduce((sum, s) => sum + (s.compositeScore ?? 0), 0) / mocksCompleted
-        )
+      ? Math.round(weekSessions.reduce((sum, s) => sum + (s.compositeScore ?? 0), 0) / mocksCompleted)
       : null;
 
     const bestScore = mocksCompleted > 0
@@ -264,13 +213,10 @@ async function loadWeekStats() {
   }
 }
 
-// Filters an array of sessions to the week's own
 function filterThisWeek(sessions) {
   const now       = new Date();
-  // Get Monday of the current week
-  const dayOfWeek = now.getDay(); // 0 = Sun, 1 = Mon, ...
+  const dayOfWeek = now.getDay();
   const monday    = new Date(now);
-  // If today is Sunday (0), go back 6 days; otherwise go back (dayOfWeek - 1) days
   monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
   monday.setHours(0, 0, 0, 0);
 
@@ -281,57 +227,26 @@ function filterThisWeek(sessions) {
 }
 
 function renderWeekStats({ mocksCompleted, avgScore, bestScore, streak }) {
-  // Mocks completed this week
-  const mocksEl = document.querySelector('.mocks-complt-count');
-  if (mocksEl) {
-    mocksEl.textContent = mocksCompleted ?? '—';
-  }
+  // Count — 0 when empty
+  fillStat(document.querySelector('.mocks-complt-count'),   mocksCompleted, '0');
+  // Scores /400 — '--' when empty
+  fillStat(document.querySelector('.avg-score.scores-two'), avgScore,       '--');
+  fillStat(document.querySelector('.best-score.scores-two'), bestScore,     '--');
 
-  // Average score this week (out of 400)
-  const avgEl = document.querySelector('.avg-score.scores-two');
-  if (avgEl) {
-    avgEl.textContent = avgScore ?? '—';
-  }
-
-  // Best score this week (out of 400)
-  const bestEl = document.querySelector('.best-score.scores-two');
-  if (bestEl) {
-    bestEl.textContent = bestScore ?? '—';
-  }
-
-  // Streak + motivational message
   renderStreakMessage(streak);
 }
 
-// Picks a motivational message based on streak length
-// and updates the keep-it-up section
 function renderStreakMessage(streak) {
   const keepItUpSection = document.querySelector('.keep-it-up-section');
   if (!keepItUpSection) return;
 
-  // Choose the right message tier
   let message;
-  if (streak === 0) {
-    message = STREAK_MESSAGES.zero;
-  } else if (streak <= 2) {
-    message = STREAK_MESSAGES.low;
-  } else if (streak <= 4) {
-    message = STREAK_MESSAGES.mid;
-  } else if (streak <= 7) {
-    message = STREAK_MESSAGES.high;
-  } else {
-    message = STREAK_MESSAGES.legend;
-  }
+  if (streak === 0)      message = STREAK_MESSAGES.zero;
+  else if (streak <= 2)  message = STREAK_MESSAGES.low;
+  else if (streak <= 4)  message = STREAK_MESSAGES.mid;
+  else if (streak <= 7)  message = STREAK_MESSAGES.high;
+  else                   message = STREAK_MESSAGES.legend;
 
-  // Streak count text
-  const streakCountEl = document.querySelector('.streak-count');
-  if (streakCountEl) {
-    streakCountEl.textContent = streak > 0
-      ? `${streak}-week streak active!`
-      : 'No active streak yet';
-  }
-
-  // Update the icon and motivational text in the keep-it-up section
   keepItUpSection.innerHTML = `
     <i class="${message.icon} check"></i>
     <div>
@@ -343,7 +258,7 @@ function renderStreakMessage(streak) {
 
 // DATE FORMATTER
 function formatDate(isoString) {
-  if (!isoString) return '—';
+  if (!isoString) return '--';
 
   const date      = new Date(isoString);
   const now       = new Date();
@@ -351,9 +266,7 @@ function formatDate(isoString) {
   yesterday.setDate(now.getDate() - 1);
 
   const timeStr = date.toLocaleTimeString('en-US', {
-    hour:   'numeric',
-    minute: '2-digit',
-    hour12: true,
+    hour: 'numeric', minute: '2-digit', hour12: true,
   });
 
   if (date.toDateString() === now.toDateString())       return `Today, ${timeStr}`;
@@ -364,6 +277,17 @@ function formatDate(isoString) {
 }
 
 // UI HELPERS
+
+// fillStat: sets element text and toggles .stat-empty class
+// empty → placeholder shows faintly via CSS
+// real value → full opacity, bold (CSS default)
+function fillStat(el, value, placeholder = '--') {
+  if (!el) return;
+  const isEmpty  = value == null;
+  el.textContent = isEmpty ? placeholder : value;
+  el.classList.toggle('stat-empty', isEmpty);
+}
+
 function showToast(message, type = '') {
   const toast = document.getElementById('toast');
   if (!toast) return;
@@ -377,10 +301,10 @@ function showToast(message, type = '') {
 function setButtonLoading(btn, isLoading) {
   if (!btn) return;
   if (isLoading) {
-    btn.disabled = true;
+    btn.disabled  = true;
     btn.innerHTML = `<span class="btn-spinner"></span> Starting...`;
   } else {
-    btn.disabled = false;
+    btn.disabled  = false;
     btn.innerHTML = `<img src="../public/icon/play.svg" alt=""> Start Session Now`;
   }
 }
