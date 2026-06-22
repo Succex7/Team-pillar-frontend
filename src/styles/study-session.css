@@ -75,11 +75,9 @@ body{
     border-radius: var(--pillar-radius-sm);
     cursor: pointer;
     color: #1A1A2E;
-    /* webkit prefix first, then standard — removes native arrow cross-browser */
     -webkit-appearance: none;
     -moz-appearance: none;
-    appearance: none;
-    /* custom chevron arrow inline SVG */
+    appearance: none;    
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 16px center;
@@ -430,8 +428,7 @@ body{
     width: 16px;
     height: 16px;
     border: 2px solid hsla(0, 0%, 100%, 0.4);
-    border-top-color: #ffffff;
-    /* ADDED: webkit prefix before standard */
+    border-top-color: #fff    fff;
     -webkit-border-radius: 50%;
     border-radius: 50%;
     -webkit-animation: spin 0.7s linear infinite;

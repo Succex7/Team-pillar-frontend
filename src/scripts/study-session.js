@@ -457,10 +457,6 @@ fillStat(document.querySelector('.sessions.streak-counts'), stats.totalSessions,
 }
 
 // UI HELPERS
-
-// fillStat: sets an element's text and toggles .stat-empty
-// when value is null/undefined the placeholder (-- or 0) shows faintly
-// when value is real the element renders bold at full opacity
 function fillStat(el, value, placeholder = '--') {
   if (!el) return;
   const isEmpty    = value == null;
