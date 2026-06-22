@@ -100,6 +100,7 @@ body{
     border-radius: var(--pillar-radius-sm);
     cursor: pointer;
     display: flex;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     align-items: center;
     justify-content: center;
     gap: 8px;
@@ -384,8 +385,10 @@ body{
 .past-study-session-box {
     max-height: calc(4 * 110px + 3 * 24px);
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    -webkit-scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
+   -webkit-overflow-scrolling: touch;
+   -moz-overflow-scrolling: touch;
+   -webkit-scrollbar-color: hsla(228, 21%, 80%, 1)        transparent;
+    -webkit-scrollbar-width: thin;
     scrollbar-width: thin;
     scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
 }
@@ -406,7 +409,9 @@ body{
     max-height: calc(3 * 110px + 2 * 16px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    -moz-overflow-scrolling: touch;
     -webkit-scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
+    -webkit-scrollbar-width: thin;
     scrollbar-width: thin;
     scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
 }

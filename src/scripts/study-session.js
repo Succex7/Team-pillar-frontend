@@ -441,7 +441,7 @@ fillStat(document.querySelector('.sessions.streak-counts'), stats.totalSessions,
 
   const avg    = stats.averageScore;
   const avgEl  = document.querySelector('.avg-score.streak-counts');
-  fillStat(avgEl, avg != null ? `${avg}%` : null, '—');
+  fillStat(avgEl, avg != null ? `${avg}%` : null, '--');
 
   const streak    = stats.studyStreak ?? 0;
   const streakEl  = document.querySelector('.streak-count');
