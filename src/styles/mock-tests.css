@@ -14,6 +14,8 @@ body {
 .mock-tests-section {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding: clamp(12px, 3vw, 24px);
   background: var(--pillar-blue-shade);
   font-family: var(--font-body);
@@ -22,8 +24,15 @@ body {
   border-radius: var(--pillar-radius);
 }
 
+.info-image-text-box {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 2vw, 16px);
+    align-items: center;
+  }
+  
 .info-image-text-box img {
-  display: none;
+  width: 100%;
 }
 
 .mock-tests-about-box {
@@ -57,6 +66,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   gap: 8px;
   transition:
     background var(--transition-fast),
@@ -90,9 +100,12 @@ body {
   max-height: calc(4 * 110px + 3 * 24px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  -webkit-scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
-  scrollbar-width: thin;
-  scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
+  -webkit-overflow-scrolling: touch;
+-moz-overflow-scrolling: touch;
+-webkit-scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
+-webkit-scrollbar-width: thin;
+scrollbar-width: thin;
+scrollbar-color: hsla(228, 21%, 80%, 1) transparent;
 }
 
 .past-mock-tests-box::-webkit-scrollbar {
@@ -365,12 +378,13 @@ body {
     align-items: center;
   }
 
-  .info-image-text-box {
+/* .info-image-text-box {
     display: flex;
     flex-direction: column;
     gap: clamp(8px, 2vw, 16px);
     align-items: center;
   }
+*/
 
   .info-image-text-box img {
     display: flex;
