@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Study Session - Pillar</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/shell.css" />
+    <link rel="stylesheet" href="../src/styles/study-session.css" />
+    <link rel="icon" type="image/png" href="../icon/logo-white.png" />
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
+   
+</head>
+<body>
+    <main class="main-container">
+        <!-- section 1, study sessions header-->
+        <section class="study-sessions-heading">
+            <div class="study-sessions">
+                <h2>Study Sessions</h2>
+                <p>Practice questions by topic with instant feedback</p>
+            </div>
+            <div class="sessions-remaining-box">
+                <i class="ph-bold ph-warning-circle warning"></i>
+                <p class="sessions-left"><span class="sessions-count">3</span> of 3 sessions remaining today</p>
+            </div>
+        </section>        
+        
+        <!-- start session now-->
+        <section class="start-session-section">
+            <h3>Start Session Now</h3>
+                 <!-- choose subjects-->
+                   <div class="choosing">
+                       <label for="subjects">Select subject</label>
+                       <select id="subjects">
+                           <option value="" disabled selected>Select a subject</option>
+                        </select>
+                   </div>
+<!-- Topic -->
+                   <div class="choosing">
+                      <label for="topics">Select topic (optional)</label>
+                      <select id="topics">
+                         <option value="">All Topics</option>
+                    </select>
+                  </div>
+          <button class="start-session-btn">
+                <img src="/icon/play.svg" alt="">Start Session Now</button>
+      </section>
+        
+        <!-- section 2, past study session section -->
+        <section class="past-study-session-section">
+            <h3>Recent Sessions</h3>
+            <article class="past-study-session-box">
+                <!-- where the recent sessions go-->
+            </article>
+        </section>
+        
+        <!-- section 3, suggested for you section-->
+       <article class="suggestions-section">
+         <div class="suggested-header">
+             <div class="icon-suggested">
+                 <img src="/icon/stats.svg" alt="">
+                 <h3>Suggested For You</h3>
+             </div>
+             <p>Based on your weak areas</p>  
+         </div>
+          <section class="suggestions-container">
+              <!-- where the suggested for you goes-->
+           </section>
+       </article>
+        
+        <!-- section 4, streak section -->
+        <article class="streak-section">
+            <div class="streak-box-main-content">
+                <div class="this-week-box">
+                    <img src="/icon/fire.svg" alt="">
+                    <h3>This Week</h3>
+                </div>
+                <p class="questions-prac">Questions Practiced</p>
+                <h2 class="ques-count streak-counts"></h2>
+                <div class="sess-avg-box">
+                    <div class="sess-box">
+                        <p>Sessions</p>
+                        <h4 class="sessions streak-counts"></h4>
+                    </div>
+                    <div class="avg-box">
+                         <p>Average Score</p>
+                         <h4 class="avg-score streak-counts"></p>
+                    </div>
+                </div>
+            </div>
+            <!-- keep it up-->
+            <div class="keep-it-up-section">
+                <i class="ph-bold ph-check-circle check"></i>
+                 <h4 class="streak-count"></h4>
+            </div>
+          </div>
+        </article>
+    </main>
+   <!-- toast -->
+   <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script type = "module" src="../src/scripts/study-session.js"></script>
+</body>
+</html>
