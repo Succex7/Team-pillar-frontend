@@ -6,18 +6,18 @@ AI-Powered Adaptive UTME Preparation Platform
 
 ## LIVE DEMO 
 
+https://pillar-utme.vercel.app
+
 ---
 
 ## TABLE OF CONTENTS 
--  [Overview](#overview)
+- [Overview](#overview)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
-- [Project Structure](£project-structure)
+- [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
-- [Environment Variable](#environment-variable)
-- [API Endpoints](#api-endpoints)
 - [Deployment](#deployment)
-- [Roadmap](#roadmap)
+- [Roles Covered](#roles-covered)
 - [License](#license)
 
 ---
@@ -68,12 +68,83 @@ A clean layout of our large-scale architecture:
 
 ```txt
 Team-pillar-frontend/
+│── pages/
+│   │── dashboard.html
+│   │── forgot-password.html
+│   │── login.html
+│   │── mock-tests.html
+│   │── onboarding-step1.html
+│   │── onboarding-step2.html
+│   │── onboarding-step3.html
+│   │── pricing.html
+│   │── register.html
+│   └── reset-password.html
+│
 │── public/
+│   │── icon/
+│   │   │── ai-badge.png
+│   │   │── cap.png
+│   │   │── energy-icon.png
+│   │   │── fire.svg
+│   │   │── logo-white.png
+│   │   │── logo.png
+│   │   │── pattern.png
+│   │   │── pattern2.png
+│   │   │── play.svg
+│   │   │── rocket.png
+│   │   └── stats.svg
+│   │
+│   │── images/
+│   │   │── feature-ai.png
+│   │   │── feature-analytics.png
+│   │   │── feature-gamification.png
+│   │   │── feature-school.png
+│   │   │── hero-dashboard.png
+│   │   │── onboarding-motivation.png
+│   │   │── problem-chart.png
+│   │   │── screen-dashboard.png
+│   │   │── screen-premium.png
+│   │   │── screen-profile.png
+│   │   │── screen-register.png
+│   │   │── screen-subjects.png
+│   │   │── sheet.png
+│   │   │── solution-mock.png
+│   │   │── solution-score.png
+│   │   └── solution-weak.png
+│   │
+│   │── logos/
+│   │   │── abu.png
+│   │   │── funaab.png
+│   │   │── futa.png
+│   │   │── lasu.png
+│   │   │── oau.png
+│   │   │── ui.png
+│   │   │── uniben.png
+│   │   │── unilag.png
+│   │   │── unilorin.png
+│   │   │── uniport.png
+│   │   │── unizik.png
+│   │   └── unn.png
+│   │
 │   └── manifest.json
 │
 │── src/
+│   │── components/
+│   │   └── shell.js
+│   │
 │   │── scripts/
-│   │   └── quiz.js
+│   │   │── dashboard.js
+│   │   │── forgot-password.js
+│   │   │── landing.js
+│   │   │── login.js
+│   │   │── mock-tests.js
+│   │   │── onboarding-step1.js
+│   │   │── onboarding-step2.js
+│   │   │── onboarding-step3.js
+│   │   │── pricing.js
+│   │   │── quiz.js
+│   │   │── register.js
+│   │   └── reset-password.js
 │   │
 │   │── services/
 │   │   │── analytics.service.js
@@ -88,7 +159,18 @@ Team-pillar-frontend/
 │   │   └── userStore.js
 │   │
 │   │── styles/
+│   │   │── auth.css
 │   │   │── base.css
+│   │   │── dashboard.css
+│   │   │── landing.css
+│   │   │── login.css
+│   │   │── mock-tests.css
+│   │   │── onboarding-step1.css
+│   │   │── onboarding-step2.css
+│   │   │── onboarding-step3.css
+│   │   │── pricing.css
+│   │   │── register.css
+│   │   │── shell.css
 │   │   └── tokens.css
 │   │
 │   │── utils/
@@ -106,6 +188,7 @@ Team-pillar-frontend/
 │
 │── .gitignore
 │── index.html
+│── node_modules/
 │── package.json
 │── package-lock.json
 └── vite.config.js
@@ -151,9 +234,11 @@ npm run build
 
 ## Deployment
 
+https://pillar-utme.vercel.app
+
 ---
 
-## ROLES COVERED 
+## Roles Covered
 * Product Designer (Figma)
 * Frontend Developer (Vanilla JS, HTML 5,CSS3)
 * Backend Developer (Node.js & Express)
