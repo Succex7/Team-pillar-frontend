@@ -10,14 +10,13 @@ const emailInput        = document.getElementById('email');
 const passwordInput     = document.getElementById('password');
 const keepSignedIn      = document.getElementById('keepSignedIn');
 const togglePasswordBtn = document.getElementById('togglePassword');
-const eyeOpen           = document.getElementById('eyeOpen');
-const eyeClosed         = document.getElementById('eyeClosed');
+const eyeOpen           = document.querySelector('#togglePassword .eye-open');
+const eyeClosed         = document.querySelector('#togglePassword .eye-closed');
 const signinBtn         = document.getElementById('signinBtn');
 const signinBtnText     = document.getElementById('signinBtnText');
 const signinBtnLoader   = document.getElementById('signinBtnLoader');
 const googleBtn         = document.getElementById('googleBtn');
 const toast             = document.getElementById('toast');
-const navbar            = document.getElementById('navbar');
 
 
 // INIT
@@ -27,7 +26,6 @@ function init() {
   bindFormValidation();
   bindFormSubmit();
   bindGoogleLogin();
-  bindNavbarScroll();
 }
 
 
@@ -36,22 +34,18 @@ function redirectIfLoggedIn() {
   const token =
     localStorage.getItem('access_token') ||
     sessionStorage.getItem('access_token');
-
-  if (token) {
-    window.location.href = '/pages/dashboard.html';
-  }
+  if (token) window.location.href = '/pages/dashboard.html';
 }
 
 
 // PASSWORD TOGGLE
 function bindPasswordToggle() {
   if (!togglePasswordBtn) return;
-
   togglePasswordBtn.addEventListener('click', () => {
     const isHidden = passwordInput.type === 'password';
     passwordInput.type = isHidden ? 'text' : 'password';
-    eyeOpen.classList.toggle('hidden', isHidden);
-    eyeClosed.classList.toggle('hidden', !isHidden);
+    eyeOpen?.classList.toggle('hidden', isHidden);
+    eyeClosed?.classList.toggle('hidden', !isHidden);
     togglePasswordBtn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
   });
 }
@@ -59,14 +53,12 @@ function bindPasswordToggle() {
 
 // REAL-TIME VALIDATION
 function bindFormValidation() {
-  emailInput.addEventListener('blur',  () => validateEmail());
-  passwordInput.addEventListener('blur', () => validatePassword());
-
-  emailInput.addEventListener('input', () => {
+  emailInput?.addEventListener('blur',  () => validateEmail());
+  passwordInput?.addEventListener('blur', () => validatePassword());
+  emailInput?.addEventListener('input', () => {
     if (emailInput.classList.contains('is-error')) validateEmail();
   });
-
-  passwordInput.addEventListener('input', () => {
+  passwordInput?.addEventListener('input', () => {
     if (passwordInput.classList.contains('is-error')) validatePassword();
   });
 }
@@ -74,7 +66,6 @@ function bindFormValidation() {
 function validateEmail() {
   const value   = emailInput.value.trim();
   const errorEl = document.getElementById('emailError');
-
   if (!value) return setFieldError(emailInput, errorEl, 'Email address is required');
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
     return setFieldError(emailInput, errorEl, 'Enter a valid email address');
@@ -85,7 +76,6 @@ function validateEmail() {
 function validatePassword() {
   const value   = passwordInput.value;
   const errorEl = document.getElementById('passwordError');
-
   if (!value) return setFieldError(passwordInput, errorEl, 'Password is required');
   if (value.length < 6) return setFieldError(passwordInput, errorEl, 'Password must be at least 6 characters');
   return setFieldValid(passwordInput, errorEl);
@@ -94,14 +84,14 @@ function validatePassword() {
 function setFieldError(input, errorEl, message) {
   input.classList.add('is-error');
   input.classList.remove('is-valid');
-  errorEl.textContent = message;
+  if (errorEl) errorEl.textContent = message;
   return false;
 }
 
 function setFieldValid(input, errorEl) {
   input.classList.remove('is-error');
   input.classList.add('is-valid');
-  errorEl.textContent = '';
+  if (errorEl) errorEl.textContent = '';
   return true;
 }
 
@@ -110,7 +100,7 @@ function validateAll() {
 }
 
 
-// FORM SUBMISSION
+// FORM SUBMIT
 function bindFormSubmit() {
   if (!loginForm) return;
   loginForm.addEventListener('submit', handleLogin);
@@ -118,9 +108,7 @@ function bindFormSubmit() {
 
 async function handleLogin(e) {
   e.preventDefault();
-
-  const isValid = validateAll();
-  if (!isValid) return;
+  if (!validateAll()) return;
 
   setLoading(true);
 
@@ -130,44 +118,38 @@ async function handleLogin(e) {
       passwordInput.value
     );
 
-    // API response shape: { success, message, data: { user, token, expiresAt, refreshToken } }
+    // API response: { success, message, data: { user, token, expiresAt } }
     const { user, token, expiresAt } = response.data;
 
-    // Store token based on "keep me signed in"
+    // Store token — localStorage if keep signed in, else sessionStorage
     const storage = keepSignedIn?.checked ? localStorage : sessionStorage;
     storage.setItem('access_token', token);
     storage.setItem('token_expires_at', expiresAt || '');
 
-    // Also keep in localStorage for app-wide auth guard
+    // Always keep in localStorage for auth guard
     localStorage.setItem('access_token', token);
 
-    userStore.setState({
-      profile: user,
-      token,
-      role: user.role,
-    });
+    userStore.setState({ profile: user, token, role: user.role });
 
     showToast('Welcome back!', 'success');
 
     setTimeout(() => {
-      // Check intended plan from pricing page
+      // Check for intended plan redirect (from pricing page)
       const intendedPlan = sessionStorage.getItem('intended_plan');
       if (intendedPlan) {
         sessionStorage.removeItem('intended_plan');
-        window.location.href = '/pages/pricing.html';
+        window.location.href = '/pages/billing.html';
         return;
       }
 
       // Check if onboarding is complete
-      // API returns onboarding as {} (empty object) when not done
+      // API returns onboarding: {} when not done, with subjects array when done
       const onboarding     = user.onboarding || {};
-      const onboardingDone = onboarding.subjects && onboarding.subjects.length > 0;
+      const onboardingDone = Array.isArray(onboarding.subjects) && onboarding.subjects.length > 0;
 
-      if (onboardingDone) {
-        window.location.href = '/pages/dashboard.html';
-      } else {
-        window.location.href = '/pages/onboarding-step1.html';
-      }
+      window.location.href = onboardingDone
+        ? '/pages/dashboard.html'
+        : '/pages/onboarding-step1.html';
     }, 1000);
 
   } catch (err) {
@@ -180,21 +162,10 @@ async function handleLogin(e) {
 // GOOGLE LOGIN
 function bindGoogleLogin() {
   if (!googleBtn) return;
-  googleBtn.addEventListener('click', handleGoogleLogin);
-}
-
-function handleGoogleLogin() {
-  const apiBase = import.meta.env.VITE_API_BASE_URL.replace('/api/v1', '');
-  window.location.href = `${apiBase}/auth/google`;
-}
-
-
-// NAVBAR SCROLL
-function bindNavbarScroll() {
-  if (!navbar) return;
-  window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 10);
-  }, { passive: true });
+  googleBtn.addEventListener('click', () => {
+    const apiBase = import.meta.env.VITE_API_BASE_URL.replace('/api/v1', '');
+    window.location.href = `${apiBase}/auth/google`;
+  });
 }
 
 
@@ -202,8 +173,8 @@ function bindNavbarScroll() {
 function setLoading(isLoading) {
   if (!signinBtn) return;
   signinBtn.disabled = isLoading;
-  signinBtnText.classList.toggle('hidden', isLoading);
-  signinBtnLoader.classList.toggle('hidden', !isLoading);
+  signinBtnText?.classList.toggle('hidden', isLoading);
+  signinBtnLoader?.classList.toggle('hidden', !isLoading);
 }
 
 
@@ -228,7 +199,6 @@ function getErrorMessage(err) {
     429: 'Too many attempts. Please wait a moment and try again.',
     500: strings?.errors?.generic || 'Something went wrong. Please try again.',
   };
-
   return map[err?.status] || err?.message || 'Something went wrong. Please try again.';
 }
 

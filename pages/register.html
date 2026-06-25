@@ -6,166 +6,208 @@
     <title>Create Account — Pillar</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="../src/styles/base.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
     <link rel="stylesheet" href="../src/styles/register.css" />
     <link rel="icon" type="image/png" href="../icon/logo-white.png" />
   </head>
   <body>
 
-    <!--NAVBAR-->
-      <nav class="navbar" id="navbar">
-      <a href="/index.html" class="nav-logo">
-        <img src="/icon/logo.png" width="22px" height="22px" alt="Pillar Logo" />
-        <span>Pillar</span>
-      </a>
-      <div class="nav-right">
-        <span class="nav-hint">Already have an account?</span>
-        <a href="../pages/login.html" class="nav-cta-link">Login</a>
-      </div>
-      </nav>
+    <div class="auth-layout">
 
-    <!--MAIN CONTENT -->
-    <main class="register-main">
+      <!-- LEFT PANEL -->
+      <div class="auth-left" aria-hidden="true">
+        <div class="auth-left-grid-overlay"></div>
+        <div class="auth-left-glow"></div>
 
-      <!-- Hero Card -->
-      <div class="hero-card">
-        <div class="hero-badge">
-            <img src="/icon/ai-badge.png" width="14px" height="14px" alt="AI badge" />
-          Nigeria's Top UTME Platform
-        </div>
-        <h1 class="hero-heading">Start your journey to university success.</h1>
-        <p class="hero-sub">Join 50,000+ Nigerian students crushing their JAMB exams with Pillar AI.</p>
-
-        <div class="feature-card">
-          <div class="feature-icon">
-            <img src="/icon/rocket.png" width="22px" height="22px" alt="Rocket Icon" />
+        <div class="auth-left-logo">
+          <div class="auth-logo-icon">
+            <img src="/icon/logo-white.png" alt="Pillar logo" width="22" height="22" />
           </div>
-          <div class="feature-text">
-            <p class="feature-title">Personalized Path</p>
-            <p class="feature-desc">AI-driven study plans tailored to your target course.</p>
-          </div>
+          <span class="auth-logo-text">Pillar</span>
         </div>
-      </div>
 
-      <!-- Registration Form -->
-      <section class="form-section">
-        <h2 class="form-heading">Create your student account</h2>
-        <p class="form-sub">Takes less than 2 minutes to get started.</p>
+        <div class="auth-left-body">
+          <p class="auth-left-eyebrow">AI-POWERED UTME PREPARATION</p>
+          <h1 class="auth-left-heading">
+            Your journey<br/>
+            starts <span class="auth-left-heading-accent">here.</span>
+          </h1>
+          <p class="auth-left-sub">
+            Join thousands of candidates already preparing smarter. Create your free account and get instant access to adaptive practice, performance analytics, and your personalised study path.
+          </p>
 
-        <form id="registerForm" novalidate>
-
-          <!-- Row: Full Name + Phone -->
-          <div class="form-row">
-            <div class="form-group">
-              <label for="fullName">Full Name</label>
-              <input
-                type="text"
-                id="fullName"
-                name="fullName"
-                placeholder="Chinedu Okafor"
-                autocomplete="name"
-              />
-              <span class="field-error" id="fullNameError"></span>
+          <div class="auth-stats-grid">
+            <div class="auth-stat-card">
+              <p class="auth-stat-number">12k+</p>
+              <p class="auth-stat-label">Candidates preparing</p>
+            </div>
+            <div class="auth-stat-card">
+              <p class="auth-stat-number">1,000+</p>
+              <p class="auth-stat-label">JAMB questions</p>
+            </div>
+            <div class="auth-stat-card">
+              <p class="auth-stat-number">4</p>
+              <p class="auth-stat-label">Subjects supported</p>
+            </div>
+            <div class="auth-stat-card">
+              <p class="auth-stat-number">Free</p>
+              <p class="auth-stat-label">To start today</p>
             </div>
           </div>
 
-          <!-- Email -->
-          <div class="form-group full-width">
-            <label for="email">Email Address</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="you@student.edu.ng"
-              autocomplete="email"
-            />
-            <span class="field-error" id="emailError"></span>
+          <ul class="auth-features-list">
+            <li class="auth-feature-item">
+              <div class="auth-feature-check" aria-hidden="true">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              3 free practice sessions daily — no card needed
+            </li>
+            <li class="auth-feature-item">
+              <div class="auth-feature-check" aria-hidden="true">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              Instant weak topic detection from your first session
+            </li>
+            <li class="auth-feature-item">
+              <div class="auth-feature-check" aria-hidden="true">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              Full CBT mock test simulation — 45 questions, 4 subjects
+            </li>
+            <li class="auth-feature-item">
+              <div class="auth-feature-check" aria-hidden="true">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              Upgrade anytime for AI Tutor and deep analytics
+            </li>
+          </ul>
+        </div>
+
+        <div class="auth-left-footer">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+          <span>Secure &amp; private connection</span>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="auth-right">
+        <div class="auth-form-wrapper">
+
+          <div class="auth-heading-group">
+            <h2 class="auth-heading">Create your account <span class="auth-heading-emoji">🚀</span></h2>
+            <p class="auth-sub">Start preparing for free — takes 30 seconds</p>
           </div>
 
-          <!-- Password -->
-          <div class="form-group full-width">
-            <label for="password">Password</label>
-            <div class="password-wrapper">
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="••••••••"
-                autocomplete="new-password"
-              />
-              <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
-                <svg id="eyeOpen" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
+          <div class="auth-tabs" role="tablist">
+            <a href="./login.html" class="auth-tab" role="tab" aria-selected="false">Sign in</a>
+            <button type="button" class="auth-tab auth-tab--active" role="tab" aria-selected="true">Create account</button>
+          </div>
+
+          <form id="registerForm" class="auth-form" novalidate>
+
+            <!-- First + Last name -->
+            <div class="form-names-row">
+              <div class="form-group">
+                <label class="form-label" for="firstName">FIRST NAME</label>
+                <input type="text" id="firstName" name="firstName" placeholder="Ada" autocomplete="given-name" class="form-input" aria-describedby="firstNameError" />
+                <span class="field-error" id="firstNameError" role="alert"></span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="lastName">LAST NAME</label>
+                <input type="text" id="lastName" name="lastName" placeholder="Okonkwo" autocomplete="family-name" class="form-input" aria-describedby="lastNameError" />
+                <span class="field-error" id="lastNameError" role="alert"></span>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label class="form-label" for="email">EMAIL ADDRESS</label>
+              <input type="email" id="email" name="email" placeholder="ada.okonkwo@gmail.com" autocomplete="email" class="form-input" aria-describedby="emailError" />
+              <span class="field-error" id="emailError" role="alert"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+              <label class="form-label" for="password">PASSWORD</label>
+              <div class="password-wrapper">
+                <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="new-password" class="form-input" aria-describedby="passwordError" />
+                <button type="button" class="toggle-password-btn" id="togglePassword" aria-label="Show password">
+                  <svg class="eye-icon eye-open" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
                   </svg>
-                  <svg id="eyeClosed" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round"
-                    class="hidden">
+                  <svg class="eye-icon eye-closed hidden" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
                     <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
                     <line x1="1" y1="1" x2="23" y2="23"/>
                   </svg>
-              </button>
+                </button>
+              </div>
+              <span class="field-error" id="passwordError" role="alert"></span>
             </div>
-            <span class="field-error" id="passwordError"></span>
+
+            <!-- Terms -->
+            <div class="terms-row">
+              <label class="checkbox-label" for="agreeTerms">
+                <input type="checkbox" id="agreeTerms" class="checkbox-native" required />
+                <span class="checkbox-custom" aria-hidden="true"></span>
+              </label>
+              <label class="terms-label" for="agreeTerms">
+                I agree to Pillar's
+                <a href="#" class="terms-link">Terms of Service</a>
+                and
+                <a href="#" class="terms-link">Privacy Policy</a>
+              </label>
+            </div>
+
+            <button type="submit" class="btn-auth" id="submitBtn">
+              <span id="submitText">Create free account</span>
+              <span class="btn-loader hidden" id="submitLoader" aria-hidden="true"></span>
+              <svg class="btn-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+
+          </form>
+
+          <div class="auth-divider">
+            <div class="auth-divider-line"></div>
+            <span class="auth-divider-text">or sign up with</span>
+            <div class="auth-divider-line"></div>
           </div>
 
-          <!-- Submit -->
-          <button type="submit" class="submit-btn" id="submitBtn">
-            <span id="submitText">Create My Account →</span>
-            <span id="submitLoader" class="btn-loader hidden"></span>
-          </button>
-
-        </form>
-
-        <!-- Divider -->
-          <div class="divider" aria-hidden="true">
-            <span class="divider-line"></span>
-            <span class="divider-text">or Continue with</span>
-            <span class="divider-line"></span>
-          </div>
-
-          <!-- Google OAuth -->
-          <button
-            type="button"
-            class="btn-google"
-            id="googleBtn"
-            aria-label="Continue with Google"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          <button type="button" class="btn-google" id="googleBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M21.35,11.1H12v2.7h5.38c-0.24,1.28-0.96,2.37-2.04,3.1v2.57h3.29c1.92-1.77,3.02-4.38,3.02-7.37c0-0.37-0.03-0.72-0.09-1.0H21.35z" fill="#4285F4"/>
+              <path d="M12,20.6c2.32,0,4.27-0.77,5.7-2.1l-3.29-2.57c-0.91,0.61-2.08,0.97-3.41,0.97c-2.62,0-4.84-1.77-5.63-4.15H2.03v2.66C3.47,18.25,7.48,20.6,12,20.6z" fill="#34A853"/>
+              <path d="M6.37,12.75c-0.2-0.61-0.32-1.27-0.32-1.95s0.12-1.34,0.32-1.95V6.19H2.03C1.3,7.66,0.9,9.29,0.9,11c0,1.71,0.4,3.34,1.13,4.81L6.37,12.75z" fill="#FBBC05"/>
+              <path d="M12,6.15c1.26,0,2.39,0.43,3.28,1.28l2.46-2.46C16.26,3.62,14.31,2.9,12,2.9C7.48,2.9,3.47,5.25,2.03,8.09l4.34,3.34C7.16,9.05,9.38,6.15,12,6.15z" fill="#EA4335"/>
             </svg>
             Continue with Google
           </button>
 
-          <p class="tos-text">
-            By signing up, you agree to our
-            <a href="/pages/terms.html" class="tos-link">Terms of Service</a>.
-          </p>
-        
-        <!-- Toast -->
-        <div class="toast" id="toast" role="alert" aria-live="polite"></div>
-      </section>
+          <div class="auth-bottom-link">
+            Already have an account?
+            <a href="./login.html" class="auth-bottom-anchor">
+              Sign in <span class="auth-bottom-arrow">→</span>
+            </a>
+            <span class="auth-secure-note">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              Secure &amp; private
+            </span>
+          </div>
 
-    </main>
+        </div>
+      </div>
 
-    <!-- FOOTER -->
-    <footer class="register-footer">
-      <span>JAMB OFFICIAL</span>
-      <span class="footer-dot">·</span>
-      <span>NERDC COMPLIANT</span>
-      <span class="footer-dot">·</span>
-      <span>CBT PREP</span>
-    </footer>
+    </div>
 
-    <script type="module" src="../src/main.js"></script>
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
     <script type="module" src="../src/scripts/register.js"></script>
   </body>
 </html>

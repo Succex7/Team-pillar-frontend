@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Email — Pillar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/register.css" />
+  </head>
+  <body>
+
+    <div class="auth-layout">
+
+      <!-- LEFT PANEL -->
+      <div class="auth-left" aria-hidden="true">
+        <div class="auth-left-grid-overlay"></div>
+        <div class="auth-left-glow"></div>
+
+        <div class="auth-left-logo">
+          <div class="auth-logo-icon">
+            <img src="/icon/logo-white.png" alt="Pillar logo" width="22" height="22" />
+          </div>
+          <span class="auth-logo-text">Pillar</span>
+        </div>
+
+        <div class="auth-left-body">
+          <div class="otp-mail-icon" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--auth-indigo-light)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <p class="auth-left-eyebrow">VERIFY YOUR EMAIL</p>
+          <h1 class="auth-left-heading">
+            Verify your<br/>
+            <span class="auth-left-heading-accent">email address.</span>
+          </h1>
+          <p class="auth-left-sub">
+            We've sent a 4-digit verification code to your email address. Enter the code to activate your account and start your UTME journey.
+          </p>
+
+          <ul class="auth-features-list">
+            <li class="auth-feature-item">
+              <div class="auth-feature-check" aria-hidden="true">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              Secure account access
+            </li>
+            <li class="auth-feature-item">
+              <div class="auth-feature-check" aria-hidden="true">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              Personalised study path
+            </li>
+            <li class="auth-feature-item">
+              <div class="auth-feature-check" aria-hidden="true">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              Instant access after verification
+            </li>
+          </ul>
+        </div>
+
+        <div class="auth-left-footer">
+          <button type="button" class="back-to-signup-btn" onclick="window.location.href='./register.html'">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+            </svg>
+            Back to signup
+          </button>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="auth-right">
+        <div class="auth-form-wrapper">
+
+          <div class="auth-heading-group">
+            <h2 class="auth-heading">Enter Code</h2>
+            <p class="auth-sub">
+              Check your inbox and spam folder. Code sent to
+              <strong id="emailDisplay" style="color:#1e293b;"></strong>
+            </p>
+          </div>
+
+          <form id="verifyForm" class="auth-form" novalidate>
+
+            <div class="form-group">
+              <label class="form-label">VERIFICATION CODE</label>
+              <div class="otp-group" role="group" aria-label="4-digit verification code">
+                <input type="text" class="otp-input" id="otp0" maxlength="1" inputmode="numeric" autocomplete="one-time-code" aria-label="Digit 1" />
+                <input type="text" class="otp-input" id="otp1" maxlength="1" inputmode="numeric" aria-label="Digit 2" />
+                <input type="text" class="otp-input" id="otp2" maxlength="1" inputmode="numeric" aria-label="Digit 3" />
+                <input type="text" class="otp-input" id="otp3" maxlength="1" inputmode="numeric" aria-label="Digit 4" />
+              </div>
+              <span class="field-error" id="otpError" role="alert"></span>
+            </div>
+
+            <button type="submit" class="btn-auth" id="verifyBtn">
+              <span id="verifyBtnText">Verify Account</span>
+              <span class="btn-loader hidden" id="verifyBtnLoader" aria-hidden="true"></span>
+            </button>
+
+          </form>
+
+          <div class="resend-row">
+            <span>Didn't receive it?</span>
+            <button type="button" class="resend-btn" id="resendBtn" disabled>
+              Resend in 60s
+            </button>
+          </div>
+
+          <div class="auth-bottom-link">
+            <a href="./login.html" class="auth-bottom-anchor">
+              ← Back to Sign in
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+    <script type="module" src="../src/scripts/verify-otp.js"></script>
+  </body>
+</html>

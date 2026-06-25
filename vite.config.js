@@ -9,6 +9,7 @@ export default defineConfig({
         forgotpassword:  'pages/forgot-password.html',
         resetpassword:  'pages/reset-password.html',
         login:     'pages/login.html',
+        verifyotp: 'pages/verify-otp.html',
         dashboard: 'pages/dashboard.html',
         onboarding1: 'pages/onboarding-step1.html',
         onboarding2:   'pages/onboarding-step2.html',

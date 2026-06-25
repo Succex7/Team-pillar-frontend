@@ -19,6 +19,17 @@
   --pillar-yellow: #f59e0b;
   --pillar-error:#dc2626;
   --pillar-success:#16a34a;
+   --auth-dark-900:       #060312;
+  --auth-dark-800:       #0d0620;
+  --auth-dark-700:       #1d0e40;
+  --auth-indigo:         #6366f1;
+  --auth-indigo-hover:   #5053e3;
+  --auth-indigo-light:   #818cf8;
+  --auth-indigo-muted:   #a5b4fc;
+  --auth-indigo-glow:    rgba(99, 102, 241, 0.2);
+  --auth-indigo-bg:      rgba(99, 102, 241, 0.15);
+  --auth-panel-border:   rgba(255, 255, 255, 0.08);
+  --auth-panel-card-bg:  rgba(255, 255, 255, 0.05);
   --pillar-shadow: 0 18px 30px rgba(15, 23, 42, 0.08);
   --pillar-shadow-soft: 0 10px 24px rgba(15, 23, 42, 0.06);
   --pillar-radius: 12px;
