@@ -11,50 +11,48 @@
   padding: 0;
 }
 
-html {
-  height: 100%;
-  overflow: hidden;
+/* MOBILE: completely natural scroll — no height tricks */
+html,
+body {
+  min-height: 100%;
 }
 
 body {
-  height: 100%;
   font-family: var(--font-body);
-  background: #f1f5f9;
+  background: white;
   color: var(--pillar-navy);
   -webkit-font-smoothing: antialiased;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
 }
 
 a      { text-decoration: none; color: inherit; }
 ul     { list-style: none; }
 button { cursor: pointer; font-family: var(--font-body); }
 
-/* AUTH LAYOUT */
+/* AUTH LAYOUT — mobile: stacked column */
 .auth-layout {
   width: 100%;
-  height: 100%;
-  background: white;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  min-height: 100svh;
 }
 
-/* LEFT PANEL */
+/* LEFT PANEL — fixed compact height on mobile, no vh units */
 .auth-left {
-  background: linear-gradient(135deg, var(--auth-dark-700), var(--auth-dark-800), var(--auth-dark-900));
-  padding: 20px 22px;
+  background: linear-gradient(
+    135deg,
+    var(--auth-dark-700),
+    var(--auth-dark-800),
+    var(--auth-dark-900)
+  );
+  padding: 20px 22px 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
+  /* Fixed height on mobile — not relative to viewport */
+  height: 200px;
   flex-shrink: 0;
-  min-height: 240px;
-  max-height: 42vh;
 }
 
 .auth-left-grid-overlay {
@@ -70,9 +68,13 @@ button { cursor: pointer; font-family: var(--font-body); }
   position: absolute;
   top: -80px;
   right: -80px;
-  width: 280px;
-  height: 280px;
-  background: radial-gradient(circle, var(--auth-indigo-glow) 0%, transparent 70%);
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(
+    circle,
+    var(--auth-indigo-glow) 0%,
+    transparent 70%
+  );
   pointer-events: none;
 }
 
@@ -82,7 +84,6 @@ button { cursor: pointer; font-family: var(--font-body); }
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-shrink: 0;
 }
 
 .auth-logo-icon {
@@ -110,8 +111,10 @@ button { cursor: pointer; font-family: var(--font-body); }
   z-index: 10;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin: 12px 0;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+  margin: 10px 0 0;
 }
 
 .auth-left-eyebrow {
@@ -124,7 +127,7 @@ button { cursor: pointer; font-family: var(--font-body); }
 
 .auth-left-heading {
   font-family: var(--font-display);
-  font-size: clamp(18px, 3.5vw, 30px);
+  font-size: clamp(20px, 5vw, 32px);
   font-weight: 900;
   color: white;
   letter-spacing: -0.8px;
@@ -209,19 +212,18 @@ button { cursor: pointer; font-family: var(--font-body); }
   gap: 6px;
   font-size: 10px;
   color: #64748b;
-  flex-shrink: 0;
+  display: none; /* hidden on mobile — no space */
 }
 
 /* RIGHT PANEL
-   THE KEY: no overflow on right panel — everything fits via compact spacing */
+   Mobile: flows naturally below the dark panel, plenty of padding */
 .auth-right {
   flex: 1;
   background: white;
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 20px 20px;
-  overflow: hidden;
+  /* Generous top padding so heading is never covered */
+  padding: 32px 22px 48px;
 }
 
 .auth-form-wrapper {
@@ -229,25 +231,26 @@ button { cursor: pointer; font-family: var(--font-body); }
   max-width: 400px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 /* HEADING */
 .auth-heading-group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .auth-heading {
   font-family: var(--font-display);
-  font-size: clamp(18px, 3.5vw, 24px);
+  font-size: clamp(20px, 5vw, 26px);
   font-weight: 900;
   color: #0f172a;
   letter-spacing: -0.5px;
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-wrap: wrap;
 }
 
 .auth-heading-emoji {
@@ -261,7 +264,7 @@ button { cursor: pointer; font-family: var(--font-body); }
 }
 
 .auth-sub {
-  font-size: 12px;
+  font-size: 13px;
   color: #64748b;
   font-weight: 500;
 }
@@ -277,7 +280,7 @@ button { cursor: pointer; font-family: var(--font-body); }
   font-size: 13px;
   font-weight: 700;
   color: #94a3b8;
-  padding-bottom: 8px;
+  padding-bottom: 10px;
   border: none;
   background: none;
   cursor: pointer;
@@ -297,19 +300,19 @@ button { cursor: pointer; font-family: var(--font-body); }
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
 }
 
 .form-names-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 9px;
+  gap: 10px;
 }
 
 .form-label {
@@ -339,19 +342,21 @@ button { cursor: pointer; font-family: var(--font-body); }
   text-decoration: underline;
 }
 
-/* INPUTS — height reduced to 40px to save vertical space */
 .form-input {
   width: 100%;
-  height: 40px;
-  padding: 0 13px;
+  height: 44px;
+  padding: 0 14px;
   border: 1.5px solid #e2e8f0;
   border-radius: 10px;
   background: #f8fafc;
-  font-size: 13px;
+  font-size: 14px;
   font-family: var(--font-body);
   color: #1e293b;
   outline: none;
-  transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    box-shadow var(--transition-fast);
   -webkit-appearance: none;
   appearance: none;
 }
@@ -375,12 +380,12 @@ button { cursor: pointer; font-family: var(--font-body); }
 /* SELECT */
 .form-select {
   width: 100%;
-  height: 40px;
-  padding: 0 36px 0 13px;
+  height: 44px;
+  padding: 0 38px 0 14px;
   border: 1.5px solid #e2e8f0;
   border-radius: 10px;
   background: #f8fafc;
-  font-size: 13px;
+  font-size: 14px;
   font-family: var(--font-body);
   color: #1e293b;
   outline: none;
@@ -400,7 +405,7 @@ button { cursor: pointer; font-family: var(--font-body); }
 
 .select-arrow {
   position: absolute;
-  right: 11px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
@@ -408,12 +413,12 @@ button { cursor: pointer; font-family: var(--font-body); }
 }
 
 /* PASSWORD */
-.password-wrapper                { position: relative; }
-.password-wrapper .form-input    { padding-right: 44px; }
+.password-wrapper             { position: relative; }
+.password-wrapper .form-input { padding-right: 46px; }
 
 .toggle-password-btn {
   position: absolute;
-  right: 11px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -433,11 +438,11 @@ button { cursor: pointer; font-family: var(--font-body); }
   font-size: 10px;
   color: #ef4444;
   font-weight: 500;
-  min-height: 12px;
+  min-height: 13px;
   padding-left: 2px;
 }
 
-/* FORM META */
+/* FORM META ROW */
 .form-meta-row {
   display: flex;
   align-items: center;
@@ -449,7 +454,7 @@ button { cursor: pointer; font-family: var(--font-body); }
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   font-size: 12px;
   font-weight: 700;
   color: #64748b;
@@ -467,17 +472,20 @@ button { cursor: pointer; font-family: var(--font-body); }
 }
 
 .checkbox-custom {
-  width: 16px;
-  height: 16px;
-  min-width: 16px;
+  width: 17px;
+  height: 17px;
+  min-width: 17px;
   border-radius: 4px;
   border: 1.5px solid #cbd5e1;
   background: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background var(--transition-fast), border-color var(--transition-fast);
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
   position: relative;
+  flex-shrink: 0;
 }
 
 .checkbox-label:has(.checkbox-native:checked) .checkbox-custom {
@@ -489,7 +497,7 @@ button { cursor: pointer; font-family: var(--font-body); }
   content: '';
   display: block;
   width: 4px;
-  height: 7px;
+  height: 8px;
   border: 2px solid white;
   border-top: none;
   border-left: none;
@@ -504,13 +512,13 @@ button { cursor: pointer; font-family: var(--font-body); }
 }
 
 .terms-label {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   color: #64748b;
   cursor: pointer;
   -webkit-user-select: none;
   user-select: none;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .terms-link {
@@ -526,21 +534,23 @@ button { cursor: pointer; font-family: var(--font-body); }
 /* AUTH BUTTON */
 .btn-auth {
   width: 100%;
-  height: 40px;
+  height: 44px;
   background: var(--auth-indigo);
   color: white;
   border: none;
   border-radius: 10px;
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 8px;
   box-shadow: 0 5px 18px var(--auth-indigo-glow);
-  transition: background var(--transition-fast), box-shadow var(--transition-fast), transform 0.1s ease;
-  margin-top: 2px;
+  transition:
+    background var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform 0.1s ease;
 }
 
 .btn-auth:hover:not(:disabled) {
@@ -558,8 +568,8 @@ button { cursor: pointer; font-family: var(--font-body); }
 .btn-arrow { flex-shrink: 0; }
 
 .btn-loader {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-top-color: white;
   border-radius: 50%;
@@ -592,19 +602,22 @@ button { cursor: pointer; font-family: var(--font-body); }
 /* GOOGLE BTN */
 .btn-google {
   width: 100%;
-  height: 40px;
+  height: 44px;
   background: white;
   color: #334155;
   border: 1.5px solid #e2e8f0;
   border-radius: 10px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-  transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  gap: 10px;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .btn-google:hover {
@@ -620,8 +633,8 @@ button { cursor: pointer; font-family: var(--font-body); }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  font-size: 12px;
+  gap: 6px;
+  font-size: 13px;
   font-weight: 600;
   color: #64748b;
   flex-wrap: wrap;
@@ -642,8 +655,8 @@ button { cursor: pointer; font-family: var(--font-body); }
 }
 
 .auth-bottom-arrow {
-  transition: transform var(--transition-fast);
   display: inline-block;
+  transition: transform var(--transition-fast);
 }
 
 .auth-bottom-anchor:hover .auth-bottom-arrow {
@@ -661,25 +674,28 @@ button { cursor: pointer; font-family: var(--font-body); }
 /* OTP INPUTS */
 .otp-group {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   justify-content: flex-start;
 }
 
 .otp-input {
-  width: 52px;
-  height: 58px;
+  width: 56px;
+  height: 64px;
   border: 1.5px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: 14px;
   background: #f8fafc;
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 900;
   color: #0f172a;
   text-align: center;
   outline: none;
   -webkit-appearance: none;
   appearance: none;
-  transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    box-shadow var(--transition-fast);
   caret-color: var(--auth-indigo);
 }
 
@@ -704,7 +720,7 @@ button { cursor: pointer; font-family: var(--font-body); }
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   color: #64748b;
 }
@@ -712,7 +728,7 @@ button { cursor: pointer; font-family: var(--font-body); }
 .resend-btn {
   background: none;
   border: none;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--auth-indigo);
   padding: 0;
@@ -729,7 +745,7 @@ button { cursor: pointer; font-family: var(--font-body); }
   cursor: not-allowed;
 }
 
-/* OTP left panel icon */
+/* OTP page */
 .otp-mail-icon {
   width: 52px;
   height: 52px;
@@ -742,7 +758,6 @@ button { cursor: pointer; font-family: var(--font-body); }
   margin-bottom: 2px;
 }
 
-/* Back button on left panel footer */
 .back-to-signup-btn {
   display: flex;
   align-items: center;
@@ -772,7 +787,9 @@ button { cursor: pointer; font-family: var(--font-body); }
   font-size: 13px;
   font-weight: 500;
   opacity: 0;
-  transition: transform var(--transition-base), opacity var(--transition-base);
+  transition:
+    transform var(--transition-base),
+    opacity var(--transition-base);
   pointer-events: none;
   z-index: 9999;
   white-space: nowrap;
@@ -784,63 +801,102 @@ button { cursor: pointer; font-family: var(--font-body); }
 .toast.error   { background: #991b1b; }
 .toast.success { background: #14532d; }
 
-/* TABLET — 600px+ */
+/* TABLET 600px+ 
+   Card floats on gray background. Left panel taller. Right scrolls. */
 @media (min-width: 600px) {
-  html, body { overflow: hidden; }
-
-  body {
-    padding: 16px;
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: #f1f5f9;
+    display: flex;
     align-items: center;
+    justify-content: center;
+    padding: 20px;
   }
 
   .auth-layout {
-    max-width: 960px;
+    width: 100%;
+    max-width: 760px;
+    min-height: unset;
     height: auto;
-    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 40px);
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.04);
-    margin: auto;
+    box-shadow:
+      0 10px 60px rgba(0, 0, 0, 0.14),
+      0 0 0 1px rgba(0, 0, 0, 0.04);
+    flex-direction: column;
   }
 
-  .auth-left       { max-height: 38vh; padding: 24px 26px; }
+  .auth-left {
+    height: auto;
+    min-height: unset;
+    padding: 24px 28px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .auth-left-body { justify-content: flex-start; gap: 8px; }
   .auth-left-sub   { display: block; }
   .auth-stats-grid { display: grid; }
+  .auth-left-footer { display: flex; }
+
+  .auth-right {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 32px 32px;
+    align-items: flex-start;
+  }
+
   .auth-secure-note { display: flex; }
 }
 
-/* DESKTOP — 900px+ */
+/* DESKTOP 900px+
+   Side-by-side layout. Both panels exactly viewport height. */
 @media (min-width: 900px) {
-  body { padding: 24px; }
+  html, body {
+    padding: 24px;
+  }
 
   .auth-layout {
     flex-direction: row;
-    max-width: 1080px;
-    height: calc(100vh - 48px);
-    max-height: 800px;
+    max-width: 1100px;
+    height: calc(100dvh - 48px);
+    max-height: 820px;
     border-radius: 24px;
   }
 
   .auth-left {
-    width: 44%;
+    width: 46%;
     min-width: 44%;
-    max-height: unset;
     height: 100%;
-    padding: 36px 34px;
+    padding: 36px 36px;
     overflow-y: auto;
     justify-content: space-between;
   }
 
-  .auth-left-body     { gap: 13px; }
+  .auth-left-body     { justify-content: flex-start; gap: 14px; }
   .auth-left-sub      { display: block; }
   .auth-stats-grid    { display: grid; }
   .auth-features-list { display: flex; }
+  .auth-left-footer   { display: flex; }
 
   .auth-right {
     flex: 1;
     height: 100%;
-    overflow: hidden;
-    padding: 36px 44px;
+    overflow-y: auto;
+    padding: 0 48px;
+    display: flex;
     align-items: center;
+    justify-content: center;
   }
+
+  /* Compact form on desktop so it fits without scrolling */
+  .auth-form-wrapper { gap: 12px; }
+  .auth-form         { gap: 10px; }
+
+  .form-input,
+  .form-select,
+  .btn-auth,
+  .btn-google        { height: 40px; font-size: 13px; }
 }
