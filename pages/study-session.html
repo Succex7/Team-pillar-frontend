@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Study Session - Pillar</title>
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Sessions — Pillar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../src/styles/tokens.css" />
@@ -12,96 +12,161 @@
     <link rel="stylesheet" href="../src/styles/study-session.css" />
     <link rel="icon" type="image/png" href="../icon/logo-white.png" />
     <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
-   
-</head>
-<body>
-    <main class="main-container">
-        <!-- section 1, study sessions header-->
-        <section class="study-sessions-heading">
-            <div class="study-sessions">
-                <h2>Study Sessions</h2>
-                <p>Practice questions by topic with instant feedback</p>
-            </div>
-            <div class="sessions-remaining-box">
-                <i class="ph-bold ph-warning-circle warning"></i>
-                <p class="sessions-left"><span class="sessions-count">3</span> of 3 sessions remaining today</p>
-            </div>
-        </section>        
-        
-        <!-- start session now-->
-        <section class="start-session-section">
-            <h3>Start Session Now</h3>
-                 <!-- choose subjects-->
-                   <div class="choosing">
-                       <label for="subjects">Select subject</label>
-                       <select id="subjects">
-                           <option value="" disabled selected>Select a subject</option>
-                        </select>
-                   </div>
-<!-- Topic -->
-                   <div class="choosing">
-                      <label for="topics">Select topic (optional)</label>
-                      <select id="topics">
-                         <option value="">All Topics</option>
-                    </select>
-                  </div>
-          <button class="start-session-btn">
-                <img src="/icon/play.svg" alt="">Start Session Now</button>
-      </section>
-        
-        <!-- section 2, past study session section -->
-        <section class="past-study-session-section">
-            <h3>Recent Sessions</h3>
-            <article class="past-study-session-box">
-                <!-- where the recent sessions go-->
-            </article>
-        </section>
-        
-        <!-- section 3, suggested for you section-->
-       <article class="suggestions-section">
-         <div class="suggested-header">
-             <div class="icon-suggested">
-                 <img src="/icon/stats.svg" alt="">
-                 <h3>Suggested For You</h3>
-             </div>
-             <p>Based on your weak areas</p>  
-         </div>
-          <section class="suggestions-container">
-              <!-- where the suggested for you goes-->
-           </section>
-       </article>
-        
-        <!-- section 4, streak section -->
-        <article class="streak-section">
-            <div class="streak-box-main-content">
-                <div class="this-week-box">
-                    <img src="/icon/fire.svg" alt="">
-                    <h3>This Week</h3>
-                </div>
-                <p class="questions-prac">Questions Practiced</p>
-                <h2 class="ques-count streak-counts"></h2>
-                <div class="sess-avg-box">
-                    <div class="sess-box">
-                        <p>Sessions</p>
-                        <h4 class="sessions streak-counts"></h4>
-                    </div>
-                    <div class="avg-box">
-                         <p>Average Score</p>
-                         <h4 class="avg-score streak-counts"></p>
-                    </div>
-                </div>
-            </div>
-            <!-- keep it up-->
-            <div class="keep-it-up-section">
-                <i class="ph-bold ph-check-circle check"></i>
-                 <h4 class="streak-count"></h4>
-            </div>
-          </div>
-        </article>
-    </main>
-   <!-- toast -->
-   <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+  </head>
+  <body>
+    <div class="app-layout">
+      <!-- Shell: sidebar + topbar injected here -->
+      <div id="shellRoot"></div>
 
-    <script type = "module" src="../src/scripts/study-session.js"></script>
-</body>
+      <!-- Main content -->
+      <div class="main-content">
+        <div id="topbarRoot"></div>
+
+        <main class="page-content" id="pageContent">
+          <div class="study-container">
+            
+            <div class="study-grid-main">
+              <!-- CONFIGURE STUDY SESSION -->
+              <section class="study-card configure-card">
+                <h2 class="card-title">Configure Study Session</h2>
+                <p class="card-subtitle">Select subjects and set preferences. Free plan users can practice up to 5 subjects.</p>
+                
+                <form id="studyConfigForm" class="config-form">
+                  <!-- SUBJECTS SELECTION -->
+                  <div class="form-group">
+                    <label class="group-label">Select Subjects</label>
+                    <div class="subjects-checkbox-grid" id="subjectsCheckboxGrid">
+                      <!-- Populated dynamically -->
+                      <div class="loading-placeholder">Loading subjects...</div>
+                    </div>
+                  </div>
+
+                  <!-- SELECT TOPIC (OPTIONAL) - only shown when exactly 1 subject is selected -->
+                  <div class="form-group" id="topicSelectionGroup" style="display: none;">
+                    <label for="topics" class="group-label">Select Topic (Optional)</label>
+                    <div class="select-wrapper">
+                      <select id="topics" class="custom-select">
+                        <option value="">All Topics</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- PRACTICE MODE SELECTION -->
+                  <div class="form-group">
+                    <label class="group-label">Practice Mode</label>
+                    <div class="mode-cards-row">
+                      <label class="mode-card-option">
+                        <input type="radio" name="practiceMode" value="practice" checked />
+                        <div class="mode-card-content">
+                          <span class="mode-title">Practice Mode</span>
+                          <span class="mode-desc">Untimed, instant AI review after each question</span>
+                        </div>
+                      </label>
+                      <label class="mode-card-option">
+                        <input type="radio" name="practiceMode" value="cbt" />
+                        <div class="mode-card-content">
+                          <span class="mode-title">CBT Simulation</span>
+                          <span class="mode-desc">Timed simulation, detailed AI breakdown on submission</span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- SESSION DURATION CARDS -->
+                  <div class="form-group">
+                    <label class="group-label">Session Duration</label>
+                    <div class="duration-cards-row">
+                      <label class="duration-card-option">
+                        <input type="radio" name="duration" value="30" checked />
+                        <div class="duration-card-content">
+                          <span class="duration-time">30 Mins</span>
+                          <span class="duration-tier">Free Plan</span>
+                        </div>
+                      </label>
+                      <label class="duration-card-option duration-card-option--pro">
+                        <input type="radio" name="duration" value="45" id="dur45" />
+                        <div class="duration-card-content">
+                          <span class="duration-time">45 Mins</span>
+                          <span class="duration-tier text-pro">⭐ Pro</span>
+                        </div>
+                      </label>
+                      <label class="duration-card-option duration-card-option--pro">
+                        <input type="radio" name="duration" value="60" id="dur60" />
+                        <div class="duration-card-content">
+                          <span class="duration-time">60 Mins</span>
+                          <span class="duration-tier text-pro">⭐ Pro</span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <button type="submit" class="start-session-btn" id="startSessionBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;">
+                      <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                    Start Session Now
+                  </button>
+                </form>
+              </section>
+
+              <!-- RECENT SESSIONS -->
+              <section class="study-card recent-sessions-card">
+                <div class="card-header">
+                  <h3 class="panel-title">Recent Study Sessions</h3>
+                </div>
+                <div class="past-study-session-box">
+                  <!-- Recent sessions list -->
+                </div>
+              </section>
+            </div>
+
+            <!-- SIDEBAR DETAILS: SUGGESTED + STREAKS -->
+            <div class="study-sidebar">
+              <!-- Streak card -->
+              <section class="study-card streak-card">
+                <div class="card-header">
+                  <h3 class="panel-title">This Week</h3>
+                </div>
+                <div class="streak-body">
+                  <div class="streak-label-main">Questions Practised</div>
+                  <div class="streak-counts-main ques-count">0</div>
+                  <div class="streak-stat-divider"></div>
+                  <div class="streak-mini-stats">
+                    <div class="mini-stat-item">
+                      <span class="mini-label">Sessions</span>
+                      <span class="mini-val sessions">0</span>
+                    </div>
+                    <div class="mini-stat-item">
+                      <span class="mini-label">Avg. Accuracy</span>
+                      <span class="mini-val avg-score">0%</span>
+                    </div>
+                  </div>
+                  <div class="keep-it-up-section">
+                    <i class="ph-bold ph-check-circle check"></i>
+                    <span class="streak-count">14-day streak active!</span>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Suggestions based on weak areas -->
+              <section class="study-card suggestions-card">
+                <div class="card-header">
+                  <h3 class="panel-title">Suggested For You</h3>
+                  <p class="panel-subtitle">Based on your weak areas</p>
+                </div>
+                <div class="suggestions-container">
+                  <!-- Dynamic suggestions list -->
+                </div>
+              </section>
+            </div>
+
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script type="module" src="../src/scripts/study-session.js"></script>
+  </body>
 </html>

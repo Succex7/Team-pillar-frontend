@@ -5,6 +5,7 @@ import { api }       from '../services/api.js';
 import { ENDPOINTS } from '../services/endpoints.js';
 
 const FREE_DAILY_LIMIT = 3;
+const MAX_FREE_SUBJECTS = 5;
 
 const ICON_COLOURS = [
   { bg: '#FFF7ED', color: '#F97316' },
@@ -13,6 +14,22 @@ const ICON_COLOURS = [
   { bg: '#EFF6FF', color: '#3B82F6' },
 ];
 
+const SUBJECT_ICONS = {
+  'Mathematics': 'ph-plus-minus',
+  'Use of English': 'ph-text-aa',
+  'English Language': 'ph-text-aa',
+  'Biology': 'ph-dna',
+  'Chemistry': 'ph-flask',
+  'Physics': 'ph-atom',
+  'Economics': 'ph-chart-bar',
+  'Government': 'ph-buildings',
+  'Literature': 'ph-book-open',
+};
+
+function getSubjectIcon(name) {
+  return SUBJECT_ICONS[name] || 'ph-book';
+}
+
 const WEAK_AREA_THRESHOLD = 60;
 const MAX_SUGGESTIONS = 10;
 
@@ -20,12 +37,16 @@ let userSubjects   = [];
 let allSubjects    = [];
 let currentTopics  = [];
 let sessionsUsedToday = 0;
+let isProUser = false;
 
 async function init() {
+  const user = userStore.getState().profile;
+  isProUser = user?.subscription === 'pro' || user?.isPro || false;
+
   await initShell(
     'study-session',
     'Study Sessions',
-    'Adaptive · up to 30 min · 5 subjects'
+    'Configure and start your study session'
   );
 
   await Promise.allSettled([
@@ -34,7 +55,7 @@ async function init() {
     loadWeekStats(),
   ]);
 
-  bindStartSession();
+  bindFormHandlers();
 }
 
 // USER PROFILE + SUBJECTS
@@ -48,6 +69,7 @@ async function loadUserAndSubjects() {
 
     if (user) {
       userStore.setState({ profile: user });
+      isProUser = user?.subscription === 'pro' || user?.isPro || false;
     }
 
     const subjRes  = await api.get(ENDPOINTS.GET_SUBJECTS);
@@ -62,117 +84,155 @@ async function loadUserAndSubjects() {
       userSubjects = allSubjects.filter(s => s.isActive);
     }
 
-    populateSubjectDropdown(userSubjects);
+    renderSubjectsCheckboxGrid(userSubjects);
 
   } catch (err) {
     showToast('Could not load your subjects. Please refresh.', 'error');
-
-    const saved = sessionStorage.getItem('onboarding_step1_data');
-    if (saved) {
-      try {
-        const step1  = JSON.parse(saved);
-        userSubjects = step1.subjects.map(s => ({ _id: s.id, name: s.name }));
-        populateSubjectDropdown(userSubjects);
-      } catch {
-        // ignore
-      }
-    }
   }
 }
 
-// Populates the subject <select> dropdown
-function populateSubjectDropdown(subjects) {
-  const select = document.getElementById('subjects');
-  if (!select) return;
+// Render Subjects Checkbox Grid
+function renderSubjectsCheckboxGrid(subjects) {
+  const grid = document.getElementById('subjectsCheckboxGrid');
+  if (!grid) return;
 
-  // Clear old options but keep the placeholder
-  select.innerHTML = '<option value="" disabled selected>Select a subject</option>';
+  if (subjects.length === 0) {
+    grid.innerHTML = '<div class="loading-placeholder">No subjects enrolled. Go to Settings to select subjects.</div>';
+    return;
+  }
 
+  grid.innerHTML = '';
   subjects.forEach(subj => {
-    const option   = document.createElement('option');
-    option.value   = subj._id;
-    option.textContent = subj.name;
-    select.appendChild(option);
+    const iconClass = getSubjectIcon(subj.name);
+    const label = document.createElement('label');
+    label.className = 'subject-checkbox-option';
+    label.innerHTML = `
+      <input type="checkbox" name="selectedSubjects" value="${subj._id}" data-name="${subj.name}">
+      <div class="subject-checkbox-content">
+        <i class="ph-bold ${iconClass} subj-icon"></i>
+        <span class="subj-name">${subj.name}</span>
+      </div>
+    `;
+    grid.appendChild(label);
   });
 
-  select.addEventListener('change', handleSubjectChange);
+  // Bind change listeners to checkboxes
+  const checkboxes = grid.querySelectorAll('input[type="checkbox"]');
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', handleCheckboxChange);
+  });
 }
 
-// TOPIC DROPDOWN
-async function handleSubjectChange() {
-  const select     = document.getElementById('subjects');
+// Handle Checkbox Change (Limits and topic display)
+async function handleCheckboxChange() {
+  const checked = document.querySelectorAll('input[name="selectedSubjects"]:checked');
+  
+  // Enforce Max 5 subjects limit for Free users
+  if (!isProUser && checked.length > MAX_FREE_SUBJECTS) {
+    this.checked = false;
+    showToast(`Free plan limit: You can select up to ${MAX_FREE_SUBJECTS} subjects.`, 'error');
+    return;
+  }
+
+  const topicGroup = document.getElementById('topicSelectionGroup');
   const topicSelect = document.getElementById('topics');
-  if (!select || !topicSelect) return;
 
-  const selectedId = select.value;
-  const subject    = userSubjects.find(s => s._id === selectedId);
+  if (checked.length === 1) {
+    // Exactly 1 subject selected: show topic selector and fetch topics
+    const subjectId = checked[0].value;
+    const subjectName = checked[0].dataset.name;
 
-  // Reset topic dropdown
-  topicSelect.innerHTML = '<option value="">All Topics</option>';
-  currentTopics = [];
+    topicGroup.style.display = 'block';
+    topicSelect.innerHTML = '<option value="">Loading topics...</option>';
 
-  if (!subject) return;
+    try {
+      const topicsRes = await api.get(`${ENDPOINTS.GET_SUBJECTS}/${subjectId}/topics`);
+      const topicsData = topicsRes.data ?? topicsRes;
+      const topics = Array.isArray(topicsData) ? topicsData : [];
 
-  try {
-    const topicsRes  = await api.get(`${ENDPOINTS.GET_SUBJECTS}/${subject._id}/topics`);
-    const topicsData = topicsRes.data ?? topicsRes;
-    const topics     = Array.isArray(topicsData) ? topicsData : [];
-
-    currentTopics = topics;
-
-    topics.forEach(topic => {
-      const option       = document.createElement('option');
-      option.value       = topic._id ?? topic;
-      option.textContent = topic.name ?? topic;
-      topicSelect.appendChild(option);
-    });
-
-  } catch {
-    // Topics endpoint not available yet — topic select stays as "All Topics"
+      currentTopics = topics;
+      topicSelect.innerHTML = '<option value="">All Topics</option>';
+      
+      topics.forEach(topic => {
+        const option = document.createElement('option');
+        option.value = topic._id ?? topic;
+        option.textContent = topic.name ?? topic;
+        topicSelect.appendChild(option);
+      });
+    } catch {
+      topicSelect.innerHTML = '<option value="">All Topics (Failed to load topics)</option>';
+      currentTopics = [];
+    }
+  } else {
+    // 0 or multiple subjects: hide topic selector
+    topicGroup.style.display = 'none';
+    if (topicSelect) topicSelect.innerHTML = '<option value="">All Topics</option>';
     currentTopics = [];
   }
 }
 
-// START SESSION
-function bindStartSession() {
-  const btn = document.querySelector('.start-session-btn');
-  if (!btn) return;
-  btn.addEventListener('click', handleStartSession);
+// BIND FORM AND DURATION CLICKS
+function bindFormHandlers() {
+  const form = document.getElementById('studyConfigForm');
+  if (form) {
+    form.addEventListener('submit', handleStartSessionSubmit);
+  }
+
+  // Duration cards change listener
+  const durationInputs = document.querySelectorAll('input[name="duration"]');
+  durationInputs.forEach(input => {
+    input.addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (!isProUser && (val === '45' || val === '60')) {
+        // Prevent selection and redirect
+        e.target.checked = false;
+        // Select 30 instead
+        const dur30 = document.querySelector('input[name="duration"][value="30"]');
+        if (dur30) dur30.checked = true;
+        
+        showToast('Pro durations require a Premium subscription.', 'error');
+        setTimeout(() => {
+          window.location.href = '/pages/billing.html';
+        }, 1000);
+      }
+    });
+  });
 }
 
-async function handleStartSession() {
-  const subjectSelect = document.getElementById('subjects');
-  const topicSelect   = document.getElementById('topics');
-  if (!subjectSelect) return;
+// START SESSION SUBMIT
+async function handleStartSessionSubmit(e) {
+  e.preventDefault();
 
-  const selectedId = subjectSelect.value;
-
-  if (!selectedId) {
-    showToast('Please select a subject to start.', 'error');
+  const checked = document.querySelectorAll('input[name="selectedSubjects"]:checked');
+  if (checked.length === 0) {
+    showToast('Please select at least one subject to practice.', 'error');
     return;
   }
 
-  const subject = userSubjects.find(s => s._id === selectedId);
-  if (!subject) {
-    showToast('Please choose a subject from your enrolled list.', 'error');
+  if (sessionsUsedToday >= FREE_DAILY_LIMIT && !isProUser) {
+    showToast("You've used all 3 sessions for today. Upgrade to Pro for unlimited sessions!", 'error');
     return;
   }
 
-  if (sessionsUsedToday >= FREE_DAILY_LIMIT) {
-    showToast("You've used all 3 sessions for today. Come back tomorrow!", 'error');
-    return;
-  }
-
-  const topicValue   = topicSelect?.value || '';
-  const selectedTopic = currentTopics.find(
-    t => (t._id ?? t) === topicValue
-  );
-
-  const btn = document.querySelector('.start-session-btn');
+  const btn = document.getElementById('startSessionBtn');
   setButtonLoading(btn, true);
 
+  const selectedIds = Array.from(checked).map(cb => cb.value);
+  const selectedNames = Array.from(checked).map(cb => cb.dataset.name);
+  
+  const practiceMode = document.querySelector('input[name="practiceMode"]:checked').value;
+  const duration = document.querySelector('input[name="duration"]:checked').value;
+  const topicValue = document.getElementById('topics')?.value || '';
+
+  const selectedTopic = currentTopics.find(t => (t._id ?? t) === topicValue);
+
   try {
-    const body = { subjectId: subject._id };
+    const body = {
+      subjectId: selectedIds[0], // fallback for single-subject backend
+      subjectIds: selectedIds,   // multi-subject support
+      mode: practiceMode,
+      duration: parseInt(duration),
+    };
 
     if (selectedTopic && topicValue) {
       body.topicId = selectedTopic._id ?? selectedTopic;
@@ -181,16 +241,19 @@ async function handleStartSession() {
     const res  = await api.post(ENDPOINTS.SESSION_START, body);
     const data = res.data ?? res;
 
-    sessionStorage.setItem('active_session_id',       data.sessionId);
-    sessionStorage.setItem('active_session_subject',   JSON.stringify(subject));
-    sessionStorage.setItem('active_session_topic',     topicValue || '');
+    // Save configs to sessionStorage
+    sessionStorage.setItem('active_session_id', data.sessionId);
+    sessionStorage.setItem('active_session_mode', practiceMode);
+    sessionStorage.setItem('active_session_duration', duration);
+    sessionStorage.setItem('active_session_subjects', JSON.stringify(selectedNames));
     sessionStorage.setItem('active_session_questions', JSON.stringify(data.questions ?? []));
+    sessionStorage.setItem('active_session_topic', selectedTopic ? selectedTopic.name : '');
 
     window.location.href = '/pages/practice-session.html';
 
   } catch (err) {
     if (err.status === 403) {
-      showToast('Session limit reached. Upgrade to Pro for unlimited sessions.', 'error');
+      showToast('Daily practice limit reached. Upgrade to Pro for unlimited access.', 'error');
     } else {
       showToast('Could not start session. Please try again.', 'error');
     }
@@ -211,7 +274,6 @@ async function loadRecentSessions() {
       return sessionDate.toDateString() === todayStr;
     }).length;
 
-    updateSessionsRemaining(sessionsUsedToday);
     renderRecentSessions(sessions);
     buildSuggestions(sessions);
 
@@ -219,19 +281,6 @@ async function loadRecentSessions() {
     showToast('Could not load recent sessions.', 'error');
     renderRecentSessions([]);
     buildSuggestions([]);
-  }
-}
-
-function updateSessionsRemaining(usedToday) {
-  const countEl = document.querySelector('.sessions-count');
-  if (!countEl) return;
-
-  const remaining   = Math.max(0, FREE_DAILY_LIMIT - usedToday);
-  countEl.textContent = remaining;
-
-  const sessionText = countEl.closest('.sessions-left');
-  if (sessionText) {
-    sessionText.innerHTML = `<span class="sessions-count">${remaining}</span> of ${FREE_DAILY_LIMIT} sessions remaining today`;
   }
 }
 
@@ -258,9 +307,9 @@ function renderRecentSessions(sessions) {
 }
 
 function buildSessionCard(session, index) {
-  const subject  = allSubjects.find(s => s._id === session.subjectId) ?? { name: 'Unknown Subject' };
-  const topic    = session.analytics?.topMistakeTopic ?? session.topic ?? '';
-  const score    = session.score ?? 0;
+  const subjectName = session.subjectName ?? 'Subject';
+  const topic = session.analytics?.topMistakeTopic ?? session.topic ?? '';
+  const score = session.score ?? 0;
   const accuracy = session.analytics?.accuracy ?? 0;
 
   const scoreColour    = score    >= 70 ? '#22C55E' : '#F59E0B';
@@ -277,7 +326,7 @@ function buildSessionCard(session, index) {
          style="background:${iconStyle.bg}; color:${iconStyle.color};"></i>
       <div class="all-subj">
         <h4 class="subj-name">
-          ${subject.name}${topic ? ` <span class="session-topic">· ${topic}</span>` : ''}
+          ${subjectName}${topic ? ` <span class="session-topic">· ${topic}</span>` : ''}
         </h4>
         <div class="subj-stats">
           <p>Score: <span style="color:${scoreColour}; font-weight:600;">${score}%</span></p>
@@ -333,13 +382,13 @@ function buildSuggestions(sessions) {
   const groups = {};
 
   sessions.forEach(session => {
-    const subject = allSubjects.find(s => s._id === session.subjectId)
-      ?? { _id: session.subjectId, name: 'Unknown' };
+    const subjectId = session.subjectId ?? 'Unknown';
+    const subjectName = session.subjectName ?? 'Subject';
     const topic   = session.analytics?.topMistakeTopic ?? '';
-    const key     = `${subject._id}|${topic}`;
+    const key     = `${subjectId}|${topic}`;
 
     if (!groups[key]) {
-      groups[key] = { subjectId: subject._id, subjectName: subject.name, topic, accuracies: [] };
+      groups[key] = { subjectId, subjectName, topic, accuracies: [] };
     }
     groups[key].accuracies.push(session.analytics?.accuracy ?? 0);
   });
@@ -406,17 +455,34 @@ function renderSuggestions(weakAreas) {
 }
 
 async function handlePracticeFromSuggestion(subjectId, subjectName, topic) {
-  const subjectSelect = document.getElementById('subjects');
-  const topicSelect   = document.getElementById('topics');
+  // Check the subject checkbox in the grid
+  const cb = document.querySelector(`input[name="selectedSubjects"][value="${subjectId}"]`);
+  if (cb) {
+    // Uncheck all first
+    document.querySelectorAll('input[name="selectedSubjects"]').forEach(box => box.checked = false);
+    cb.checked = true;
+    // Trigger change event to load topics
+    await handleCheckboxChange.call(cb);
 
-  if (subjectSelect) subjectSelect.value = subjectId;
-  subjectSelect?.dispatchEvent(new Event('change'));
+    // Scroll to form config
+    document.getElementById('studyConfigForm')?.scrollIntoView({ behavior: 'smooth' });
 
-  await new Promise(resolve => setTimeout(resolve, 300));
-
-  if (topicSelect && topic) topicSelect.value = topic;
-
-  handleStartSession();
+    // Wait a brief moment for topics to load and select the specific topic
+    if (topic) {
+      setTimeout(() => {
+        const topicSelect = document.getElementById('topics');
+        if (topicSelect) {
+          // Find option with matching text
+          for (let i = 0; i < topicSelect.options.length; i++) {
+            if (topicSelect.options[i].text === topic || topicSelect.options[i].value === topic) {
+              topicSelect.selectedIndex = i;
+              break;
+            }
+          }
+        }
+      }, 500);
+    }
+  }
 }
 
 // THIS WEEK STATS
@@ -436,19 +502,19 @@ async function loadWeekStats() {
 }
 
 function renderWeekStats(stats) {
-fillStat(document.querySelector('.ques-count'),             stats.questionsAnswered, '0');
-fillStat(document.querySelector('.sessions.streak-counts'), stats.totalSessions,     '0');
+  fillStat(document.querySelector('.ques-count'),             stats.questionsAnswered, '0');
+  fillStat(document.querySelector('.sessions'),               stats.totalSessions,     '0');
 
   const avg    = stats.averageScore;
-  const avgEl  = document.querySelector('.avg-score.streak-counts');
+  const avgEl  = document.querySelector('.avg-score');
   fillStat(avgEl, avg != null ? `${avg}%` : null, '--');
 
   const streak    = stats.studyStreak ?? 0;
-  const streakEl  = document.querySelector('.streak-count');
+  const streakEl  = document.querySelector('.keep-it-up-section .streak-count');
   const checkIcon = document.querySelector('.keep-it-up-section .check');
 
   if (streakEl) {
-    streakEl.textContent = streak > 0 ? `${streak} week streak active!` : 'Start your streak today!';
+    streakEl.textContent = streak > 0 ? `${streak}-day streak active!` : 'Start your streak today!';
   }
 
   if (checkIcon && streak === 0) {
@@ -481,7 +547,12 @@ function setButtonLoading(btn, isLoading) {
     btn.innerHTML = `<span class="btn-spinner"></span> Starting...`;
   } else {
     btn.disabled  = false;
-    btn.innerHTML = `<img src="/icon/play.svg" alt=""> Start Session Now`;
+    btn.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;">
+        <polygon points="5 3 19 12 5 21 5 3"/>
+      </svg>
+      Start Session Now
+    `;
   }
 }
 

@@ -456,3 +456,76 @@
   .perf-left  { flex: 1.1; min-width: 0; }
   .perf-right { flex: 0.9; min-width: 0; }
 }
+
+/* PREMIUM CARD LOCK OVERLAYS */
+.card-locked {
+  position: relative;
+}
+
+.card-locked-blur {
+  filter: blur(5px);
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+  opacity: 0.65;
+}
+
+.card-lock-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.45);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-radius: var(--pillar-radius);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.card-lock-content {
+  text-align: center;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-lock-content .lock-icon {
+  color: #6366f1;
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.card-lock-content .lock-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pillar-navy);
+}
+
+.card-lock-content .lock-desc {
+  font-size: 11.5px;
+  color: var(--pillar-muted);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.card-lock-content .upgrade-lock-btn {
+  background: #6366f1;
+  color: white;
+  font-weight: 700;
+  font-family: var(--font-display);
+  padding: 8px 16px;
+  border-radius: var(--pillar-radius-xs);
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.card-lock-content .upgrade-lock-btn:hover {
+  background: var(--pillar-navy);
+}

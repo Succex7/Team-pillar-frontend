@@ -70,10 +70,13 @@ async function loadAllData() {
     const mockHistory = mockHistoryRes.status === 'fulfilled' ? (mockHistoryRes.value.data || mockHistoryRes.value) : null;
     const dashboard  = dashboardRes.status  === 'fulfilled' ? (dashboardRes.value.data  || dashboardRes.value)  : null;
 
+    const user = userStore.getState().profile;
+    const isProUser = user?.subscription === 'pro' || user?.isPro || false;
+
     renderStatCards(analytics, mockStats, dashboard);
     renderSubjectPerformance(analytics?.subjectMastery || dashboard?.subjectMastery || []);
-    renderScoreTrajectory(mockHistory || []);
-    renderHeatmap(analytics?.subjectMastery || []);
+    renderScoreTrajectory(mockHistory || [], isProUser);
+    renderHeatmap(analytics?.subjectMastery || [], isProUser);
     renderWeakTopics(analytics?.weakAreas || dashboard?.weakAreas || []);
     renderRecentMocks(Array.isArray(mockHistory) ? mockHistory.slice(0, 3) : []);
 
@@ -127,9 +130,72 @@ function renderStatCards(analytics, mockStats, dashboard) {
 }
 
 
+// LOCK CARD FUNCTION
+function lockCard(cardId, featureName, description) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+
+  card.classList.add('card-locked');
+  
+  // Find contents to blur (anything other than the card-header)
+  Array.from(card.children).forEach(child => {
+    if (!child.classList.contains('card-header')) {
+      child.classList.add('card-locked-blur');
+    }
+  });
+
+  // Check if overlay already exists
+  if (card.querySelector('.card-lock-overlay')) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'card-lock-overlay';
+  overlay.innerHTML = `
+    <div class="card-lock-content">
+      <svg class="lock-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      <p class="lock-title">${featureName} — Pro Only</p>
+      <p class="lock-desc">${description}</p>
+      <button type="button" class="upgrade-lock-btn">
+        Upgrade to Pro
+      </button>
+    </div>
+  `;
+
+  overlay.querySelector('.upgrade-lock-btn').addEventListener('click', () => {
+    window.location.href = '/pages/billing.html';
+  });
+
+  card.appendChild(overlay);
+}
+
+
 // SCORE TRAJECTORY — SVG line chart from mock history
 // mockHistory: [{ score, totalScore, createdAt }]
-function renderScoreTrajectory(mockHistory) {
+function renderScoreTrajectory(mockHistory, isProUser = false) {
+  const container = document.getElementById('scoreChart');
+  if (!container) return;
+
+  if (!isProUser) {
+    const dummyHistory = [
+      { score: 220, createdAt: new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString() },
+      { score: 235, createdAt: new Date(Date.now() - 6 * 24 * 3600 * 1000).toISOString() },
+      { score: 242, createdAt: new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString() },
+      { score: 250, createdAt: new Date(Date.now() - 4 * 24 * 3600 * 1000).toISOString() },
+      { score: 261, createdAt: new Date(Date.now() - 3 * 24 * 3600 * 1000).toISOString() },
+      { score: 268, createdAt: new Date(Date.now() - 2 * 24 * 3600 * 1000).toISOString() },
+      { score: 278, createdAt: new Date(Date.now() - 1 * 24 * 3600 * 1000).toISOString() },
+    ];
+    renderScoreTrajectoryGraph(dummyHistory);
+    lockCard('scoreTrajectoryCard', 'Score Trajectory', 'Unlock predicted UTME score trends, target comparisons, and future trajectory projections.');
+    return;
+  }
+
+  renderScoreTrajectoryGraph(mockHistory);
+}
+
+function renderScoreTrajectoryGraph(mockHistory) {
   const container = document.getElementById('scoreChart');
   if (!container) return;
 
@@ -189,23 +255,42 @@ function renderScoreTrajectory(mockHistory) {
     `;
   });
 
+  // Target score line
+  const user = userStore.getState().profile;
+  const targetScore = user?.onboarding?.targetScore ?? 300;
+  const targetY = yPos(targetScore);
+  const targetLineHTML = `
+    <line x1="${padLeft}" y1="${targetY}" x2="${svgW - padRight}" y2="${targetY}" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="4,4" />
+    <text x="${svgW - padRight - 4}" y="${targetY - 6}" fill="#22c55e" font-size="10" font-weight="700" text-anchor="end">Target ${targetScore}</text>
+  `;
+
   // X axis labels (dates)
   const xLabels = sessions.map((s, i) => {
     const label = new Date(s.createdAt).toLocaleDateString('en-NG', { month: 'short', day: 'numeric' });
     return `<text x="${xPos(i)}" y="${svgH - 6}" class="chart-label" text-anchor="middle">${label}</text>`;
   });
 
-  // Data points
-  const circles = scores.map((s, i) => `
-    <circle
-      cx="${xPos(i)}"
-      cy="${yPos(s)}"
-      r="5"
-      class="chart-point"
-    >
-      <title>Session ${i + 1}: ${s}/400</title>
-    </circle>
-  `);
+  // Data points + latest score badge
+  const circles = scores.map((s, i) => {
+    const isLast = i === scores.length - 1;
+    const circleHTML = `
+      <circle
+        cx="${xPos(i)}"
+        cy="${yPos(s)}"
+        r="5"
+        class="chart-point"
+      >
+        <title>Session ${i + 1}: ${s}/400</title>
+      </circle>
+    `;
+    const badgeHTML = isLast ? `
+      <g transform="translate(${xPos(i) - 25}, ${yPos(s) - 26})">
+        <rect width="50" height="18" rx="4" fill="var(--pillar-navy)" />
+        <text x="25" y="12" fill="#ffffff" font-size="9" font-weight="800" text-anchor="middle">${s} pts</text>
+      </g>
+    ` : '';
+    return circleHTML + badgeHTML;
+  });
 
   container.innerHTML = `
     <svg viewBox="0 0 ${svgW} ${svgH}" class="score-chart-svg" role="img" aria-label="Score trajectory chart">
@@ -218,6 +303,9 @@ function renderScoreTrajectory(mockHistory) {
 
       <!-- Grid lines + Y labels -->
       ${yLabels.join('')}
+
+      <!-- Target line -->
+      ${targetLineHTML}
 
       <!-- Area fill -->
       <path d="${areaPath}" fill="url(#areaGrad)" />
@@ -237,7 +325,28 @@ function renderScoreTrajectory(mockHistory) {
 
 // HEATMAP — topic mastery grid
 // subjectMastery: [{ subject, mastery, questionsAttempted }]
-function renderHeatmap(subjectMastery) {
+function renderHeatmap(subjectMastery, isProUser = false) {
+  const wrapper = document.getElementById('heatmapWrapper');
+  if (!wrapper) return;
+
+  if (!isProUser) {
+    const dummyMastery = [
+      { subject: 'Comprehension', mastery: 85 },
+      { subject: 'Algebra', mastery: 72 },
+      { subject: 'Genetics', mastery: 70 },
+      { subject: 'Org. Chemistry', mastery: 45 },
+      { subject: 'Calculus', mastery: 72 },
+      { subject: 'Cell Biology', mastery: 78 }
+    ];
+    renderHeatmapGrid(dummyMastery);
+    lockCard('heatmapCard', 'Topic Mastery Heatmap', 'Unlock detailed subject topic breakdowns, progress trackers, and subject mastery analytics.');
+    return;
+  }
+
+  renderHeatmapGrid(subjectMastery);
+}
+
+function renderHeatmapGrid(subjectMastery) {
   const wrapper = document.getElementById('heatmapWrapper');
   if (!wrapper) return;
 
@@ -294,6 +403,7 @@ function renderHeatmap(subjectMastery) {
 
   wrapper.innerHTML = `<div class="heatmap-grid">${rows.join('')}</div>`;
 }
+
 
 
 // SUBJECT PERFORMANCE LIST

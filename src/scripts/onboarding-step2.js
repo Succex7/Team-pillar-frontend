@@ -1,5 +1,10 @@
 // Onboarding Step 2 — Set Your Aim (Target Score)
-// DATA 
+// Integrates: target score slider, backend synchronization, onboarding state guard
+
+import { api } from '../services/api.js';
+import { ENDPOINTS } from '../services/endpoints.js';
+import { authService } from '../services/auth.service.js';
+import { userStore } from '../store/userStore.js';
 
 const SCORE_TIERS = [
   {
@@ -40,7 +45,7 @@ const DEFAULT_SCORE    = 315;
 
 // STATE
 let currentScore    = DEFAULT_SCORE;
-let confirmedScore  = null; // set when user clicks "Set Target"
+let confirmedScore  = null;
 
 // DOM REFERENCES
 const scoreSlider      = document.getElementById('scoreSlider');
@@ -61,8 +66,9 @@ const toast            = document.getElementById('toast');
 const pageOverlay      = document.getElementById('pageOverlay');
 
 // INIT
-function init() {
+async function init() {
   guardAccess();
+  await checkOnboardingState();
   restoreSavedScore();
   updateScoreDisplay(currentScore);
   updateTierCard(currentScore);
@@ -80,6 +86,19 @@ function guardAccess() {
   const step1Done = sessionStorage.getItem('onboarding_step1_done');
   if (!step1Done) {
     navigateTo('/pages/onboarding-step1.html');
+  }
+}
+
+async function checkOnboardingState() {
+  try {
+    const res = await authService.getMe();
+    const payload = res?.data?.data ?? res?.data ?? res;
+    const user = payload?.user ?? payload;
+    if (user && user.onboardingComplete) {
+      window.location.href = '/pages/dashboard.html';
+    }
+  } catch (err) {
+    console.warn('Failed to verify user onboarding status in step 2:', err);
   }
 }
 
@@ -114,13 +133,10 @@ function bindSlider() {
   });
 }
 
-// Live score number above slider 
-
 function updateScoreDisplay(score) {
   if (scoreDisplay) scoreDisplay.textContent = score;
 }
 
-// Slider filled track via CSS gradient
 function updateSliderTrack(score) {
   if (!scoreSlider) return;
 
@@ -139,8 +155,6 @@ function updateSliderTrack(score) {
   `;
 }
 
-//Tier card — title and description update on slide
-
 function updateTierCard(score) {
   const tier = SCORE_TIERS.find(t => score >= t.min && score <= t.max);
   if (!tier) return;
@@ -154,41 +168,32 @@ function updateTierCard(score) {
   }
 }
 
-// Goal bar — two-tone bar
-
 function updateGoalBar(score) {
   if (!goalFillNavy || !goalFillAmber) return;
 
-  // Navy portion: how far above average (200) the goal is
-  // Amber portion: the remaining stretch to max (400)
   const navyPercent  = Math.min(((score - AVERAGE_SCORE) / (MAX_SCORE - AVERAGE_SCORE)) * 100, 100);
-  const amberPercent = 100 - navyPercent;
-
   goalFillNavy.style.width  = `${navyPercent}%`;
-  goalFillAmber.style.width = `${amberPercent > 5 ? 15 : 0}%`; // amber shows as accent
+  goalFillAmber.style.width = `${100 - navyPercent > 5 ? 15 : 0}%`;
 
   if (goalValue) goalValue.textContent = score;
 }
 
-// SET TARGET BUTTON
+// SET TARGET BUTTON with API integration
 function bindSetTarget() {
   if (!btnSetTarget) return;
   btnSetTarget.addEventListener('click', handleSetTarget);
 }
 
-function handleSetTarget() {
+async function handleSetTarget() {
   confirmedScore = currentScore;
-
-  // Visual feedback
   setTargetLoading(true);
 
-  setTimeout(() => {
-    setTargetLoading(false);
+  try {
+    // Sync Step 2: send target score to backend
+    await api.post(ENDPOINTS.STUDENT_ONBOARDING, { targetScore: confirmedScore });
 
-    // Update button label to show confirmation
     if (setTargetText) setTargetText.textContent = `Target Set: ${confirmedScore} ✓`;
 
-    // Save to session
     const step2Data = {
       targetScore: confirmedScore,
     };
@@ -197,13 +202,15 @@ function handleSetTarget() {
 
     showToast(`Target score set to ${confirmedScore}!`, 'success');
 
-    // Re-enable next button after target set
     if (nextBtn) {
       nextBtn.disabled = false;
       nextBtn.setAttribute('aria-disabled', 'false');
     }
-
-  }, 600);
+  } catch (err) {
+    showToast(err?.message || 'Failed to sync target score with backend.', 'error');
+  } finally {
+    setTargetLoading(false);
+  }
 }
 
 function setTargetLoading(isLoading) {
@@ -217,7 +224,6 @@ function setTargetLoading(isLoading) {
 function bindNextButton() {
   if (!nextBtn) return;
 
-  // Disable until Set Target is clicked
   const alreadyDone = sessionStorage.getItem('onboarding_step2_done');
   if (!alreadyDone) {
     nextBtn.disabled = true;
@@ -227,24 +233,37 @@ function bindNextButton() {
   nextBtn.addEventListener('click', handleNext);
 }
 
-function handleNext() {
+async function handleNext() {
   if (!confirmedScore && !sessionStorage.getItem('onboarding_step2_done')) {
     showToast('Please set your target score before continuing.', 'error');
     return;
   }
 
-  // If user skipped Set Target click but score is valid — auto-confirm
-  if (!confirmedScore) {
-    confirmedScore = currentScore;
-    const step2Data = { targetScore: confirmedScore };
-    sessionStorage.setItem('onboarding_step2_data', JSON.stringify(step2Data));
-    sessionStorage.setItem('onboarding_step2_done', '1');
-  }
+  setNextLoading(true);
 
-  navigateTo('/pages/onboarding-step3.html');
+  try {
+    if (!confirmedScore) {
+      confirmedScore = currentScore;
+      await api.post(ENDPOINTS.STUDENT_ONBOARDING, { targetScore: confirmedScore });
+      const step2Data = { targetScore: confirmedScore };
+      sessionStorage.setItem('onboarding_step2_data', JSON.stringify(step2Data));
+      sessionStorage.setItem('onboarding_step2_done', '1');
+    }
+    navigateTo('/pages/onboarding-step3.html');
+  } catch (err) {
+    showToast(err?.message || 'Failed to proceed. Try setting target again.', 'error');
+  } finally {
+    setNextLoading(false);
+  }
 }
 
-// BACK LINK — navigate back to step 1 seamlessly
+function setNextLoading(isLoading) {
+  if (!nextBtn || !nextBtnText || !nextBtnLoader) return;
+  nextBtn.disabled = isLoading;
+  nextBtnText.classList.toggle('hidden', isLoading);
+  nextBtnLoader.classList.toggle('hidden', !isLoading);
+}
+
 function bindBackLink() {
   if (!backLink) return;
   backLink.addEventListener('click', (e) => {
@@ -253,15 +272,12 @@ function bindBackLink() {
   });
 }
 
-// SEAMLESS PAGE TRANSITION
 function navigateTo(url) {
   if (!pageOverlay) {
     window.location.href = url;
     return;
   }
-
   pageOverlay.classList.add('fade-in');
-
   setTimeout(() => {
     window.location.href = url;
   }, 300);
@@ -277,18 +293,13 @@ function fadeInOnLoad() {
   });
 }
 
-// TOAST
 function showToast(message, type = '') {
   if (!toast) return;
-
   toast.textContent = message;
   toast.className   = `toast ${type}`.trim();
-
   void toast.offsetWidth;
   toast.classList.add('show');
-
   setTimeout(() => toast.classList.remove('show'), 3500);
 }
 
-// BOOT
 init();

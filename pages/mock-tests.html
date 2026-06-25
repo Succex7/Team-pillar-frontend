@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Mock Tests - Pillar</title>
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mock Tests — Pillar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../src/styles/tokens.css" />
@@ -12,92 +12,208 @@
     <link rel="stylesheet" href="../src/styles/mock-tests.css" />
     <link rel="icon" type="image/png" href="../icon/logo-white.png" />
     <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
-</head>
-<body>
-    <main class="main-container">
-        <!-- section 1, mock tests about-->
-        <section class="mock-tests-section">
-            <div class="info-image-text-box">
-                <img src="/images/sheet.png" alt="image of a study sheet">
-                <div class="mock-tests-about-box">
-                    <h3 class="mock-tests">Mock tests</h3>
-                    <p class="mock-tests-about">
-                    Simulate the real UTME experience with our full-length mock tests. Track your performance and improve your exam readiness.
+  </head>
+  <body>
+    <div class="app-layout">
+      <!-- Shell: sidebar + topbar injected here -->
+      <div id="shellRoot"></div>
+
+      <!-- Main content -->
+      <div class="main-content">
+        <div id="topbarRoot"></div>
+
+        <main class="page-content" id="pageContent">
+          <div class="mock-container">
+            
+            <div class="mock-grid-main">
+              <!-- HERO PREPARE CARD -->
+              <section class="mock-card mock-hero-card">
+                <div class="hero-content">
+                  <div class="hero-text-block">
+                    <h2 class="hero-title">UTME CBT Simulator</h2>
+                    <p class="hero-desc">
+                      Simulate actual JAMB UTME exam conditions. Includes full-screen lockdown, timed countdowns, subject division tabs, and visibility fraud detection.
                     </p>
+                  </div>
+                  <img src="/images/sheet.png" alt="Exam Sheet" class="hero-illustration" />
                 </div>
+                <button type="button" class="start-mock-btn" id="openMockConfigBtn">
+                  <i class="ph-bold ph-play"></i> Configure & Launch Mock
+                </button>
+              </section>
+
+              <!-- PAST MOCKS -->
+              <section class="mock-card past-mock-tests-section">
+                <div class="card-header">
+                  <h3 class="panel-title">Past Mock Tests</h3>
+                </div>
+                <div class="past-mock-tests-box" id="pastMockTestsBox">
+                  <!-- Past mock list -->
+                </div>
+              </section>
             </div>
-            <button class="start-session-btn">
-                <img src="/icon/play.svg" alt="">Start Session Now</button>
-            <!-- end of mock test about box-->
-        </section>
-        
-        <!-- section 2, past mock tests section -->
-        <section class="past-mock-tests-section">
-            <h3>Past Mock Tests</h3>
-            <article class="past-mock-tests-box">
-                
-           <!-- where the mock tests listings go-->
-            </article>
-        </section>
-        
-        <!-- section 3, mock stats section-->
-       <article class="mock-stats-section">
-         <div class="mock-stats-header">
-              <img src= "/icon/stats.svg" alt="">
-              <h3>Your Mock Stats</h3>
-         </div>
-          <section class="stats">
-              <!-- average mock stats-->
-              <div class="avg-mock mock-stats">
-                  <p>Average Mock Score</p>
-                  <p><span class="average-score scores"></span> /400</p>
-              </div>
-              <!-- highest mock stats-->
-              <div class="hgst-mock mock-stats">
-                  <p>Highest Mock Score</p>
-                  <p><span class="highest-score scores"></span> /400</p>
-              </div>
-              <!-- total mock count stats -->
-              <div class="total-mock mock-stats">
-                 <p>Total Mocks Taken</p>
-                 <p class="mocks-count scores">0</p>
-              </div>
-       </article>
-        
-        <!-- section 4, streak section -->
-        <article class="streak-section">
-            <div class="streak-box-main-content">
-                <div class="this-week-box">
-                    <img src="/icon/fire.svg" alt="">
-                    <h3>This Week</h3>
+
+            <!-- SIDEBAR: STATS & STREAK -->
+            <div class="mock-sidebar">
+              <!-- Stats Card -->
+              <section class="mock-card mock-stats-card">
+                <div class="card-header">
+                  <h3 class="panel-title">Your Mock Stats</h3>
                 </div>
-                <p class="mocks-complt">Mocks Completed</p>
-                <h2 class="mocks-complt-count scores-two">0</h2>
-                <div class="avg-best-box">
-                    <div class="avg-score-box">
-                        <p>Average Score</p>
-                        <p><span class="avg-score scores-two"></span> /400</p>
+                <div class="stats-body-grid">
+                  <div class="mock-stat-box box-blue">
+                    <span class="mock-stat-label">Average Mock Score</span>
+                    <span class="mock-stat-value"><span class="average-score">--</span> <span class="score-max">/ 400</span></span>
+                  </div>
+                  <div class="mock-stat-box box-green">
+                    <span class="mock-stat-label">Highest Mock Score</span>
+                    <span class="mock-stat-value"><span class="highest-score">--</span> <span class="score-max">/ 400</span></span>
+                  </div>
+                  <div class="mock-stat-box box-yellow">
+                    <span class="mock-stat-label">Total Mocks Taken</span>
+                    <span class="mock-stat-value mocks-count">0</span>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Streak Card -->
+              <section class="mock-card streak-card">
+                <div class="card-header">
+                  <h3 class="panel-title">This Week</h3>
+                </div>
+                <div class="streak-body">
+                  <div class="streak-label-main">Mocks Completed</div>
+                  <div class="streak-counts-main mocks-complt-count">0</div>
+                  <div class="streak-stat-divider"></div>
+                  <div class="streak-mini-stats">
+                    <div class="mini-stat-item">
+                      <span class="mini-label">Average Score</span>
+                      <span class="mini-val"><span class="avg-score">--</span>/400</span>
                     </div>
-                    <div class="best-score-box">
-                         <p>Best Score</p>
-                         <p><span class="best-score scores-two"></span> /400</p>
+                    <div class="mini-stat-item">
+                      <span class="mini-label">Best Score</span>
+                      <span class="mini-val"><span class="best-score">--</span>/400</span>
                     </div>
+                  </div>
+                  <div class="keep-it-up-section">
+                    <i class="ph-bold ph-check-circle check"></i>
+                    <div>
+                      <p class="motivation">Keep it Up! You’re improving.</p>
+                      <h4 class="streak-count">4-week streak active!</h4>
+                    </div>
+                  </div>
                 </div>
+              </section>
             </div>
-            <!-- keep it up-->
-            <div class="keep-it-up-section">
-                <i class="ph-bold ph-check-circle check"></i>
-                <div>
-                    <h4 class = "motivation">Keep it Up! You’re improving.</h4>
-                    <h4 class="streak-count">4 week streak active!</h4>
+
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- MOCK TESTS LAUNCH CONFIG OVERLAY MODAL -->
+    <div class="modal-overlay" id="mockConfigModal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 class="modal-title">Configure Mock Exam</h3>
+          <button title="close" type="button" class="btn-close-modal" id="closeMockConfigBtn">
+            <i class="ph-bold ph-x"></i>
+          </button>
+        </div>
+        
+        <form id="mockConfigForm" class="modal-form">
+          <!-- SUBJECT SELECTOR CHIPS -->
+          <div class="modal-form-group">
+            <label class="modal-group-label">Exam Subjects (Select 4 Enrolled)</label>
+            <p class="modal-group-sub">English is mandatory. Select 3 other subjects to complete your track.</p>
+            <div class="modal-subjects-list" id="modalSubjectsList">
+              <!-- Dynamically populated subjects checkboxes -->
+            </div>
+          </div>
+
+          <!-- QUESTIONS CONFIG -->
+          <div class="modal-form-group">
+            <label class="modal-group-label">Questions Configuration</label>
+            <div class="config-toggle-row">
+              <label class="config-card-option">
+                <input type="radio" name="mockQuestions" value="180" checked />
+                <div class="config-card-content">
+                  <span class="config-title">180 Questions</span>
+                  <span class="config-desc">Full classic UTME (60 English, 40 others)</span>
                 </div>
+              </label>
+              <label class="config-card-option">
+                <input type="radio" name="mockQuestions" value="120" />
+                <div class="config-card-content">
+                  <span class="config-title">120 Questions</span>
+                  <span class="config-desc">Shortened simulation (30 English, 30 others)</span>
+                </div>
+              </label>
             </div>
-        </article>
-    </section>
-    </main>
- 
-   <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+          </div>
+
+          <!-- TIME LIMIT INFO -->
+          <div class="modal-form-group">
+            <label class="modal-group-label">Exam Duration & Strictness</label>
+            <div class="info-banner">
+              <i class="ph-bold ph-shield-warning info-icon"></i>
+              <div class="info-text">
+                <strong>Standard 120 Minutes (2 Hours) allowed.</strong>
+                <p>This exam launches in fullscreen mode. Exiting fullscreen or switching tabs triggers anti-cheat warnings. Exceeding 3 visibility violations auto-submits your exam.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- DIFFICULTY / PATTERN -->
+          <div class="modal-form-group">
+            <label class="modal-group-label">Adaptive Mode</label>
+            <div class="config-toggle-row">
+              <label class="config-card-option">
+                <input type="radio" name="mockDifficulty" value="adaptive" checked />
+                <div class="config-card-content">
+                  <span class="config-title">Adaptive Difficulty</span>
+                  <span class="config-desc">Tailors question distribution to your skill level</span>
+                </div>
+              </label>
+              <label class="config-card-option">
+                <input type="radio" name="mockDifficulty" value="fixed" />
+                <div class="config-card-content">
+                  <span class="config-title">Standard Difficulty</span>
+                  <span class="config-desc">Standard balanced static JAMB question sets</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="limit-warning" id="mockLimitWarning" style="display: none;">
+            ⚠️ Free Plan: You have 1 free mock left today. Upgrade for unlimited mocks.
+          </div>
+
+          <button type="submit" class="launch-exam-btn" id="launchMockExamBtn">
+            Begin Exam (Launch Fullscreen)
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- FULLSCREEN CONFIRMATION POPUP (Triggered before launching quiz) -->
+    <div class="modal-overlay" id="fullscreenPromptModal" style="display: none;">
+      <div class="modal-card modal-card--small">
+        <div class="modal-header">
+          <h3 class="modal-title">Ready to Begin?</h3>
+        </div>
+        <div class="modal-body-content">
+          <p>The mock quiz requires fullscreen lock. Ensure you have a stable network connection and won't be interrupted. Good luck!</p>
+        </div>
+        <div class="modal-footer-row">
+          <button type="button" class="btn-secondary" id="exitFullscreenLaunchBtn">Cancel</button>
+          <button type="button" class="btn-primary" id="confirmFullscreenLaunchBtn">Go Fullscreen & Start</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
 
     <script type="module" src="../src/scripts/mock-tests.js"></script>
-</body>
+  </body>
 </html>

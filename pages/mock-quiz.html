@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Active UTME Mock Exam — Pillar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/quiz-session.css" />
+    <link rel="icon" type="image/png" href="../icon/logo-white.png" />
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
+    <style>
+      /* Exam Specific Overrides */
+      .timer-display {
+        font-size: 18px;
+        padding: 10px 20px;
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid #ef4444;
+        color: #ef4444;
+      }
+      .timer-display.timer-warning {
+        animation: pulseRed 1s infinite alternate;
+      }
+      @keyframes pulseRed {
+        from { opacity: 0.7; }
+        to { opacity: 1; transform: scale(1.02); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="quiz-layout">
+      <!-- Top header bar -->
+      <header class="quiz-header">
+        <div class="header-left">
+          <img src="/icon/logo-white.png" alt="Pillar Logo" class="quiz-logo" />
+          <div class="quiz-meta-info">
+            <span class="session-badge">UTME MOCK EXAM</span>
+            <h1 class="session-title" id="examTitle">JAMB CBT Simulation</h1>
+          </div>
+        </div>
+        
+        <div class="header-center">
+          <div class="quiz-progress-container">
+            <div class="progress-info">
+              <span>Progress</span>
+              <span id="progressText">0 / 0 Completed</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="timer-display" id="timerDisplay">
+            <i class="ph-bold ph-alarm"></i>
+            <span id="timerText">02:00:00</span>
+          </div>
+          <button type="button" class="btn-submit-session" id="submitExamBtn">
+            Submit Exam
+          </button>
+        </div>
+      </header>
+
+      <!-- Main workspace -->
+      <div class="quiz-workspace">
+        
+        <!-- Left side: Questions & Passage panel -->
+        <main class="quiz-content-panel">
+          <!-- Optional Passage Panel -->
+          <div class="passage-box" id="passageBox" style="display: none;">
+            <div class="passage-header">
+              <i class="ph-bold ph-text-align-left"></i>
+              <span>Reading Passage</span>
+            </div>
+            <div class="passage-body" id="passageText">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Question Card -->
+          <div class="question-card" id="questionCard">
+            <div class="question-card-header">
+              <span class="subject-chip" id="currentSubjectChip">Subject</span>
+              <span class="question-number" id="currentQuestionNum">Question 1</span>
+            </div>
+
+            <div class="question-body" id="questionText">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- Option Selection List -->
+            <div class="options-list" id="optionsList">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- Action panel below options (No AI Tutor options allowed in standard Mock!) -->
+            <div class="question-actions">
+              <div class="actions-left">
+                <button type="button" class="btn-secondary" id="flagQuestionBtn">
+                  <i class="ph-bold ph-flag"></i> Flag Question
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation controls -->
+          <div class="navigation-controls">
+            <button type="button" class="btn-nav" id="prevQuestionBtn">
+              <i class="ph-bold ph-arrow-left"></i> Previous
+            </button>
+            <button type="button" class="btn-nav" id="nextQuestionBtn">
+              Next <i class="ph-bold ph-arrow-right"></i>
+            </button>
+          </div>
+        </main>
+
+        <!-- Right side: Questions navigation grid & sidebar -->
+        <aside class="quiz-sidebar-panel">
+          
+          <!-- Subject Navigation Tabs -->
+          <div class="sidebar-block subjects-nav-block">
+            <div class="sidebar-block-title">Subjects</div>
+            <div class="subject-tab-buttons" id="subjectTabButtons">
+              <!-- Tabs added dynamically -->
+            </div>
+          </div>
+
+          <!-- Question Grid -->
+          <div class="sidebar-block grid-nav-block">
+            <div class="sidebar-block-title">Questions Navigation</div>
+            <div class="questions-nav-grid" id="questionsNavGrid">
+              <!-- Dynamically generated question numbers -->
+            </div>
+            
+            <div class="grid-legend">
+              <div class="legend-item"><span class="legend-dot dot-answered"></span> Answered</div>
+              <div class="legend-item"><span class="legend-dot dot-flagged"></span> Flagged</div>
+              <div class="legend-item"><span class="legend-dot dot-current"></span> Current</div>
+              <div class="legend-item"><span class="legend-dot dot-unvisited"></span> Unvisited</div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="sidebar-block help-block">
+            <button type="button" class="btn-sidebar-action" id="quitExamBtn">
+              <i class="ph-bold ph-sign-out"></i> Quit Exam
+            </button>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+
+    <!-- FULLSCREEN RE-ENTRY / RESUME OVERLAY (Blocking modal when user leaves fullscreen) -->
+    <div class="modal-overlay" id="fullscreenRestoreModal">
+      <div class="modal-card modal-card--small">
+        <div class="modal-header">
+          <h3 class="modal-title">⚠️ FULLSCREEN EXITED</h3>
+        </div>
+        <div class="modal-body-content" style="padding: 16px 0;">
+          <p>Mock exams must remain in fullscreen mode. Please return to fullscreen mode immediately to continue your exam.</p>
+          <div style="background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 12px; border-radius: 6px; margin-top: 12px; font-weight: 600; font-size: 13px;" id="violationCountWarning">
+            Visibilities lost: 0 of 3. Repeated tab switches submit the exam automatically.
+          </div>
+        </div>
+        <div class="modal-footer-row">
+          <button type="button" class="btn-secondary" id="exitExamBtn">Quit & Fail</button>
+          <button type="button" class="btn-primary" id="restoreFullscreenBtn">Resume Exam</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script type="module" src="../src/scripts/mock-quiz.js"></script>
+  </body>
+</html>

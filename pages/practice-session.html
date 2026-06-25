@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Active Study Session — Pillar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/quiz-session.css" />
+    <link rel="icon" type="image/png" href="../icon/logo-white.png" />
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
+  </head>
+  <body>
+    <!-- Immersive Practice Layout -->
+    <div class="quiz-layout">
+      <!-- Top header bar -->
+      <header class="quiz-header">
+        <div class="header-left">
+          <img src="/icon/logo-white.png" alt="Pillar Logo" class="quiz-logo" />
+          <div class="quiz-meta-info">
+            <span class="session-badge" id="sessionModeBadge">Practice Mode</span>
+            <h1 class="session-title" id="sessionTitle">UTME Practice Session</h1>
+          </div>
+        </div>
+        
+        <div class="header-center">
+          <div class="quiz-progress-container">
+            <div class="progress-info">
+              <span>Progress</span>
+              <span id="progressText">0 / 0 Completed</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="timer-display" id="timerDisplay">
+            <i class="ph-bold ph-clock"></i>
+            <span id="timerText">00:00</span>
+          </div>
+          <button type="button" class="btn-submit-session" id="submitSessionBtn">
+            Submit Session
+          </button>
+        </div>
+      </header>
+
+      <!-- Main workspace -->
+      <div class="quiz-workspace">
+        
+        <!-- Left side: Questions & Passage panel -->
+        <main class="quiz-content-panel">
+          <!-- Optional Passage Panel (shown if current question has passage) -->
+          <div class="passage-box" id="passageBox" style="display: none;">
+            <div class="passage-header">
+              <i class="ph-bold ph-text-align-left"></i>
+              <span>Reading Passage</span>
+            </div>
+            <div class="passage-body" id="passageText">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Question Card -->
+          <div class="question-card" id="questionCard">
+            <div class="question-card-header">
+              <span class="subject-chip" id="currentSubjectChip">Subject</span>
+              <span class="question-number" id="currentQuestionNum">Question 1</span>
+            </div>
+
+            <div class="question-body" id="questionText">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- Option Selection List -->
+            <div class="options-list" id="optionsList">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- Action panel below options -->
+            <div class="question-actions">
+              <div class="actions-left">
+                <button type="button" class="btn-secondary" id="flagQuestionBtn">
+                  <i class="ph-bold ph-flag"></i> Flag Question
+                </button>
+                <button type="button" class="btn-ai-explain" id="aiExplainBtn" style="display: none;">
+                  <i class="ph-bold ph-sparkle"></i> Ask AI Tutor
+                </button>
+              </div>
+              
+              <div class="actions-right">
+                <button type="button" class="btn-primary" id="checkAnswerBtn" style="display: none;">
+                  Check Answer
+                </button>
+              </div>
+            </div>
+
+            <!-- Instant feedback/AI review block (Practice Mode only, shown when answered/checked) -->
+            <div class="instant-feedback-card" id="instantFeedbackCard" style="display: none;">
+              <div class="feedback-status" id="feedbackStatus">
+                <!-- Correct or Incorrect with checkmark -->
+              </div>
+              <div class="explanation-box">
+                <h4 class="explanation-title">Explanation:</h4>
+                <div class="explanation-content" id="explanationText">
+                  <!-- Explanation text -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation controls -->
+          <div class="navigation-controls">
+            <button type="button" class="btn-nav" id="prevQuestionBtn">
+              <i class="ph-bold ph-arrow-left"></i> Previous
+            </button>
+            <button type="button" class="btn-nav" id="nextQuestionBtn">
+              Next <i class="ph-bold ph-arrow-right"></i>
+            </button>
+          </div>
+        </main>
+
+        <!-- Right side: Questions navigation grid & AI Sidebar -->
+        <aside class="quiz-sidebar-panel">
+          
+          <!-- Subject Navigation Tabs -->
+          <div class="sidebar-block subjects-nav-block">
+            <div class="sidebar-block-title">Subjects</div>
+            <div class="subject-tab-buttons" id="subjectTabButtons">
+              <!-- Tabs added dynamically -->
+            </div>
+          </div>
+
+          <!-- Question Grid -->
+          <div class="sidebar-block grid-nav-block">
+            <div class="sidebar-block-title">Questions Navigation</div>
+            <div class="questions-nav-grid" id="questionsNavGrid">
+              <!-- Dynamically generated question numbers -->
+            </div>
+            
+            <div class="grid-legend">
+              <div class="legend-item"><span class="legend-dot dot-answered"></span> Answered</div>
+              <div class="legend-item"><span class="legend-dot dot-flagged"></span> Flagged</div>
+              <div class="legend-item"><span class="legend-dot dot-current"></span> Current</div>
+              <div class="legend-item"><span class="legend-dot dot-unvisited"></span> Unvisited</div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="sidebar-block help-block">
+            <button type="button" class="btn-sidebar-action" id="quitSessionBtn">
+              <i class="ph-bold ph-sign-out"></i> Quit Session
+            </button>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+
+    <!-- AI Tutor Drawer Panel (collapsible overlay on the right) -->
+    <div class="ai-chat-drawer" id="aiChatDrawer">
+      <div class="drawer-header">
+        <div class="drawer-title">
+          <i class="ph-bold ph-sparkle text-indigo"></i>
+          <span>Pillar AI Tutor</span>
+        </div>
+        <button title="close" type="button" class="btn-close-drawer" id="closeDrawerBtn">
+          <i class="ph-bold ph-x"></i>
+        </button>
+      </div>
+      
+      <div class="drawer-chat-area" id="drawerChatArea">
+        <div class="ai-chat-message message-system">
+          Hello! I'm your Pillar AI Tutor. Ask me any question about the current topic or question, and I'll help you break it down step-by-step.
+        </div>
+      </div>
+
+      <form class="drawer-input-area" id="drawerInputForm">
+        <input type="text" id="drawerChatInput" placeholder="Ask a follow-up question..." autocomplete="off" />
+        <button title="close" type="submit" class="btn-send-message">
+          <i class="ph-bold ph-paper-plane-right"></i>
+        </button>
+      </form>
+    </div>
+
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script type="module" src="../src/scripts/practice-session.js"></script>
+  </body>
+</html>

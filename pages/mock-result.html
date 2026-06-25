@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UTME Mock Test Results — Pillar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/shell.css" />
+    <link rel="stylesheet" href="../src/styles/mock-result.css" />
+    <link rel="icon" type="image/png" href="../icon/logo-white.png" />
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
+  </head>
+  <body>
+    <div class="app-layout">
+      <!-- Shell: sidebar + topbar injected here -->
+      <div id="shellRoot"></div>
+
+      <!-- Main content -->
+      <div class="main-content">
+        <div id="topbarRoot"></div>
+
+        <main class="page-content" id="pageContent">
+          <div class="results-container">
+            
+            <!-- COMPOSITE SCORE HEADER CARD -->
+            <section class="results-card overview-card">
+              <div class="overview-left">
+                <h2 class="results-score-title">Composite Score</h2>
+                <div class="score-display-wrapper">
+                  <svg class="score-circle-svg" width="165" height="165" viewBox="0 0 165 165">
+                    <circle class="circle-bg" cx="82.5" cy="82.5" r="72" />
+                    <circle class="circle-fill" cx="82.5" cy="82.5" r="72" id="resultsCircle" stroke-dasharray="452" stroke-dashoffset="452" />
+                  </svg>
+                  <div class="circle-inner-text">
+                    <span class="score-num-value" id="compositeScoreText">0</span>
+                    <span class="score-num-max">/ 400</span>
+                  </div>
+                </div>
+                <div class="score-performance-tag" id="scorePerformanceTag">Fair Effort</div>
+              </div>
+
+              <div class="overview-right">
+                <h3 class="stats-grid-title">Exam Analytics</h3>
+                <div class="results-stats-grid">
+                  <div class="stat-box">
+                    <span class="stat-label">Correct</span>
+                    <span class="stat-value text-green" id="correctCountText">0</span>
+                  </div>
+                  <div class="stat-box">
+                    <span class="stat-label">Incorrect</span>
+                    <span class="stat-value text-red" id="incorrectCountText">0</span>
+                  </div>
+                  <div class="stat-box">
+                    <span class="stat-label">Flagged Questions</span>
+                    <span class="stat-value text-amber" id="flaggedCountText">0</span>
+                  </div>
+                  <div class="stat-box">
+                    <span class="stat-label">Time Spent</span>
+                    <span class="stat-value" id="timeSpentText">0h 0m</span>
+                  </div>
+                </div>
+                <div class="action-buttons-row">
+                  <a href="/pages/mock-tests.html" class="btn-primary">
+                    Take Another Mock
+                  </a>
+                  <a href="/pages/dashboard.html" class="btn-secondary">
+                    Back to Dashboard
+                  </a>
+                </div>
+              </div>
+            </section>
+
+            <!-- SUBJECT BREAKDOWN PERFORMANCE BARS -->
+            <section class="results-card subject-breakdown-card">
+              <div class="card-header">
+                <h3 class="panel-title">Subject Breakdown</h3>
+                <p class="panel-subtitle">Review your individual performance per UTME subject.</p>
+              </div>
+              <div class="subject-scores-list" id="subjectScoresList">
+                <!-- Dynamically populated list of subject progress bars -->
+                <div class="loading-placeholder">Loading subject breakdowns...</div>
+              </div>
+            </section>
+
+            <!-- BLURRED PRO DEEP ANALYSIS PANEL -->
+            <section class="results-card deep-analysis-card" id="deepAnalysisCard">
+              <div class="insights-header">
+                <div class="insights-title-row">
+                  <i class="ph-bold ph-sparkle text-indigo font-bold"></i>
+                  <h3>Detailed Pro Analysis</h3>
+                </div>
+                <span class="insights-pro-badge">⚡ Pro Intelligence</span>
+              </div>
+              <div class="insights-content" id="proAnalysisContent">
+                <!-- Dynamic contents for Pro plan or locked message overlay -->
+                <div class="loading-placeholder">Synthesising detailed review...</div>
+              </div>
+            </section>
+
+            <!-- DETAILED QUESTION LIST REVIEW -->
+            <section class="review-section">
+              <h3 class="section-title">Question-by-Question Review</h3>
+              <div class="question-review-list" id="questionReviewList">
+                <!-- Dynamically populated review list -->
+              </div>
+            </section>
+
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script type="module" src="../src/scripts/mock-result.js"></script>
+  </body>
+</html>

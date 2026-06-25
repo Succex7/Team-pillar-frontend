@@ -84,7 +84,7 @@ function populateProfile(user) {
   const name  = user.name  || '';
   const email = user.email || '';
   const isPro = user.isPro ?? false;
-  const lang  = user.language || 'en';
+  const lang  = user.language || 'EN';
 
   // Avatar initials
   const initials = name
@@ -141,7 +141,7 @@ async function handleProfileSave(e) {
   try {
     const payload = {
       name:     fullNameInput.value.trim(),
-      language: languageSelect?.value || 'en',
+      language: languageSelect?.value || 'EN',
     };
 
     const response = await api.patch(ENDPOINTS.UPDATE_PROFILE, payload);

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Practice Session Results — Pillar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/shell.css" />
+    <link rel="stylesheet" href="../src/styles/session-result.css" />
+    <link rel="icon" type="image/png" href="../icon/logo-white.png" />
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
+  </head>
+  <body>
+    <div class="app-layout">
+      <!-- Shell: sidebar + topbar injected here -->
+      <div id="shellRoot"></div>
+
+      <!-- Main content -->
+      <div class="main-content">
+        <div id="topbarRoot"></div>
+
+        <main class="page-content" id="pageContent">
+          <div class="results-container">
+            
+            <!-- OVERVIEW: CIRCULAR SCORE AND KEY METRICS -->
+            <section class="results-card overview-card">
+              <div class="overview-left">
+                <h2 class="results-score-title">Session Score</h2>
+                <div class="score-display-wrapper">
+                  <svg class="score-circle-svg" width="140" height="140" viewBox="0 0 140 140">
+                    <circle class="circle-bg" cx="70" cy="70" r="60" />
+                    <circle class="circle-fill" cx="70" cy="70" r="60" id="resultsCircle" stroke-dasharray="377" stroke-dashoffset="377" />
+                  </svg>
+                  <div class="circle-inner-text">
+                    <span class="score-pct-value" id="scorePctText">0%</span>
+                    <span class="score-pct-label">Accuracy</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="overview-right">
+                <div class="results-stats-grid">
+                  <div class="stat-box">
+                    <span class="stat-label">Correct</span>
+                    <span class="stat-value text-green" id="correctCountText">0</span>
+                  </div>
+                  <div class="stat-box">
+                    <span class="stat-label">Incorrect</span>
+                    <span class="stat-value text-red" id="incorrectCountText">0</span>
+                  </div>
+                  <div class="stat-box">
+                    <span class="stat-label">Total Questions</span>
+                    <span class="stat-value" id="totalQuestionsText">0</span>
+                  </div>
+                  <div class="stat-box">
+                    <span class="stat-label">Time Spent</span>
+                    <span class="stat-value" id="timeSpentText">0m 0s</span>
+                  </div>
+                </div>
+                <div class="action-buttons-row">
+                  <a href="/pages/study-session.html" class="btn-primary">
+                    Start New Session
+                  </a>
+                  <a href="/pages/dashboard.html" class="btn-secondary">
+                    Back to Dashboard
+                  </a>
+                </div>
+              </div>
+            </section>
+
+            <!-- AI RECOMMENDATIONS PANEL -->
+            <section class="results-card ai-tutor-insights-card">
+              <div class="insights-header">
+                <div class="insights-title-row">
+                  <i class="ph-bold ph-sparkle text-indigo"></i>
+                  <h3>AI Tutor Performance Review</h3>
+                </div>
+                <span class="insights-pro-badge">⭐ Pro</span>
+              </div>
+              <div class="insights-content" id="aiInsightsContent">
+                <!-- Dynamically populated or blurred if Free tier -->
+                <div class="loading-placeholder">Synthesising reviews...</div>
+              </div>
+            </section>
+
+            <!-- DETAILED QUESTION LIST REVIEW -->
+            <section class="review-section">
+              <h3 class="section-title">Question Review</h3>
+              <div class="question-review-list" id="questionReviewList">
+                <!-- Dynamically populated -->
+              </div>
+            </section>
+
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script type="module" src="../src/scripts/session-result.js"></script>
+  </body>
+</html>
