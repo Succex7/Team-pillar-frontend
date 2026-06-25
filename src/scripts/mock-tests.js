@@ -19,47 +19,239 @@ const STREAK_MESSAGES = {
   legend: { text: 'Legendary streak! JAMB ready.',  icon: 'ph-bold ph-trophy'        },
 };
 
+let userSubjects = [];
+let allSubjects = [];
+let isProUser = false;
+let startPayload = null; // Stored payload before fullscreen confirm
+
 async function init() {
+  const user = userStore.getState().profile;
+  isProUser = user?.subscription === 'pro' || user?.isPro || false;
+
   await initShell(
     'mock-test',
     'Mock Tests',
-    'Full UTME simulation · 160 questions · 4 subjects · 2 hours'
+    'Full UTME simulations and anti-cheat exam engine'
   );
 
   await Promise.allSettled([
     loadMockHistory(),
     loadMockStats(),
     loadWeekStats(),
+    loadUserSubjects(),
   ]);
 
-  bindStartMock();
+  bindModalHandlers();
 }
 
-// START MOCK TEST
-function bindStartMock() {
-  const btn = document.querySelector('.start-session-btn');
-  if (!btn) return;
-  btn.addEventListener('click', handleStartMock);
+// FETCH USER SUBJECTS
+async function loadUserSubjects() {
+  try {
+    const meRes = await api.get(ENDPOINTS.GET_ME);
+    const meData = meRes.data ?? meRes;
+    const user = meData.user ?? meData;
+
+    const selectedSubjectIds = user?.selectedSubjects ?? [];
+
+    if (user) {
+      userStore.setState({ profile: user });
+      isProUser = user?.subscription === 'pro' || user?.isPro || false;
+    }
+
+    const subjRes = await api.get(ENDPOINTS.GET_SUBJECTS);
+    const subjData = subjRes.data ?? subjRes;
+
+    allSubjects = Array.isArray(subjData) ? subjData : [];
+    userSubjects = allSubjects.filter(subj =>
+      selectedSubjectIds.includes(subj._id)
+    );
+
+    if (userSubjects.length === 0 && selectedSubjectIds.length > 0) {
+      userSubjects = allSubjects.filter(s => s.isActive);
+    }
+  } catch (err) {
+    console.error('Could not load user subjects:', err);
+  }
 }
 
-async function handleStartMock() {
-  const btn = document.querySelector('.start-session-btn');
+// BIND MODAL OPEN/CLOSE & SUBMITS
+function bindModalHandlers() {
+  const openBtn = document.getElementById('openMockConfigBtn');
+  const closeBtn = document.getElementById('closeMockConfigBtn');
+  const modal = document.getElementById('mockConfigModal');
+  const form = document.getElementById('mockConfigForm');
+
+  if (openBtn && modal) {
+    openBtn.addEventListener('click', () => {
+      renderModalSubjects();
+      modal.classList.add('open');
+    });
+  }
+
+  if (closeBtn && modal) {
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('open');
+    });
+  }
+
+  if (form) {
+    form.addEventListener('submit', handleConfigSubmit);
+  }
+
+  // Fullscreen Confirmation Buttons
+  const cancelFullBtn = document.getElementById('exitFullscreenLaunchBtn');
+  const confirmFullBtn = document.getElementById('confirmFullscreenLaunchBtn');
+  const fullModal = document.getElementById('fullscreenPromptModal');
+
+  if (cancelFullBtn && fullModal) {
+    cancelFullBtn.addEventListener('click', () => {
+      fullModal.style.display = 'none';
+      setButtonLoading(document.getElementById('launchMockExamBtn'), false);
+    });
+  }
+
+  if (confirmFullBtn && fullModal) {
+    confirmFullBtn.addEventListener('click', () => {
+      fullModal.style.display = 'none';
+      launchExamFullscreen();
+    });
+  }
+}
+
+// RENDER SUBJECTS IN CONFIG MODAL
+function renderModalSubjects() {
+  const container = document.getElementById('modalSubjectsList');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  if (userSubjects.length === 0) {
+    container.innerHTML = '<div class="loading-placeholder">No subjects enrolled. Go to settings first.</div>';
+    return;
+  }
+
+  userSubjects.forEach(subj => {
+    const isEnglish = subj.name.toLowerCase().includes('english');
+    const label = document.createElement('label');
+    label.className = 'subject-chip-checkbox';
+    
+    label.innerHTML = `
+      <input type="checkbox" name="mockSubjects" value="${subj._id}" data-name="${subj.name}" 
+        ${isEnglish ? 'checked disabled' : ''}>
+      <div class="subject-chip-content">
+        <span>${subj.name}</span>
+        ${isEnglish ? '<span class="compulsory-lbl">Mandatory</span>' : ''}
+      </div>
+    `;
+    
+    container.appendChild(label);
+  });
+}
+
+// VALIDATE & SUBMIT CONFIG FORM
+async function handleConfigSubmit(e) {
+  e.preventDefault();
+
+  // Validate exactly 4 subjects (English + 3 others)
+  const checkedBoxes = document.querySelectorAll('input[name="mockSubjects"]:checked');
+  const disabledBoxes = document.querySelectorAll('input[name="mockSubjects"]:disabled'); // English is disabled
+  
+  // Total subjects checked = enabled checked + disabled checked
+  const totalChecked = checkedBoxes.length + disabledBoxes.length;
+
+  if (totalChecked !== 4) {
+    showToast('A mock exam requires exactly 4 subjects (including English).', 'error');
+    return;
+  }
+
+  const selectedSubjectIds = [];
+  const selectedSubjectNames = [];
+
+  // Add disabled (English)
+  disabledBoxes.forEach(cb => {
+    selectedSubjectIds.push(cb.value);
+    selectedSubjectNames.push(cb.dataset.name);
+  });
+  
+  // Add others
+  checkedBoxes.forEach(cb => {
+    selectedSubjectIds.push(cb.value);
+    selectedSubjectNames.push(cb.dataset.name);
+  });
+
+  const questionLimit = document.querySelector('input[name="mockQuestions"]:checked').value;
+  const difficulty = document.querySelector('input[name="mockDifficulty"]:checked').value;
+
+  const btn = document.getElementById('launchMockExamBtn');
   setButtonLoading(btn, true);
 
+  // Save start details before launching
+  startPayload = {
+    subjectIds: selectedSubjectIds,
+    subjectNames: selectedSubjectNames,
+    questionLimit: parseInt(questionLimit),
+    difficulty: difficulty
+  };
+
+  // Close config modal and open fullscreen confirmation prompt
+  document.getElementById('mockConfigModal').classList.remove('open');
+  
+  const fullPrompt = document.getElementById('fullscreenPromptModal');
+  if (fullPrompt) {
+    fullPrompt.style.display = 'flex';
+  } else {
+    // Fallback if prompt not found
+    launchExamFullscreen();
+  }
+}
+
+// LAUNCH EXAM & FULLSCREEN LOCK
+async function launchExamFullscreen() {
+  if (!startPayload) return;
+
+  const btn = document.getElementById('launchMockExamBtn');
+
   try {
-    const res  = await api.post(ENDPOINTS.MOCK_START, {});
+    const res  = await api.post(ENDPOINTS.MOCK_START, {
+      subjectIds: startPayload.subjectIds,
+      questionLimit: startPayload.questionLimit,
+      difficulty: startPayload.difficulty
+    });
+    
     const data = res.data ?? res;
 
-    sessionStorage.setItem('mock_session_id',        data.sessionId);
+    // Save configurations
+    sessionStorage.setItem('mock_session_id', data.sessionId);
     sessionStorage.setItem('mock_session_questions', JSON.stringify(data.questions ?? []));
+    sessionStorage.setItem('mock_session_subjects', JSON.stringify(startPayload.subjectNames));
+    sessionStorage.setItem('mock_session_limit', startPayload.questionLimit);
+    sessionStorage.setItem('mock_session_difficulty', startPayload.difficulty);
+    sessionStorage.setItem('mock_session_duration', 120); // 120 mins (2 Hours)
 
+    // Trigger Fullscreen API request
+    try {
+      const docEl = document.documentElement;
+      if (docEl.requestFullscreen) {
+        await docEl.requestFullscreen();
+      } else if (docEl.mozRequestFullScreen) { /* Firefox */
+        await docEl.mozRequestFullScreen();
+      } else if (docEl.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+        await docEl.webkitRequestFullscreen();
+      } else if (docEl.msRequestFullscreen) { /* IE/Edge */
+        await docEl.msRequestFullscreen();
+      }
+    } catch (e) {
+      console.warn('Fullscreen request bypassed by browser policy. Proceeding to quiz...', e);
+    }
+
+    // Redirect to active mock page
     window.location.href = '/pages/mock-quiz.html';
 
   } catch (err) {
     if (err.status === 403) {
       showToast('Mock test limit reached. Upgrade to Pro for unlimited mocks!', 'error');
     } else if (err.status === 400) {
-      showToast('Please complete subject selection in onboarding first.', 'error');
+      showToast('Bad request. Please check selected subjects.', 'error');
     } else {
       showToast('Could not start mock test. Please try again.', 'error');
     }
@@ -85,7 +277,7 @@ async function loadMockHistory() {
 }
 
 function renderMockHistory(sessions) {
-  const container = document.querySelector('.past-mock-tests-box');
+  const container = document.getElementById('pastMockTestsBox');
   if (!container) return;
 
   container.innerHTML = '';
@@ -121,7 +313,7 @@ function buildMockCard(session, index) {
   const scoreColour    = scorePercent >= 70 ? '#22C55E' : '#F59E0B';
   const accuracyColour = accuracy    >= 70 ? '#22C55E' : '#F59E0B';
   const iconStyle      = ICON_COLOURS[index % ICON_COLOURS.length];
-  const dateStr        = formatDate(session.createdAt);
+  const dateStr        = formatDate(session.createdAt || session.startTime);
 
   const card = document.createElement('div');
   card.className = 'mock-tests-listing';
@@ -142,14 +334,14 @@ function buildMockCard(session, index) {
         </div>
       </div>
     </div>
-    <button class="rvw-btn" data-session-id="${session.sessionId}">
+    <button class="rvw-btn" data-session-id="${session.sessionId || session._id || session.id}">
       Review
       <i class="ph-bold ph-arrow-right"></i>
     </button>
   `;
 
   card.querySelector('.rvw-btn')?.addEventListener('click', () =>
-    handleReview(session.sessionId)
+    handleReview(session.sessionId || session._id || session.id)
   );
 
   return card;
@@ -173,10 +365,8 @@ async function loadMockStats() {
 }
 
 function renderMockStats(data) {
-  // Scores /400 — use '--' when empty (zero would look like a real score)
   fillStat(document.querySelector('.average-score'),  data.avgMockScore,     '--');
   fillStat(document.querySelector('.highest-score'),  data.highestMockScore, '--');
-  // Count — use '0' when empty (zero is a real meaningful count here)
   fillStat(document.querySelector('.mocks-count'),    data.totalMocksTaken,  '0');
 }
 
@@ -221,17 +411,15 @@ function filterThisWeek(sessions) {
   monday.setHours(0, 0, 0, 0);
 
   return sessions.filter(s => {
-    const sessionDate = new Date(s.createdAt);
+    const sessionDate = new Date(s.createdAt || s.startTime);
     return sessionDate >= monday && sessionDate <= now;
   });
 }
 
 function renderWeekStats({ mocksCompleted, avgScore, bestScore, streak }) {
-  // Count — 0 when empty
   fillStat(document.querySelector('.mocks-complt-count'),   mocksCompleted, '0');
-  // Scores /400 — '--' when empty
-  fillStat(document.querySelector('.avg-score.scores-two'), avgScore,       '--');
-  fillStat(document.querySelector('.best-score.scores-two'), bestScore,     '--');
+  fillStat(document.querySelector('.avg-score'),            avgScore,       '--');
+  fillStat(document.querySelector('.best-score'),           bestScore,      '--');
 
   renderStreakMessage(streak);
 }
@@ -251,7 +439,7 @@ function renderStreakMessage(streak) {
     <i class="${message.icon} check"></i>
     <div>
       <p class="motivation">${message.text}</p>
-      <h4 class="streak-count">${streak > 0 ? `${streak}-week streak active!` : 'No active streak yet'}</h4>
+      <h4 class="streak-count">${streak > 0 ? `${streak}-day streak active!` : 'No active streak yet'}</h4>
     </div>
   `;
 }
@@ -277,10 +465,6 @@ function formatDate(isoString) {
 }
 
 // UI HELPERS
-
-// fillStat: sets element text and toggles .stat-empty class
-// empty → placeholder shows faintly via CSS
-// real value → full opacity, bold (CSS default)
 function fillStat(el, value, placeholder = '--') {
   if (!el) return;
   const isEmpty  = value == null;
@@ -302,10 +486,10 @@ function setButtonLoading(btn, isLoading) {
   if (!btn) return;
   if (isLoading) {
     btn.disabled  = true;
-    btn.innerHTML = `<span class="btn-spinner"></span> Starting...`;
+    btn.innerHTML = `<span class="btn-spinner"></span> Launching...`;
   } else {
     btn.disabled  = false;
-    btn.innerHTML = `<img src="../public/icon/play.svg" alt=""> Start Session Now`;
+    btn.innerHTML = `Begin Exam (Launch Fullscreen)`;
   }
 }
 

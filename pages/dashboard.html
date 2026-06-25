@@ -26,145 +26,168 @@
 
         <main class="page-content" id="pageContent">
 
-          <!-- Welcome + stats row -->
-          <div class="dashboard-welcome" id="dashboardWelcome">
-            <div class="welcome-text">
-              <h2 class="welcome-heading skeleton skeleton-text skeleton-text--mid" id="welcomeHeading"></h2>
-              <p class="welcome-sub skeleton skeleton-text skeleton-text--short" id="welcomeSub"></p>
-            </div>
-          </div>
+          <div class="dashboard-grid">
 
-          <!-- Top 3 stat cards -->
-          <div class="stat-cards-row" id="statCardsRow">
-            <div class="stat-card skeleton-card" id="statCardScore">
-              <div class="skeleton skeleton-text skeleton-text--short" style="width:120px;height:12px;margin-bottom:8px;"></div>
-              <div class="skeleton skeleton-text skeleton-text--xl" style="width:80px;"></div>
-            </div>
-            <div class="stat-card skeleton-card" id="statCardConsistency">
-              <div class="skeleton skeleton-text skeleton-text--short" style="width:120px;height:12px;margin-bottom:8px;"></div>
-              <div class="skeleton skeleton-text skeleton-text--xl" style="width:60px;"></div>
-            </div>
-            <div class="stat-card skeleton-card" id="statCardSessions">
-              <div class="skeleton skeleton-text skeleton-text--short" style="width:100px;height:12px;margin-bottom:8px;"></div>
-              <div class="skeleton skeleton-text skeleton-text--xl" style="width:40px;"></div>
-            </div>
-          </div>
+            <!-- PREDICTED SCORE BANNER CARD -->
+            <section class="predicted-score-banner" id="predictedScoreBanner">
+              <div class="banner-left">
+                <span class="banner-badge" id="weeklyProgressBadge">+18.8% this week · Steady progress</span>
+                <h2 class="banner-title">Predicted UTME Score</h2>
+                <div class="banner-score-row">
+                  <span class="banner-score" id="bannerScore">278</span>
+                  <span class="banner-max">of 400</span>
+                </div>
+                <p class="banner-sub" id="bannerScoreSub">Based on your last 18 sessions across 4 subjects</p>
+                <div class="banner-meta-grid">
+                  <div>
+                    <span class="meta-label">Weekly gain</span>
+                    <span class="meta-val text-green" id="weeklyGain">+12 pts</span>
+                  </div>
+                  <div>
+                    <span class="meta-label">AI Confidence</span>
+                    <span class="meta-val" id="aiConfidence">87%</span>
+                  </div>
+                  <div>
+                    <span class="meta-label">Target</span>
+                    <span class="meta-val" id="targetScoreVal">300 / 400</span>
+                  </div>
+                </div>
+              </div>
+              <div class="banner-right">
+                <div class="circle-progress-wrapper">
+                  <svg class="circle-progress" width="120" height="120" viewBox="0 0 120 120">
+                    <circle class="circle-bg" cx="60" cy="60" r="50" />
+                    <circle class="circle-fill" cx="60" cy="60" r="50" id="progressCircle" stroke-dasharray="314" stroke-dashoffset="95" />
+                  </svg>
+                  <div class="circle-inner">
+                    <span class="circle-num" id="circleScore">278</span>
+                    <span class="circle-lbl">of 400</span>
+                  </div>
+                </div>
+                <div class="consistency-wrapper">
+                  <div class="consistency-header">
+                    <span class="consistency-val" id="consistencyVal">92%</span>
+                    <span class="consistency-label">Study consistency</span>
+                  </div>
+                  <span class="consistency-status-badge">✓ On track for target</span>
+                  
+                  <!-- Calendar Consistency Blocks Grid -->
+                  <div class="consistency-calendar-grid" id="consistencyCalendarGrid">
+                    <!-- Filled dynamically by JS -->
+                  </div>
+                </div>
+              </div>
+            </section>
 
-          <!-- CTA cards row -->
-          <div class="cta-cards-row">
-            <a href="/pages/study-session.html" class="cta-card cta-card--blue" id="ctaStudy">
-              <div class="cta-card-icon" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polygon points="5 3 19 12 5 21 5 3"/>
-                </svg>
-              </div>
-              <div class="cta-card-text">
-                <p class="cta-card-title">Start Study Session</p>
-                <p class="cta-card-desc">Practice questions by topic with instant feedback</p>
-              </div>
-              <svg class="cta-card-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-              </svg>
-            </a>
+            <!-- CTA SPLIT CARDS -->
+            <div class="cta-cards-row">
+              <a href="/pages/study-session.html" class="cta-card cta-card--blue">
+                <div class="cta-card-content">
+                  <span class="cta-badge">Continue preparing</span>
+                  <h3 class="cta-title">Start today's study session</h3>
+                  <p class="cta-sub">Adaptive · up to 30 min · 5 subjects</p>
+                </div>
+                <div class="cta-icon-circle">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                  </svg>
+                </div>
+              </a>
+              <a href="/pages/mock-tests.html" class="cta-card cta-card--purple">
+                <div class="cta-card-content">
+                  <span class="cta-badge">Full simulation</span>
+                  <h3 class="cta-title">Start a UTME mock test</h3>
+                  <p class="cta-sub">45 questions · 4 subjects · 2 hours</p>
+                </div>
+                <div class="cta-icon-circle">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                </div>
+              </a>
+            </div>
 
-            <a href="/pages/mock-tests.html" class="cta-card cta-card--dark" id="ctaMock">
-              <div class="cta-card-icon" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                  <line x1="16" y1="13" x2="8" y2="13"/>
-                  <line x1="16" y1="17" x2="8" y2="17"/>
-                </svg>
+            <!-- FOUR SMALL STAT CARDS -->
+            <div class="stat-cards-grid">
+              <div class="stat-mini-card">
+                <div class="stat-mini-row">
+                  <span class="stat-mini-val" id="avgAccuracy">68%</span>
+                  <span class="stat-mini-badge text-green">↑ 3%</span>
+                </div>
+                <span class="stat-mini-label">Avg. accuracy</span>
               </div>
-              <div class="cta-card-text">
-                <p class="cta-card-title">Start Mock Test</p>
-                <p class="cta-card-desc">Full UTME simulation with exam conditions</p>
+              <div class="stat-mini-card">
+                <div class="stat-mini-row">
+                  <span class="stat-mini-val" id="totalQuestionsPracticed">2,847</span>
+                  <span class="stat-mini-badge text-indigo">this week</span>
+                </div>
+                <span class="stat-mini-label">Questions practised</span>
               </div>
-              <svg class="cta-card-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-              </svg>
-            </a>
-          </div>
+              <div class="stat-mini-card">
+                <div class="stat-mini-row">
+                  <span class="stat-mini-val" id="totalMocksTaken">23</span>
+                  <span class="stat-mini-badge text-muted">total</span>
+                </div>
+                <span class="stat-mini-label">Mock tests taken</span>
+              </div>
+              <div class="stat-mini-card">
+                <div class="stat-mini-row">
+                  <span class="stat-mini-val" id="weakTopicsCount">3</span>
+                  <span class="stat-mini-badge text-red">3 flagged</span>
+                </div>
+                <span class="stat-mini-label">Weak topics</span>
+              </div>
+            </div>
 
-          <!-- Subject performance -->
-          <div class="section-card" id="subjectPerformanceCard">
-            <div class="section-card-header">
-              <h3 class="section-card-title">Subject Performance</h3>
-              <a href="/pages/performance.html" class="section-card-link">View Details →</a>
-            </div>
-            <div class="subject-performance-list" id="subjectPerformanceList">
-              <!-- skeleton rows -->
-              <div class="subject-row-skeleton">
-                <div class="skeleton skeleton-text" style="width:120px;height:13px;"></div>
-                <div class="skeleton skeleton-text" style="width:100%;height:8px;border-radius:9999px;margin-top:6px;"></div>
-              </div>
-              <div class="subject-row-skeleton">
-                <div class="skeleton skeleton-text" style="width:100px;height:13px;"></div>
-                <div class="skeleton skeleton-text" style="width:100%;height:8px;border-radius:9999px;margin-top:6px;"></div>
-              </div>
-              <div class="subject-row-skeleton">
-                <div class="skeleton skeleton-text" style="width:80px;height:13px;"></div>
-                <div class="skeleton skeleton-text" style="width:100%;height:8px;border-radius:9999px;margin-top:6px;"></div>
-              </div>
-              <div class="subject-row-skeleton">
-                <div class="skeleton skeleton-text" style="width:90px;height:13px;"></div>
-                <div class="skeleton skeleton-text" style="width:100%;height:8px;border-radius:9999px;margin-top:6px;"></div>
-              </div>
-            </div>
-          </div>
+            <!-- MIDDLE TWO-COLUMN SECTION -->
+            <div class="dashboard-middle-row">
+              <!-- Left panel: Subject performance -->
+              <section class="dashboard-panel panel-left" id="subjectPerformanceCard">
+                <div class="panel-header">
+                  <h3 class="panel-title">Subject performance</h3>
+                  <a href="/pages/performance.html" class="panel-link">View all →</a>
+                </div>
+                <div class="subject-mastery-list" id="subjectMasteryList">
+                  <!-- Populated dynamically -->
+                </div>
+              </section>
 
-          <!-- Bottom stats row -->
-          <div class="bottom-stats-row" id="bottomStatsRow">
-            <div class="bottom-stat-card skeleton-card">
-              <div class="skeleton skeleton-text" style="width:90px;height:11px;margin-bottom:8px;"></div>
-              <div class="skeleton skeleton-text skeleton-text--xl" style="width:70px;"></div>
-              <div class="skeleton skeleton-text skeleton-text--sm" style="width:100px;margin-top:4px;"></div>
+              <!-- Right panel: AI tutor insights -->
+              <section class="dashboard-panel panel-right" id="aiInsightsCard">
+                <div class="panel-header">
+                  <h3 class="panel-title">AI insights</h3>
+                  <span class="panel-badge-pro">⚡ Pro</span>
+                </div>
+                <div class="ai-insights-list" id="aiInsightsList">
+                  <!-- Populated dynamically -->
+                </div>
+              </section>
             </div>
-            <div class="bottom-stat-card skeleton-card">
-              <div class="skeleton skeleton-text" style="width:110px;height:11px;margin-bottom:8px;"></div>
-              <div class="skeleton skeleton-text skeleton-text--xl" style="width:80px;"></div>
-              <div class="skeleton skeleton-text skeleton-text--sm" style="width:80px;margin-top:4px;"></div>
-            </div>
-            <div class="bottom-stat-card skeleton-card">
-              <div class="skeleton skeleton-text" style="width:100px;height:11px;margin-bottom:8px;"></div>
-              <div class="skeleton skeleton-text skeleton-text--xl" style="width:50px;"></div>
-              <div class="skeleton skeleton-text skeleton-text--sm" style="width:110px;margin-top:4px;"></div>
-            </div>
-          </div>
 
-          <!-- AI Tutor Insights -->
-          <div class="ai-tutor-card" id="aiTutorCard">
-            <div class="ai-tutor-header">
-              <div class="ai-tutor-icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="M12 8v4l3 3"/>
-                </svg>
-              </div>
-              <div>
-                <p class="ai-tutor-title">AI Tutor Insights</p>
-                <p class="ai-tutor-desc">Personalized recommendations powered by AI</p>
-              </div>
-              <span class="pro-only-badge">⚡ PRO ONLY</span>
-            </div>
-            <div class="ai-tutor-body" id="aiTutorBody">
-              <!-- Populated by JS based on plan -->
-            </div>
-          </div>
+            <!-- BOTTOM TWO-COLUMN SECTION -->
+            <div class="dashboard-bottom-row">
+              <!-- Left panel: Today's study plan -->
+              <section class="dashboard-panel bottom-panel-left" id="studyPlanCard">
+                <div class="panel-header">
+                  <h3 class="panel-title">Today's study plan</h3>
+                  <a href="/pages/settings.html?tab=study-planner" class="panel-link">Edit plan</a>
+                </div>
+                <div class="study-plan-list" id="studyPlanList">
+                  <!-- Populated dynamically -->
+                </div>
+              </section>
 
-          <!-- Topics needing attention -->
-          <div class="section-card" id="weakTopicsCard">
-            <div class="section-card-header">
-              <h3 class="section-card-title">Topics Needing Attention</h3>
+              <!-- Right panel: Recent mock tests -->
+              <section class="dashboard-panel bottom-panel-right" id="recentMocksCard">
+                <div class="panel-header">
+                  <h3 class="panel-title">Recent mock tests</h3>
+                  <a href="/pages/mock-tests.html" class="panel-link">View all</a>
+                </div>
+                <div class="recent-mocks-list" id="recentMocksList">
+                  <!-- Populated dynamically -->
+                </div>
+              </section>
             </div>
-            <div class="weak-topics-grid" id="weakTopicsGrid">
-              <!-- Skeleton -->
-              <div class="weak-topic-skeleton skeleton-card"></div>
-              <div class="weak-topic-skeleton skeleton-card"></div>
-              <div class="weak-topic-skeleton skeleton-card"></div>
-              <div class="weak-topic-skeleton skeleton-card"></div>
-            </div>
-          </div>
 
         </main>
       </div>

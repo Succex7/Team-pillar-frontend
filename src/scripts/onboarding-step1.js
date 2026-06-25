@@ -1,9 +1,14 @@
 // Onboarding Step 1 — Select UTME Subjects
 // Handles: subject rendering, selection logic, progress bar,
-//          validation, session persistence, seamless navigation
+//          validation, session persistence, seamless navigation, API integration
 
-// DATA
-const SUBJECTS = [
+import { api } from '../services/api.js';
+import { ENDPOINTS } from '../services/endpoints.js';
+import { authService } from '../services/auth.service.js';
+import { userStore } from '../store/userStore.js';
+
+// STATIC FALLBACK DATA (with SVG icons)
+const STATIC_SUBJECTS = [
   {
     id:          'use-of-english',
     name:        'Use of English',
@@ -85,10 +90,8 @@ const MAX_SUBJECTS   = 4;
 const TOTAL_SUBJECTS = 4;
 
 // STATE
-// Pre-select compulsory subject
-let selectedIds = new Set(
-  SUBJECTS.filter(s => s.compulsory).map(s => s.id)
-);
+let activeSubjects = [];
+let selectedIds = new Set();
 
 // DOM REFERENCES
 const subjectsGrid   = document.getElementById('subjectsGrid');
@@ -102,35 +105,133 @@ const toast          = document.getElementById('toast');
 const pageOverlay    = document.getElementById('pageOverlay');
 
 // INIT
-function init() {
+async function init() {
+  guardAuth();
+  await checkOnboardingState();
+  await loadSubjects();
   restoreSavedSelection();
   renderSubjects();
   updateProgress();
   updateNextButton();
 }
 
-// RESTORE SAVED — if user navigated back from step 2
+function guardAuth() {
+  const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+  if (!token) {
+    window.location.href = '/pages/login.html';
+  }
+}
+
+async function checkOnboardingState() {
+  try {
+    const res = await authService.getMe();
+    const payload = res?.data?.data ?? res?.data ?? res;
+    const user = payload?.user ?? payload;
+    if (user) {
+      userStore.setState({ profile: user, role: user.role });
+
+      // Auto-fix invalid user language values (e.g. 'en', 'yoruba', etc.)
+      const validLangs = ['EN', 'FR', 'DE'];
+      if (!validLangs.includes(user.language)) {
+        console.log(`Auto-fixing invalid language '${user.language}' to 'EN' in the database...`);
+        try {
+          await api.patch(ENDPOINTS.UPDATE_PROFILE, { language: 'EN' });
+          user.language = 'EN';
+          userStore.setState({ profile: user });
+        } catch (e) {
+          console.warn("Failed to auto-fix language:", e);
+        }
+      }
+
+      if (user.onboardingComplete) {
+        window.location.href = '/pages/dashboard.html';
+      }
+    }
+  } catch (err) {
+    console.warn('Failed to verify user onboarding status:', err);
+  }
+}
+
+// FETCH SUBJECTS FROM BACKEND
+async function loadSubjects() {
+  try {
+    const res = await api.get(ENDPOINTS.GET_SUBJECTS);
+    const data = res?.data ?? res;
+    const backendList = Array.isArray(data) ? data : (Array.isArray(data?.subjects) ? data.subjects : (Array.isArray(data?.data) ? data.data : []));
+    
+    if (backendList && backendList.length > 0) {
+      activeSubjects = backendList.map(mapSubjectWithIcon);
+      return;
+    }
+  } catch (err) {
+    console.warn('Failed to load subjects from backend, using fallbacks', err);
+  }
+  
+  // Use fallbacks
+  activeSubjects = STATIC_SUBJECTS.map(s => ({
+    id: s.id,
+    name: s.name,
+    compulsory: s.compulsory,
+    icon: s.icon
+  }));
+}
+
+function mapSubjectWithIcon(backendSub) {
+  const name = backendSub.name || '';
+  const nameLower = name.toLowerCase();
+
+  // Find matching static subject
+  let match = STATIC_SUBJECTS.find(s => s.name.toLowerCase() === nameLower || nameLower.includes(s.id));
+  if (!match) {
+    if (nameLower.includes('english')) {
+      match = STATIC_SUBJECTS.find(s => s.id === 'use-of-english');
+    } else if (nameLower.includes('math')) {
+      match = STATIC_SUBJECTS.find(s => s.id === 'mathematics');
+    } else if (nameLower.includes('literature')) {
+      match = STATIC_SUBJECTS.find(s => s.id === 'literature');
+    }
+  }
+
+  return {
+    id: backendSub._id || backendSub.id,
+    name: backendSub.name,
+    compulsory: match ? match.compulsory : (nameLower.includes('english') ? true : false),
+    icon: match ? match.icon : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+    </svg>`
+  };
+}
+
+// RESTORE SAVED
 function restoreSavedSelection() {
+  // Add compulsory subjects by default
+  activeSubjects.filter(s => s.compulsory).forEach(s => selectedIds.add(s.id));
+
   const saved = sessionStorage.getItem('onboarding_step1_subjects');
   if (!saved) return;
 
   try {
     const ids = JSON.parse(saved);
     if (Array.isArray(ids)) {
-      selectedIds = new Set(ids);
-      // Always keep compulsory selected
-      SUBJECTS.filter(s => s.compulsory).forEach(s => selectedIds.add(s.id));
+      ids.forEach(id => {
+        // Only restore if the subject exists in our active list
+        if (activeSubjects.some(s => s.id === id)) {
+          selectedIds.add(id);
+        }
+      });
     }
   } catch {
-    // Ignore parse errors — start fresh
+    // Ignore fresh start
   }
 }
 
-// RENDER SUBJECTS DYNAMICALLY
+// RENDER SUBJECTS
 function renderSubjects() {
   if (!subjectsGrid) return;
+  subjectsGrid.innerHTML = '';
 
-  SUBJECTS.forEach(subject => {
+  activeSubjects.forEach(subject => {
     const li = document.createElement('li');
 
     const card = document.createElement('div');
@@ -141,7 +242,6 @@ function renderSubjects() {
     card.setAttribute('data-id',      subject.id);
     card.setAttribute('aria-label',   subject.name);
 
-    // Compulsory badge
     if (subject.compulsory) {
       const badge = document.createElement('div');
       badge.className = 'compulsory-badge';
@@ -149,19 +249,16 @@ function renderSubjects() {
       card.appendChild(badge);
     }
 
-    // Icon
     const iconEl = document.createElement('div');
     iconEl.className = 'subject-icon';
     iconEl.innerHTML = subject.icon;
     card.appendChild(iconEl);
 
-    // Name
     const nameEl = document.createElement('span');
     nameEl.className = 'subject-name';
     nameEl.textContent = subject.name;
     card.appendChild(nameEl);
 
-    // Status
     const statusEl = document.createElement('div');
     statusEl.className = 'subject-status';
     statusEl.innerHTML = `
@@ -173,7 +270,6 @@ function renderSubjects() {
     `;
     card.appendChild(statusEl);
 
-    // Events — skip for compulsory
     if (!subject.compulsory) {
       card.addEventListener('click',   () => handleToggle(subject.id, card));
       card.addEventListener('keydown', (e) => {
@@ -198,19 +294,16 @@ function buildCardClasses(subject) {
 
 // TOGGLE SELECTION
 function handleToggle(id, card) {
-  const subject = SUBJECTS.find(s => s.id === id);
+  const subject = activeSubjects.find(s => s.id === id);
   if (!subject || subject.compulsory) return;
 
   const isSelected = selectedIds.has(id);
 
   if (isSelected) {
-    // Deselect
     selectedIds.delete(id);
     card.classList.remove('selected');
     card.setAttribute('aria-checked', 'false');
-
   } else {
-    // Select — check max limit
     if (selectedIds.size >= MAX_SUBJECTS) {
       showToast(`You can only select ${MAX_SUBJECTS} subjects.`, 'error');
       return;
@@ -225,7 +318,6 @@ function handleToggle(id, card) {
   saveSelection();
 }
 
-// PROGRESS BAR
 function updateProgress() {
   const count     = selectedIds.size;
   const remaining = MAX_SUBJECTS - count;
@@ -240,12 +332,10 @@ function updateProgress() {
       : 'Complete!';
   }
 
-  // Update progressbar aria
   const track = document.querySelector('.progress-track');
   if (track) track.setAttribute('aria-valuenow', count);
 }
 
-// NEXT BUTTON STATE
 function updateNextButton() {
   if (!nextBtn) return;
   const isReady = selectedIds.size === MAX_SUBJECTS;
@@ -253,7 +343,6 @@ function updateNextButton() {
   nextBtn.setAttribute('aria-disabled', String(!isReady));
 }
 
-// PERSIST SELECTION
 function saveSelection() {
   sessionStorage.setItem(
     'onboarding_step1_subjects',
@@ -261,66 +350,66 @@ function saveSelection() {
   );
 }
 
-// NEXT BUTTON — navigate to step 2
+// NEXT BUTTON — navigate to step 2 with API sync
 function bindNextButton() {
   if (!nextBtn) return;
   nextBtn.addEventListener('click', handleNext);
 }
 
-function handleNext() {
+async function handleNext() {
   if (selectedIds.size < MAX_SUBJECTS) {
     showToast(`Please select ${MAX_SUBJECTS} subjects to continue.`, 'error');
     return;
   }
 
-  // Build step 1 payload
-  const step1Data = {
-    subjects: [...selectedIds].map(id => {
-      const subject = SUBJECTS.find(s => s.id === id);
-      return { id, name: subject?.name || id };
-    }),
-  };
+  setNextLoading(true);
 
-  sessionStorage.setItem('onboarding_step1_data', JSON.stringify(step1Data));
-  sessionStorage.setItem('onboarding_step1_done', '1');
+  try {
+    const subjectIds = [...selectedIds];
+    
+    // Sync Step 1: send subjects selection to backend
+    await api.post(ENDPOINTS.STUDENT_ONBOARDING, { subjects: subjectIds });
 
-  // Seamless transition to step 2
-  navigateTo('/pages/onboarding-step2.html');
+    const step1Data = {
+      subjects: subjectIds.map(id => {
+        const subject = activeSubjects.find(s => s.id === id);
+        return { id, name: subject?.name || id };
+      }),
+    };
+
+    sessionStorage.setItem('onboarding_step1_data', JSON.stringify(step1Data));
+    sessionStorage.setItem('onboarding_step1_done', '1');
+
+    navigateTo('/pages/onboarding-step2.html');
+  } catch (err) {
+    showToast(err?.message || 'Failed to sync selection with backend. Please try again.', 'error');
+  } finally {
+    setNextLoading(false);
+  }
 }
 
-// SEAMLESS PAGE TRANSITION
 function navigateTo(url) {
   if (!pageOverlay) {
     window.location.href = url;
     return;
   }
-
-  // Fade out current page
   pageOverlay.classList.add('fade-in');
-
-  // Navigate after fade completes
   setTimeout(() => {
     window.location.href = url;
   }, 300);
 }
 
-// TOAST
 function showToast(message, type = '') {
   if (!toast) return;
-
   toast.textContent = message;
   toast.className   = `toast ${type}`.trim();
-
-  void toast.offsetWidth; // reflow
+  void toast.offsetWidth;
   toast.classList.add('show');
-
   setTimeout(() => toast.classList.remove('show'), 3500);
 }
 
-// FADE IN ON PAGE LOAD (arriving from another step)
 function fadeInOnLoad() {
   if (!pageOverlay) return;
-  // Briefly show overlay then fade out
   pageOverlay.classList.add('fade-in');
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
@@ -329,7 +418,13 @@ function fadeInOnLoad() {
   });
 }
 
-// BOOT
+function setNextLoading(isLoading) {
+  if (!nextBtn || !nextBtnText || !nextBtnLoader) return;
+  nextBtn.disabled = isLoading;
+  nextBtnText.classList.toggle('hidden', isLoading);
+  nextBtnLoader.classList.toggle('hidden', !isLoading);
+}
+
 init();
 bindNextButton();
 fadeInOnLoad();
