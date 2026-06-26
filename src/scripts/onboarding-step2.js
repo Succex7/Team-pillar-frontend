@@ -94,8 +94,23 @@ async function checkOnboardingState() {
     const res = await authService.getMe();
     const payload = res?.data?.data ?? res?.data ?? res;
     const user = payload?.user ?? payload;
-    if (user && user.onboardingComplete) {
-      window.location.href = '/pages/dashboard.html';
+    if (user) {
+      // Auto-fix invalid user language values (e.g. 'en', 'yoruba', etc.)
+      const validLangs = ['EN', 'FR', 'DE'];
+      if (!validLangs.includes(user.language)) {
+        console.log(`Auto-fixing invalid language '${user.language}' to 'EN' in the database...`);
+        try {
+          await api.patch(ENDPOINTS.UPDATE_PROFILE, { language: 'EN' });
+          user.language = 'EN';
+          userStore.setState({ profile: user, role: user.role });
+        } catch (e) {
+          console.warn("Failed to auto-fix language:", e);
+        }
+      }
+
+      if (user.onboardingComplete) {
+        window.location.href = '/pages/dashboard.html';
+      }
     }
   } catch (err) {
     console.warn('Failed to verify user onboarding status in step 2:', err);

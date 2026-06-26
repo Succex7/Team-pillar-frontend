@@ -76,6 +76,12 @@ img.lazy.loaded { opacity: 1; }
   transition: transform var(--transition-base);
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
 
 .sidebar.sidebar--open {
@@ -122,11 +128,11 @@ img.lazy.loaded { opacity: 1; }
   letter-spacing: -0.3px;
 }
 
-/* SIDEBAR SCORE CARD */
-.sidebar-score-card {
-  background: rgba(255, 255, 255, 0.04);
+/* SIDEBAR SCORE CAPSULE */
+.sidebar-score-capsule {
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--pillar-radius-sm);
+  border-radius: 12px;
   margin: 16px 20px;
   padding: 14px 16px;
   display: flex;
@@ -134,33 +140,20 @@ img.lazy.loaded { opacity: 1; }
   gap: 6px;
 }
 
-.score-card-label {
+.score-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.score-lbl {
   font-size: 9px;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.45);
   letter-spacing: 0.5px;
 }
 
-.score-card-value-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-}
-
-.score-card-value {
-  font-size: 20px;
-  font-weight: 800;
-  color: white;
-  font-family: var(--font-display);
-}
-
-.score-card-max {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.45);
-  font-weight: 500;
-}
-
-.score-card-change {
+.score-gain {
   font-size: 10px;
   font-weight: 700;
   background: rgba(34, 197, 94, 0.15);
@@ -169,12 +162,46 @@ img.lazy.loaded { opacity: 1; }
   border-radius: 4px;
 }
 
+.score-num-row {
+  display: flex;
+  align-items: baseline;
+}
+
+.score-val {
+  font-size: 20px;
+  font-weight: 800;
+  color: white;
+  font-family: var(--font-display);
+}
+
+.score-max {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 500;
+  margin-left: 2px;
+}
+
 /* SIDEBAR NAV */
 .sidebar-nav {
   flex: 1;
   padding: 10px 8px;
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+.menu-category {
+  font-size: 9px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.8px;
+  margin: 16px 12px 6px;
+  text-transform: uppercase;
 }
 
 .sidebar-group {
@@ -284,18 +311,22 @@ img.lazy.loaded { opacity: 1; }
 
 .upgrade-card-btn {
   width: 100%;
-  padding: 8px;
-  background: var(--pillar-yellow);
+  padding: 10px;
+  background: #4f46e5;
   color: white;
   border: none;
-  border-radius: var(--pillar-radius-xs);
+  border-radius: 8px;
   font-size: 12px;
   font-weight: 700;
   font-family: var(--font-display);
   transition: background var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
-.upgrade-card-btn:hover { background: rgb(255, 175, 37); }
+.upgrade-card-btn:hover { background: #4338ca; }
 
 /* MAIN CONTENT COLUMN — takes full width on mobile */
 .main-content {

@@ -210,6 +210,99 @@
             </div>
           </section>
 
+          <!-- NOTIFICATIONS SECTION -->
+          <section class="settings-section" aria-labelledby="notificationsHeading">
+            <div class="settings-section-header">
+              <h2 class="settings-section-title" id="notificationsHeading">Notifications</h2>
+              <p class="settings-section-sub">Choose how and when you want to receive updates</p>
+            </div>
+
+            <div class="settings-card">
+              <form id="notificationsForm" novalidate>
+                <div class="notification-setting-row">
+                  <div class="setting-info">
+                    <p class="setting-title">Email Notifications</p>
+                    <p class="setting-desc">Receive weekly performance summaries and study tips</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="emailNotifications" name="emailNotifications" checked>
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+
+                <div class="notification-setting-row">
+                  <div class="setting-info">
+                    <p class="setting-title">Push Notifications</p>
+                    <p class="setting-desc">Get real-time updates and direct study planner reminders</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="pushNotifications" name="pushNotifications" checked>
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+
+                <div class="notification-setting-row">
+                  <div class="setting-info">
+                    <p class="setting-title">Daily Study Reminders</p>
+                    <p class="setting-desc">Remind me to complete my daily learning block</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="studyReminders" name="studyReminders" checked>
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn-save" id="saveNotificationsBtn">
+                    <span id="saveNotificationsText">Save Notification Preferences</span>
+                    <span class="btn-loader hidden" id="saveNotificationsLoader" aria-hidden="true"></span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <!-- PRIVACY SECTION -->
+          <section class="settings-section" aria-labelledby="privacyHeading">
+            <div class="settings-section-header">
+              <h2 class="settings-section-title" id="privacyHeading">Privacy</h2>
+              <p class="settings-section-sub">Manage your public profile visibility</p>
+            </div>
+
+            <div class="settings-card">
+              <form id="privacyForm" novalidate>
+                <div class="notification-setting-row">
+                  <div class="setting-info">
+                    <p class="setting-title">Show on Leaderboard</p>
+                    <p class="setting-desc">Allow other students to see your weekly rank and streak</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="showLeaderboard" name="showLeaderboard" checked>
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+
+                <div class="notification-setting-row">
+                  <div class="setting-info">
+                    <p class="setting-title">Public Profile</p>
+                    <p class="setting-desc">Make your UTME target and study stats visible to classmates</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="publicProfile" name="publicProfile">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn-save" id="savePrivacyBtn">
+                    <span id="savePrivacyText">Save Privacy Settings</span>
+                    <span class="btn-loader hidden" id="savePrivacyLoader" aria-hidden="true"></span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+
           <!-- ACCOUNT SECTION -->
           <section class="settings-section" aria-labelledby="accountHeading">
             <div class="settings-section-header">
@@ -233,6 +326,18 @@
                     </svg>
                     <span id="logoutText">Log Out</span>
                     <span class="btn-loader btn-loader--dark hidden" id="logoutLoader" aria-hidden="true"></span>
+                  </button>
+                </div>
+
+                <div class="account-action-divider"></div>
+
+                <div class="account-action-row">
+                  <div class="account-action-info">
+                    <p class="account-action-title text-danger">Deactivate Account</p>
+                    <p class="account-action-desc">Temporarily disable your profile. You can reactivate later</p>
+                  </div>
+                  <button type="button" class="btn-deactivate" id="deactivateBtn">
+                    Deactivate Account
                   </button>
                 </div>
 

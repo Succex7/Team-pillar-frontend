@@ -124,10 +124,12 @@ function buildSidebarHTML(activeKey, user, stats = {}) {
 
       <!-- PREDICTED SCORE CAPSULE -->
       <div class="sidebar-score-capsule">
-        <div class="score-lbl">PREDICTED SCORE</div>
+        <div class="score-header-row">
+          <span class="score-lbl">PREDICTED SCORE</span>
+          <span class="score-gain">+${scoreChange} pts</span>
+        </div>
         <div class="score-num-row">
           <span class="score-val">${predictedScore} <span class="score-max">/ 400</span></span>
-          <span class="score-gain">+${scoreChange} pts</span>
         </div>
       </div>
 
@@ -341,6 +343,18 @@ async function ensureUserProfile() {
     const user = payload?.user ?? payload;
 
     if (user) {
+      // Auto-fix invalid user language values (e.g. 'en', 'yoruba', etc.)
+      const validLangs = ['EN', 'FR', 'DE'];
+      if (!validLangs.includes(user.language)) {
+        console.log(`Auto-fixing invalid language '${user.language}' to 'EN' in ensureUserProfile...`);
+        try {
+          await api.patch(ENDPOINTS.UPDATE_PROFILE, { language: 'EN' });
+          user.language = 'EN';
+        } catch (e) {
+          console.warn("Failed to auto-fix language in shell:", e);
+        }
+      }
+
       userStore.setState({
         profile: user,
         token: userStore.getState().token || localStorage.getItem('access_token') || sessionStorage.getItem('access_token'),
