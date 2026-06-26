@@ -183,20 +183,6 @@ function buildSidebarHTML(activeKey, user, stats = {}) {
           </div>
         ` : ''}
 
-        <!-- USER BLOCK -->
-        <div class="sidebar-user-block">
-          <div class="user-block-avatar">${initials}</div>
-          <div class="user-block-info">
-            <div class="user-block-name">${user?.name || 'Victor Okafor'}</div>
-            <div class="user-block-plan">${plan} plan · Science Track</div>
-          </div>
-          <div class="user-block-arrow">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </div>
-        </div>
-      </div>
     </aside>
 
     <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
