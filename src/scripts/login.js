@@ -3,6 +3,8 @@
 import { authService } from '../services/auth.service.js';
 import { userStore }   from '../store/userStore.js';
 import { strings }     from '../strings.js';
+import { api }         from '../services/api.js';
+import { ENDPOINTS }   from '../services/endpoints.js';
 
 // DOM REFERENCES
 const loginForm         = document.getElementById('loginForm');
@@ -133,7 +135,7 @@ async function handleLogin(e) {
 
     showToast('Welcome back!', 'success');
 
-    setTimeout(() => {
+    setTimeout(async () => {
       // Check for intended plan redirect (from pricing page)
       const intendedPlan = sessionStorage.getItem('intended_plan');
       if (intendedPlan) {
@@ -142,10 +144,23 @@ async function handleLogin(e) {
         return;
       }
 
+      // Auto-fix invalid user language values (e.g. 'en', 'yoruba', etc.)
+      const validLangs = ['EN', 'FR', 'DE'];
+      if (user && !validLangs.includes(user.language)) {
+        console.log(`Auto-fixing invalid language '${user.language}' to 'EN' on login...`);
+        try {
+          await api.patch(ENDPOINTS.UPDATE_PROFILE, { language: 'EN' });
+          user.language = 'EN';
+          userStore.setState({ profile: user, token, role: user.role });
+        } catch (e) {
+          console.warn("Failed to auto-fix language on login:", e);
+        }
+      }
+
       // Check if onboarding is complete
-      // API returns onboarding: {} when not done, with subjects array when done
+      // API returns onboardingComplete as true or onboarding with subjects array when done
       const onboarding     = user.onboarding || {};
-      const onboardingDone = Array.isArray(onboarding.subjects) && onboarding.subjects.length > 0;
+      const onboardingDone = user.onboardingComplete || (Array.isArray(onboarding.subjects) && onboarding.subjects.length > 0);
 
       window.location.href = onboardingDone
         ? '/pages/dashboard.html'

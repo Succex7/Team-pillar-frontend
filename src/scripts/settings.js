@@ -46,15 +46,39 @@ const logoutConfirmLoader = document.getElementById('logoutConfirmLoader');
 
 const toast = document.getElementById('toast');
 
+// DOM REFERENCES — Notifications
+const notificationsForm = document.getElementById('notificationsForm');
+const emailNotificationsInput = document.getElementById('emailNotifications');
+const pushNotificationsInput = document.getElementById('pushNotifications');
+const studyRemindersInput = document.getElementById('studyReminders');
+const saveNotificationsBtn = document.getElementById('saveNotificationsBtn');
+const saveNotificationsText = document.getElementById('saveNotificationsText');
+const saveNotificationsLoader = document.getElementById('saveNotificationsLoader');
+
+// DOM REFERENCES — Privacy
+const privacyForm = document.getElementById('privacyForm');
+const showLeaderboardInput = document.getElementById('showLeaderboard');
+const publicProfileInput = document.getElementById('publicProfile');
+const savePrivacyBtn = document.getElementById('savePrivacyBtn');
+const savePrivacyText = document.getElementById('savePrivacyText');
+const savePrivacyLoader = document.getElementById('savePrivacyLoader');
+
+// DOM REFERENCES — Deactivate
+const deactivateBtn = document.getElementById('deactivateBtn');
+
 
 // INIT
 async function init() {
   await initShell('settings', 'Settings', 'Manage your account preferences');
   await loadProfile();
+  await loadSettings();
   bindPasswordToggles();
   bindProfileForm();
   bindPasswordForm();
+  bindNotificationsForm();
+  bindPrivacyForm();
   bindLogout();
+  bindDeactivate();
 }
 
 
@@ -419,6 +443,112 @@ function getErrorMessage(err, context = '') {
   return map[err?.status]
     || err?.message
     || 'Something went wrong. Please try again.';
+}
+
+
+// FETCH SETTINGS
+async function loadSettings() {
+  try {
+    const response = await api.get(ENDPOINTS.GET_SETTINGS);
+    const settings = response.data || response;
+    
+    // Populate notifications form
+    if (settings.notifications) {
+      const n = settings.notifications;
+      if (emailNotificationsInput) emailNotificationsInput.checked = n.email ?? n.emailNotifications ?? true;
+      if (pushNotificationsInput) pushNotificationsInput.checked = n.push ?? n.pushNotifications ?? true;
+      if (studyRemindersInput) studyRemindersInput.checked = n.reminders ?? n.studyReminders ?? true;
+    }
+    
+    // Populate privacy form
+    if (settings.privacy) {
+      const p = settings.privacy;
+      if (showLeaderboardInput) showLeaderboardInput.checked = p.showLeaderboard ?? p.leaderboard ?? true;
+      if (publicProfileInput) publicProfileInput.checked = p.publicProfile ?? p.public ?? false;
+    }
+  } catch (err) {
+    console.warn("Failed to load settings from server, using defaults", err);
+  }
+}
+
+// NOTIFICATIONS
+function bindNotificationsForm() {
+  if (!notificationsForm) return;
+  notificationsForm.addEventListener('submit', handleNotificationsSave);
+}
+
+async function handleNotificationsSave(e) {
+  e.preventDefault();
+  setNotificationsLoading(true);
+  try {
+    const payload = {
+      email: emailNotificationsInput.checked,
+      push: pushNotificationsInput.checked,
+      reminders: studyRemindersInput.checked
+    };
+    await api.patch(ENDPOINTS.UPDATE_NOTIFICATIONS, payload);
+    showToast('Notification preferences updated successfully!', 'success');
+  } catch (err) {
+    showToast(err?.message || 'Failed to update notification preferences.', 'error');
+  } finally {
+    setNotificationsLoading(false);
+  }
+}
+
+function setNotificationsLoading(isLoading) {
+  if (!saveNotificationsBtn) return;
+  saveNotificationsBtn.disabled = isLoading;
+  saveNotificationsText?.classList.toggle('hidden', isLoading);
+  saveNotificationsLoader?.classList.toggle('hidden', !isLoading);
+}
+
+// PRIVACY
+function bindPrivacyForm() {
+  if (!privacyForm) return;
+  privacyForm.addEventListener('submit', handlePrivacySave);
+}
+
+async function handlePrivacySave(e) {
+  e.preventDefault();
+  setPrivacyLoading(true);
+  try {
+    const payload = {
+      showLeaderboard: showLeaderboardInput.checked,
+      publicProfile: publicProfileInput.checked
+    };
+    await api.patch(ENDPOINTS.UPDATE_PRIVACY, payload);
+    showToast('Privacy settings updated successfully!', 'success');
+  } catch (err) {
+    showToast(err?.message || 'Failed to update privacy settings.', 'error');
+  } finally {
+    setPrivacyLoading(false);
+  }
+}
+
+function setPrivacyLoading(isLoading) {
+  if (!savePrivacyBtn) return;
+  savePrivacyBtn.disabled = isLoading;
+  savePrivacyText?.classList.toggle('hidden', isLoading);
+  savePrivacyLoader?.classList.toggle('hidden', !isLoading);
+}
+
+// DEACTIVATE
+function bindDeactivate() {
+  if (!deactivateBtn) return;
+  deactivateBtn.addEventListener('click', async () => {
+    const confirmDeactivate = confirm("Are you sure you want to deactivate your account? You will be logged out and your account will be temporarily disabled.");
+    if (confirmDeactivate) {
+      try {
+        await api.post(ENDPOINTS.DEACTIVATE_ACCOUNT);
+        showToast('Account deactivated successfully.', 'success');
+        setTimeout(() => {
+          handleLogout();
+        }, 1200);
+      } catch (err) {
+        showToast(err?.message || 'Failed to deactivate account.', 'error');
+      }
+    }
+  });
 }
 
 

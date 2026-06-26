@@ -115,40 +115,31 @@
     <div class="modal-overlay" id="mockConfigModal">
       <div class="modal-card">
         <div class="modal-header">
-          <h3 class="modal-title">Configure Mock Exam</h3>
+          <h3 class="modal-title">Mock Exam Details</h3>
           <button title="close" type="button" class="btn-close-modal" id="closeMockConfigBtn">
             <i class="ph-bold ph-x"></i>
           </button>
         </div>
         
         <form id="mockConfigForm" class="modal-form">
-          <!-- SUBJECT SELECTOR CHIPS -->
+          <!-- SUBJECTS LIST -->
           <div class="modal-form-group">
-            <label class="modal-group-label">Exam Subjects (Select 4 Enrolled)</label>
-            <p class="modal-group-sub">English is mandatory. Select 3 other subjects to complete your track.</p>
+            <label class="modal-group-label">Your Exam Subjects</label>
+            <p class="modal-group-sub">These are your enrolled subjects. You can replace one subject if needed.</p>
             <div class="modal-subjects-list" id="modalSubjectsList">
-              <!-- Dynamically populated subjects checkboxes -->
+              <!-- Dynamically populated subjects list with swap/replace select options -->
             </div>
           </div>
 
-          <!-- QUESTIONS CONFIG -->
+          <!-- QUESTIONS CONFIG (READ ONLY) -->
           <div class="modal-form-group">
-            <label class="modal-group-label">Questions Configuration</label>
-            <div class="config-toggle-row">
-              <label class="config-card-option">
-                <input type="radio" name="mockQuestions" value="180" checked />
-                <div class="config-card-content">
-                  <span class="config-title">180 Questions</span>
-                  <span class="config-desc">Full classic UTME (60 English, 40 others)</span>
-                </div>
-              </label>
-              <label class="config-card-option">
-                <input type="radio" name="mockQuestions" value="120" />
-                <div class="config-card-content">
-                  <span class="config-title">120 Questions</span>
-                  <span class="config-desc">Shortened simulation (30 English, 30 others)</span>
-                </div>
-              </label>
+            <label class="modal-group-label">Exam Questions</label>
+            <div class="info-banner">
+              <i class="ph-bold ph-file-text info-icon"></i>
+              <div class="info-text">
+                <strong>180 Questions (Standard UTME length)</strong>
+                <p>60 questions in English Language, and 40 questions in each of your 3 other selected subjects.</p>
+              </div>
             </div>
           </div>
 
@@ -161,27 +152,6 @@
                 <strong>Standard 120 Minutes (2 Hours) allowed.</strong>
                 <p>This exam launches in fullscreen mode. Exiting fullscreen or switching tabs triggers anti-cheat warnings. Exceeding 3 visibility violations auto-submits your exam.</p>
               </div>
-            </div>
-          </div>
-
-          <!-- DIFFICULTY / PATTERN -->
-          <div class="modal-form-group">
-            <label class="modal-group-label">Adaptive Mode</label>
-            <div class="config-toggle-row">
-              <label class="config-card-option">
-                <input type="radio" name="mockDifficulty" value="adaptive" checked />
-                <div class="config-card-content">
-                  <span class="config-title">Adaptive Difficulty</span>
-                  <span class="config-desc">Tailors question distribution to your skill level</span>
-                </div>
-              </label>
-              <label class="config-card-option">
-                <input type="radio" name="mockDifficulty" value="fixed" />
-                <div class="config-card-content">
-                  <span class="config-title">Standard Difficulty</span>
-                  <span class="config-desc">Standard balanced static JAMB question sets</span>
-                </div>
-              </label>
             </div>
           </div>
 

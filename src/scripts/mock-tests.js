@@ -23,6 +23,7 @@ let userSubjects = [];
 let allSubjects = [];
 let isProUser = false;
 let startPayload = null; // Stored payload before fullscreen confirm
+let selectedMockSubjects = [];
 
 async function init() {
   const user = userStore.getState().profile;
@@ -83,6 +84,7 @@ function bindModalHandlers() {
 
   if (openBtn && modal) {
     openBtn.addEventListener('click', () => {
+      selectedMockSubjects = [...userSubjects];
       renderModalSubjects();
       modal.classList.add('open');
     });
@@ -130,77 +132,124 @@ function renderModalSubjects() {
     return;
   }
 
-  userSubjects.forEach(subj => {
+  if (selectedMockSubjects.length === 0) {
+    selectedMockSubjects = [...userSubjects];
+  }
+
+  selectedMockSubjects.forEach(subj => {
     const isEnglish = subj.name.toLowerCase().includes('english');
-    const label = document.createElement('label');
-    label.className = 'subject-chip-checkbox';
+    const item = document.createElement('div');
+    item.className = 'subject-chip-checkbox';
     
-    label.innerHTML = `
-      <input type="checkbox" name="mockSubjects" value="${subj._id}" data-name="${subj.name}" 
-        ${isEnglish ? 'checked disabled' : ''}>
-      <div class="subject-chip-content">
-        <span>${subj.name}</span>
-        ${isEnglish ? '<span class="compulsory-lbl">Mandatory</span>' : ''}
-      </div>
-    `;
+    if (isEnglish) {
+      item.innerHTML = `
+        <div class="subject-chip-content flex-row-between">
+          <span>${subj.name}</span>
+          <span class="compulsory-lbl">Compulsory (60 Qs)</span>
+        </div>
+      `;
+    } else {
+      const availableOptions = allSubjects.filter(s =>
+        !s.name.toLowerCase().includes('english') &&
+        !selectedMockSubjects.some(selected => selected._id === s._id)
+      );
+
+      let selectHTML = `<select class="replace-subject-select" data-id="${subj._id}" aria-label="Replace ${subj.name}">`;
+      selectHTML += `<option value="${subj._id}" selected>${subj.name} (Keep)</option>`;
+      availableOptions.forEach(opt => {
+        selectHTML += `<option value="${opt._id}">Replace with ${opt.name}</option>`;
+      });
+      selectHTML += `</select>`;
+
+      item.innerHTML = `
+        <div class="subject-chip-content flex-row-between">
+          <span class="subj-name">${subj.name}</span>
+          <div class="subj-actions-group">
+            ${selectHTML}
+            <span class="compulsory-lbl">40 Qs</span>
+          </div>
+        </div>
+      `;
+
+      const select = item.querySelector('.replace-subject-select');
+      if (select) {
+        select.addEventListener('change', (e) => {
+          const newId = e.target.value;
+          const oldId = e.target.dataset.id;
+          if (newId === oldId) return;
+
+          const newSubj = allSubjects.find(s => s._id === newId);
+          if (newSubj) {
+            selectedMockSubjects = selectedMockSubjects.map(s => s._id === oldId ? newSubj : s);
+            renderModalSubjects();
+          }
+        });
+      }
+    }
     
-    container.appendChild(label);
+    container.appendChild(item);
   });
+}
+
+// SYNC SELECTED SUBJECTS TO BACKEND
+async function syncSelectedSubjects(subjectIds) {
+  try {
+    await api.patch(ENDPOINTS.STUDENT_UPDATE_SUBJECTS, { subjects: subjectIds }).catch(async () => {
+      await api.put(ENDPOINTS.STUDENT_UPDATE_SUBJECTS, { subjects: subjectIds });
+    });
+    await api.patch(ENDPOINTS.UPDATE_PROFILE, { selectedSubjects: subjectIds });
+    
+    const profile = userStore.getState().profile || {};
+    profile.selectedSubjects = subjectIds;
+    if (profile.onboarding) {
+      profile.onboarding.subjects = subjectIds;
+    }
+    userStore.setState({ profile });
+    userSubjects = allSubjects.filter(subj => subjectIds.includes(subj._id));
+  } catch (e) {
+    console.warn("Failed to sync selected subjects to backend, attempting profile fallback:", e);
+    try {
+      await api.patch(ENDPOINTS.UPDATE_PROFILE, { selectedSubjects: subjectIds });
+    } catch (err) {
+      console.error("Critical: failed to update subjects:", err);
+    }
+  }
 }
 
 // VALIDATE & SUBMIT CONFIG FORM
 async function handleConfigSubmit(e) {
   e.preventDefault();
 
-  // Validate exactly 4 subjects (English + 3 others)
-  const checkedBoxes = document.querySelectorAll('input[name="mockSubjects"]:checked');
-  const disabledBoxes = document.querySelectorAll('input[name="mockSubjects"]:disabled'); // English is disabled
-  
-  // Total subjects checked = enabled checked + disabled checked
-  const totalChecked = checkedBoxes.length + disabledBoxes.length;
-
-  if (totalChecked !== 4) {
+  if (selectedMockSubjects.length !== 4) {
     showToast('A mock exam requires exactly 4 subjects (including English).', 'error');
     return;
   }
 
-  const selectedSubjectIds = [];
-  const selectedSubjectNames = [];
-
-  // Add disabled (English)
-  disabledBoxes.forEach(cb => {
-    selectedSubjectIds.push(cb.value);
-    selectedSubjectNames.push(cb.dataset.name);
-  });
-  
-  // Add others
-  checkedBoxes.forEach(cb => {
-    selectedSubjectIds.push(cb.value);
-    selectedSubjectNames.push(cb.dataset.name);
-  });
-
-  const questionLimit = document.querySelector('input[name="mockQuestions"]:checked').value;
-  const difficulty = document.querySelector('input[name="mockDifficulty"]:checked').value;
+  const selectedSubjectIds = selectedMockSubjects.map(s => s._id);
+  const selectedSubjectNames = selectedMockSubjects.map(s => s.name);
 
   const btn = document.getElementById('launchMockExamBtn');
   setButtonLoading(btn, true);
 
-  // Save start details before launching
+  try {
+    await syncSelectedSubjects(selectedSubjectIds);
+  } catch (err) {
+    console.warn("Subject sync failed but proceeding anyway:", err);
+  }
+
   startPayload = {
     subjectIds: selectedSubjectIds,
     subjectNames: selectedSubjectNames,
-    questionLimit: parseInt(questionLimit),
-    difficulty: difficulty
+    questionLimit: 180,
+    difficulty: 'fixed'
   };
 
-  // Close config modal and open fullscreen confirmation prompt
   document.getElementById('mockConfigModal').classList.remove('open');
   
   const fullPrompt = document.getElementById('fullscreenPromptModal');
   if (fullPrompt) {
     fullPrompt.style.display = 'flex';
   } else {
-    // Fallback if prompt not found
     launchExamFullscreen();
   }
 }
