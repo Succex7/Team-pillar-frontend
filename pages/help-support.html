@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Help & Support — Pillar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/shell.css" />
+    <link rel="stylesheet" href="../src/styles/help-support.css" />
+    <link rel="icon" type="image/png" href="../icon/logo-white.png" />
+  </head>
+  <body>
+
+    <div class="app-layout">
+
+      <!-- Shell: sidebar injected here -->
+      <div id="shellRoot"></div>
+
+      <div class="main-content">
+
+        <!-- Shell: topbar injected here -->
+        <div id="topbarRoot"></div>
+
+        <main class="page-content">
+
+          <!-- Header Title & CTA -->
+          <div class="support-header-row">
+            <div class="support-title-section">
+              <h1>Support Tickets</h1>
+              <p>Need help? We've got your back.</p>
+            </div>
+            <button type="button" class="btn-new-ticket" id="newTicketBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>New Ticket</span>
+            </button>
+          </div>
+
+          <!-- Filter tabs -->
+          <div class="ticket-filters" role="tablist" aria-label="Filter tickets by status">
+            <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true">All Tickets</button>
+            <button class="filter-tab" data-filter="open" role="tab" aria-selected="false">Open</button>
+            <button class="filter-tab" data-filter="in_progress" role="tab" aria-selected="false">In Progress</button>
+            <button class="filter-tab" data-filter="resolved" role="tab" aria-selected="false">Resolved</button>
+            <button class="filter-tab" data-filter="closed" role="tab" aria-selected="false">Closed</button>
+          </div>
+
+          <!-- Empty State -->
+          <div class="empty-state" id="emptyState">
+            <div class="empty-icon" aria-hidden="true">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
+            <h2 class="empty-title">No tickets yet</h2>
+            <p class="empty-desc">Got an issue? We're here to help you succeed.</p>
+            <button type="button" class="btn-open-ticket" id="emptyOpenTicketBtn">Open a Ticket</button>
+          </div>
+
+          <!-- Tickets List -->
+          <div class="tickets-container hidden" id="ticketsContainer">
+            <!-- Populated dynamically by JS -->
+          </div>
+
+        </main>
+      </div>
+    </div>
+
+    <!-- Create Ticket Modal -->
+    <div class="modal-overlay" id="ticketModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal create-ticket-modal">
+        <div class="modal-header">
+          <h2 class="modal-title" id="modalTitle">Create Support Ticket</h2>
+          <p class="modal-subtitle">Describe your issue and we'll get back to you shortly.</p>
+        </div>
+        <form id="ticketForm" novalidate>
+          
+          <div class="form-group">
+            <label for="category">Category</label>
+            <div class="select-wrapper">
+              <select id="category" name="category" required>
+                <option value="" disabled selected>Select category</option>
+                <option value="Subscription & Billing">Subscription & Billing</option>
+                <option value="Mock Test & CBT Issues">Mock Test & CBT Issues</option>
+                <option value="Account & Profile">Account & Profile</option>
+                <option value="Content Feedback">Content Feedback</option>
+                <option value="Other">Other</option>
+              </select>
+              <svg class="select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="details">Details</label>
+            <textarea id="details" name="details" placeholder="Please provide details..." required rows="4"></textarea>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-cancel" id="cancelModalBtn">Cancel</button>
+            <button type="submit" class="btn-submit-ticket" id="submitTicketBtn">
+              <span id="submitTicketText">Submit Ticket</span>
+              <span class="btn-loader hidden" id="submitTicketLoader" aria-hidden="true"></span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script type="module" src="../src/scripts/help-support.js"></script>
+  </body>
+</html>

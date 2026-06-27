@@ -158,7 +158,7 @@ function buildSidebarHTML(activeKey, user, stats = {}) {
             </a>
           </li>
           <li>
-            <a href="/pages/settings.html?tab=support" class="nav-item" data-nav-key="support">
+            <a href="/pages/help-support.html" class="nav-item ${activeKey === 'support' ? 'nav-item--active' : ''}" data-nav-key="support">
               <span class="nav-item-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
@@ -196,6 +196,16 @@ function buildSidebarHTML(activeKey, user, stats = {}) {
             </svg>
           </div>
         </div>
+
+        <!-- SIGN OUT BUTTON -->
+        <button type="button" class="sidebar-signout-btn" id="sidebarSignoutBtn" aria-label="Sign out">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Sign Out</span>
+        </button>
       </div> 
     </aside>
 
@@ -328,6 +338,7 @@ export async function initShell(pageKey, pageTitle, pageSubtitle) {
   bindSidebarToggle();
   bindUpgradeButtons();
   bindTabLoader();
+  bindSignoutButton();
 }
 
 async function ensureUserProfile() {
@@ -437,6 +448,29 @@ function bindUpgradeButtons() {
     btn.addEventListener('click', () => {
       window.location.href = '/pages/billing.html';
     });
+  });
+}
+
+function bindSignoutButton() {
+  const signoutBtn = document.getElementById('sidebarSignoutBtn');
+  if (!signoutBtn) return;
+
+  signoutBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    
+    signoutBtn.disabled = true;
+    signoutBtn.innerHTML = `<span>Signing out...</span>`;
+
+    try {
+      await authService.logout();
+    } catch (err) {
+      console.warn("API logout call failed:", err);
+    } finally {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('token_expires_at');
+      sessionStorage.clear();
+      window.location.href = '/pages/login.html';
+    }
   });
 }
 
