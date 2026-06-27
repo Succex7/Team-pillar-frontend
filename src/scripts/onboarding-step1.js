@@ -92,6 +92,7 @@ const TOTAL_SUBJECTS = 4;
 // STATE
 let activeSubjects = [];
 let selectedIds = new Set();
+let backendUser = null;
 
 // DOM REFERENCES
 const subjectsGrid   = document.getElementById('subjectsGrid');
@@ -128,6 +129,7 @@ async function checkOnboardingState() {
     const payload = res?.data?.data ?? res?.data ?? res;
     const user = payload?.user ?? payload;
     if (user) {
+      backendUser = user;
       userStore.setState({ profile: user, role: user.role });
 
       // Auto-fix invalid user language values (e.g. 'en', 'yoruba', etc.)
@@ -208,6 +210,19 @@ function restoreSavedSelection() {
   // Add compulsory subjects by default
   activeSubjects.filter(s => s.compulsory).forEach(s => selectedIds.add(s.id));
 
+  // 1. Try to restore from backend first
+  const backendSubjects = backendUser?.selectedSubjects ?? backendUser?.onboarding?.subjects;
+  if (Array.isArray(backendSubjects) && backendSubjects.length > 0) {
+    backendSubjects.forEach(id => {
+      // Only restore if the subject exists in our active list
+      if (activeSubjects.some(s => s.id === id)) {
+        selectedIds.add(id);
+      }
+    });
+    return;
+  }
+
+  // 2. Fallback to sessionStorage
   const saved = sessionStorage.getItem('onboarding_step1_subjects');
   if (!saved) return;
 
