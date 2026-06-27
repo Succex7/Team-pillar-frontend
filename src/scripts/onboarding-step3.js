@@ -67,6 +67,7 @@ const SUBJECT_NAME_TO_ID = new Map([
 ]);
 // STATE
 let selectedValue = null;
+let backendUser   = null;
 // DOM REFERENCES
 const optionsList       = document.getElementById('optionsList');
 const finishBtn         = document.getElementById('finishBtn');
@@ -109,6 +110,7 @@ async function checkOnboardingState() {
     const payload = res?.data?.data ?? res?.data ?? res;
     const user = payload?.user ?? payload;
     if (user) {
+      backendUser = user;
       // Auto-fix invalid user language values (e.g. 'en', 'yoruba', etc.)
       const validLangs = ['EN', 'FR', 'DE'];
       if (!validLangs.includes(user.language)) {
@@ -197,6 +199,23 @@ function enableFinishButton() {
 }
 // RESTORE SAVED SELECTION
 function restoreSavedSelection() {
+  // 1. Try to restore from backend first
+  let backendHours = backendUser?.onboarding?.studyPlan ?? backendUser?.studyPlan;
+  if (backendHours) {
+    // Normalize format: "1-2 hours" -> "1-2", "3-4 hours" -> "3-4", "5+ hours" -> "5+"
+    if (backendHours === "1-2 hours") backendHours = "1-2";
+    else if (backendHours === "3-4 hours") backendHours = "3-4";
+    else if (backendHours === "5+ hours") backendHours = "5+";
+
+    optionsList?.querySelectorAll('.option-item').forEach((card) => {
+      if (card.dataset.value === backendHours) {
+        handleOptionSelect(backendHours, card);
+      }
+    });
+    return;
+  }
+
+  // 2. Fallback to sessionStorage
   const saved = sessionStorage.getItem('onboarding_step3_hours');
   if (!saved) return;
   optionsList?.querySelectorAll('.option-item').forEach((card) => {

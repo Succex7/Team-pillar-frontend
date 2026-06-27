@@ -46,6 +46,7 @@ const DEFAULT_SCORE    = 315;
 // STATE
 let currentScore    = DEFAULT_SCORE;
 let confirmedScore  = null;
+let backendUser     = null;
 
 // DOM REFERENCES
 const scoreSlider      = document.getElementById('scoreSlider');
@@ -95,6 +96,7 @@ async function checkOnboardingState() {
     const payload = res?.data?.data ?? res?.data ?? res;
     const user = payload?.user ?? payload;
     if (user) {
+      backendUser = user;
       // Auto-fix invalid user language values (e.g. 'en', 'yoruba', etc.)
       const validLangs = ['EN', 'FR', 'DE'];
       if (!validLangs.includes(user.language)) {
@@ -119,6 +121,22 @@ async function checkOnboardingState() {
 
 // RESTORE SAVED SCORE
 function restoreSavedScore() {
+  // 1. Try to restore from backend first
+  const backendScore = backendUser?.onboarding?.targetScore ?? backendUser?.targetScore;
+  if (backendScore) {
+    currentScore   = backendScore;
+    confirmedScore = backendScore;
+    if (scoreSlider) scoreSlider.value = currentScore;
+    
+    // Enable the Next button if target is already set on the backend
+    if (nextBtn) {
+      nextBtn.disabled = false;
+      nextBtn.setAttribute('aria-disabled', 'false');
+    }
+    return;
+  }
+
+  // 2. Fallback to sessionStorage
   const saved = sessionStorage.getItem('onboarding_step2_data');
   if (!saved) return;
 
