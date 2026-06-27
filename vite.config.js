@@ -23,6 +23,7 @@ export default defineConfig({
         mockquiz: 'pages/mock-quiz.html',
         sessionresult: 'pages/session-result.html',
         mockresult: 'pages/mock-result.html',
+        helpsupport: 'pages/help-support.html',
       },
     },
   },

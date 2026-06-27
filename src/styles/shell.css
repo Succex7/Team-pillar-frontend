@@ -344,6 +344,35 @@ img.lazy.loaded { opacity: 1; }
   background: rgba(255, 255, 255, 0.03);
 }
 
+.sidebar-signout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 12px;
+  color: #f87171;
+  font-size: 13.5px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+.sidebar-signout-btn:hover {
+  background: rgba(239, 68, 68, 0.16);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+}
+
+.sidebar-signout-btn svg {
+  stroke: currentColor;
+}
+
 .user-block-avatar {
   width: 38px;
   height: 38px;

@@ -10,32 +10,26 @@ const SCORE_TIERS = [
   {
     min:   150,
     max:   199,
-    title: 'Below Average',
-    desc:  'This score range is below the national average. With the right study plan, you can significantly improve before your exam.',
+    title: 'Average',
+    desc:  'A starting point. Most state universities accept scores in this range.',
   },
   {
     min:   200,
-    max:   249,
-    title: 'Average Tier',
-    desc:  'You\'re aiming at the average range. This qualifies you for many courses — a focused study plan can push you higher.',
-  },
-  {
-    min:   250,
-    max:   299,
+    max:   274,
     title: 'Above Average',
-    desc:  'A solid score that opens doors to many competitive courses. You are on track for a strong UTME performance.',
+    desc:  'You are competitive for many federal and private universities.',
   },
   {
-    min:   300,
+    min:   275,
     max:   349,
-    title: 'Top 10% Tier',
-    desc:  'A score in this range places you in the top 10% of candidates. You are eligible for competitive courses at leading universities.',
+    title: 'Top 10%',
+    desc:  'Strong performance. Eligible for popular courses at top universities.',
   },
   {
     min:   350,
     max:   400,
     title: 'Top 5% Tier',
-    desc:  'A score of {score} places you in the elite bracket. You are eligible for competitive courses like Medicine or Engineering at top Nigerian universities.',
+    desc:  'A score here places you in the elite bracket. Eligible for competitive courses like Medicine or Engineering at top Nigerian universities.',
   },
 ];
 
@@ -197,7 +191,7 @@ function updateTierCard(score) {
   }
 
   if (tierDescription) {
-    tierDescription.textContent = tier.desc.replace('{score}', score);
+    tierDescription.textContent = tier.desc;
   }
 }
 
@@ -257,31 +251,35 @@ function setTargetLoading(isLoading) {
 function bindNextButton() {
   if (!nextBtn) return;
 
-  const alreadyDone = sessionStorage.getItem('onboarding_step2_done');
-  if (!alreadyDone) {
-    nextBtn.disabled = true;
-    nextBtn.setAttribute('aria-disabled', 'true');
-  }
+  // Enable Next button by default (there is a pre-selected target of 315)
+  nextBtn.disabled = false;
+  nextBtn.setAttribute('aria-disabled', 'false');
 
   nextBtn.addEventListener('click', handleNext);
 }
 
 async function handleNext() {
-  if (!confirmedScore && !sessionStorage.getItem('onboarding_step2_done')) {
-    showToast('Please set your target score before continuing.', 'error');
-    return;
-  }
-
   setNextLoading(true);
 
   try {
-    if (!confirmedScore) {
-      confirmedScore = currentScore;
-      await api.post(ENDPOINTS.STUDENT_ONBOARDING, { targetScore: confirmedScore });
-      const step2Data = { targetScore: confirmedScore };
-      sessionStorage.setItem('onboarding_step2_data', JSON.stringify(step2Data));
-      sessionStorage.setItem('onboarding_step2_done', '1');
+    confirmedScore = currentScore;
+    await api.post(ENDPOINTS.STUDENT_ONBOARDING, { targetScore: confirmedScore });
+
+    try {
+      const res = await authService.getMe();
+      const payload = res?.data?.data ?? res?.data ?? res;
+      const user = payload?.user ?? payload;
+      if (user) {
+        userStore.setState({ profile: user, role: user.role });
+      }
+    } catch (e) {
+      console.warn("Failed to auto-refresh profile in step 2:", e);
     }
+
+    const step2Data = { targetScore: confirmedScore };
+    sessionStorage.setItem('onboarding_step2_data', JSON.stringify(step2Data));
+    sessionStorage.setItem('onboarding_step2_done', '1');
+
     navigateTo('/pages/onboarding-step3.html');
   } catch (err) {
     showToast(err?.message || 'Failed to proceed. Try setting target again.', 'error');

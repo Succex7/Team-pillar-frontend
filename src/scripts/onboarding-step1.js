@@ -1,36 +1,37 @@
+// src/scripts/onboarding-step1.js
 // Onboarding Step 1 — Select UTME Subjects
-// Handles: subject rendering, selection logic, progress bar,
-//          validation, session persistence, seamless navigation, API integration
+// First-time only. If user.onboardingComplete === true, redirects to dashboard.
+// Subjects fetched from backend. Selection sent to backend on Next.
 
 import { api } from '../services/api.js';
 import { ENDPOINTS } from '../services/endpoints.js';
 import { authService } from '../services/auth.service.js';
 import { userStore } from '../store/userStore.js';
 
-// STATIC FALLBACK DATA (with SVG icons)
+// STATIC FALLBACK SUBJECTS + ICONS
 const STATIC_SUBJECTS = [
   {
-    id:          'use-of-english',
-    name:        'Use of English',
-    compulsory:  true,
+    id: 'use-of-english',
+    name: 'Use of English',
+    compulsory: true,
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
       <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
     </svg>`,
   },
   {
-    id:         'mathematics',
-    name:       'Mathematics',
-    compulsory:  false,
+    id: 'mathematics',
+    name: 'Mathematics',
+    compulsory: false,
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <rect x="3" y="3" width="18" height="18" rx="2"/>
       <path d="M9 9h.01M15 9h.01M9 15h.01M15 15h.01M12 9v6"/>
     </svg>`,
   },
   {
-    id:         'biology',
-    name:       'Biology',
-    compulsory:  false,
+    id: 'biology',
+    name: 'Biology',
+    compulsory: false,
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 22c4.97 0 9-3.582 9-8 0-2.91-1.64-5.455-4.125-6.965"/>
       <path d="M3 14c0 4.418 4.03 8 9 8"/>
@@ -39,17 +40,34 @@ const STATIC_SUBJECTS = [
     </svg>`,
   },
   {
-    id:         'chemistry',
-    name:       'Chemistry',
-    compulsory:  false,
+    id: 'chemistry',
+    name: 'Chemistry',
+    compulsory: false,
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M9 3h6M9 3v7l-5 9.5A2 2 0 0 0 5.76 22h12.48A2 2 0 0 0 20 19.5L15 10V3M9 3h6"/>
     </svg>`,
   },
   {
-    id:         'government',
-    name:       'Government',
-    compulsory:  false,
+    id: 'physics',
+    name: 'Physics',
+    compulsory: false,
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M13 2L4.09 12.97H11L10 22L20.91 11.03H14L13 2Z"/>
+    </svg>`,
+  },
+  {
+    id: 'economics',
+    name: 'Economics',
+    compulsory: false,
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+      <polyline points="17 6 23 6 23 12"/>
+    </svg>`,
+  },
+  {
+    id: 'government',
+    name: 'Government',
+    compulsory: false,
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 2L22 8H2L12 2Z"/>
       <rect x="4" y="9" width="3" height="10" rx="1"/>
@@ -59,26 +77,9 @@ const STATIC_SUBJECTS = [
     </svg>`,
   },
   {
-    id:         'physics',
-    name:       'Physics',
-    compulsory:  false,
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M13 2L4.09 12.97H11L10 22L20.91 11.03H14L13 2Z"/>
-    </svg>`,
-  },
-  {
-    id:         'economics',
-    name:       'Economics',
-    compulsory:  false,
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-      <polyline points="17 6 23 6 23 12"/>
-    </svg>`,
-  },
-  {
-    id:         'literature',
-    name:       'Literature',
-    compulsory:  false,
+    id: 'literature',
+    name: 'Literature',
+    compulsory: false,
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
       <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
@@ -86,26 +87,28 @@ const STATIC_SUBJECTS = [
   },
 ];
 
-const MAX_SUBJECTS   = 4;
-const TOTAL_SUBJECTS = 4;
+// Like the React version: min 4, max 6 subjects
+const MIN_SUBJECTS = 4;
+const MAX_SUBJECTS = 6;
 
 // STATE
-let activeSubjects = [];
+let activeSubjects = [];  // subjects from backend or fallback
 let selectedIds = new Set();
 let backendUser = null;
 
-// DOM REFERENCES
-const subjectsGrid   = document.getElementById('subjectsGrid');
-const nextBtn        = document.getElementById('nextBtn');
-const nextBtnText    = document.getElementById('nextBtnText');
-const nextBtnLoader  = document.getElementById('nextBtnLoader');
-const progressCount  = document.getElementById('progressCount');
-const progressFill   = document.getElementById('progressFill');
+// DOM
+const subjectsGrid = document.getElementById('subjectsGrid');
+const nextBtn = document.getElementById('nextBtn');
+const nextBtnText = document.getElementById('nextBtnText');
+const nextBtnLoader = document.getElementById('nextBtnLoader');
+const progressCount = document.getElementById('progressCount');
+const progressFill = document.getElementById('progressFill');
 const remainingBadge = document.getElementById('remainingBadge');
-const toast          = document.getElementById('toast');
-const pageOverlay    = document.getElementById('pageOverlay');
+const toast = document.getElementById('toast');
+const pageOverlay = document.getElementById('pageOverlay');
 
-// INIT
+
+// ── INIT ──────────────────────────────────────────────────────────
 async function init() {
   guardAuth();
   await checkOnboardingState();
@@ -114,148 +117,145 @@ async function init() {
   renderSubjects();
   updateProgress();
   updateNextButton();
+  bindNextButton();
+  fadeInOnLoad();
 }
 
+
+// ── AUTH GUARD ────────────────────────────────────────────────────
 function guardAuth() {
-  const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
-  if (!token) {
-    window.location.href = '/pages/login.html';
-  }
+  const token =
+    localStorage.getItem('access_token') ||
+    sessionStorage.getItem('access_token');
+  if (!token) window.location.href = '/pages/login.html';
 }
 
+
+// ── CHECK IF ALREADY ONBOARDED ────────────────────────────────────
+// Mirrors React's useAuth() + refreshOnboardingStatus()
 async function checkOnboardingState() {
   try {
     const res = await authService.getMe();
-    const payload = res?.data?.data ?? res?.data ?? res;
-    const user = payload?.user ?? payload;
-    if (user) {
-      backendUser = user;
-      userStore.setState({ profile: user, role: user.role });
+    const data = res?.data?.data ?? res?.data ?? res;
+    const user = data?.user ?? data;
 
-      // Auto-fix invalid user language values (e.g. 'en', 'yoruba', etc.)
-      const validLangs = ['EN', 'FR', 'DE'];
-      if (!validLangs.includes(user.language)) {
-        console.log(`Auto-fixing invalid language '${user.language}' to 'EN' in the database...`);
-        try {
-          await api.patch(ENDPOINTS.UPDATE_PROFILE, { language: 'EN' });
-          user.language = 'EN';
-          userStore.setState({ profile: user });
-        } catch (e) {
-          console.warn("Failed to auto-fix language:", e);
-        }
-      }
+    if (!user) return;
 
-      if (user.onboardingComplete) {
-        window.location.href = '/pages/dashboard.html';
+    backendUser = user;
+    userStore.setState({ profile: user, role: user.role });
+
+    // Fix stale lowercase language — backend enum requires 'EN' | 'FR' | 'DE'
+    const validLangs = ['EN', 'FR', 'DE'];
+    if (user.language && !validLangs.includes(user.language)) {
+      try {
+        await api.patch(ENDPOINTS.UPDATE_PROFILE, { language: 'EN' });
+        user.language = 'EN';
+        userStore.setState({ profile: user });
+      } catch (e) {
+        console.warn('Language fix failed:', e);
       }
     }
+
+    // If already onboarded → go straight to dashboard
+    if (user.onboardingComplete) {
+      window.location.href = '/pages/dashboard.html';
+    }
   } catch (err) {
-    console.warn('Failed to verify user onboarding status:', err);
+    console.warn('onboarding-step1 checkOnboardingState:', err);
   }
 }
 
-// FETCH SUBJECTS FROM BACKEND
+
+// ── LOAD SUBJECTS FROM BACKEND ────────────────────────────────────
 async function loadSubjects() {
   try {
     const res = await api.get(ENDPOINTS.GET_SUBJECTS);
     const data = res?.data ?? res;
-    const backendList = Array.isArray(data) ? data : (Array.isArray(data?.subjects) ? data.subjects : (Array.isArray(data?.data) ? data.data : []));
-    
-    if (backendList && backendList.length > 0) {
-      activeSubjects = backendList.map(mapSubjectWithIcon);
+    const list =
+      Array.isArray(data) ? data :
+        Array.isArray(data?.subjects) ? data.subjects :
+          Array.isArray(data?.data) ? data.data : [];
+
+    if (list.length > 0) {
+      activeSubjects = list.map(mapSubjectWithIcon);
       return;
     }
   } catch (err) {
-    console.warn('Failed to load subjects from backend, using fallbacks', err);
+    console.warn('Subjects fetch failed, using fallback:', err);
   }
-  
-  // Use fallbacks
-  activeSubjects = STATIC_SUBJECTS.map(s => ({
-    id: s.id,
-    name: s.name,
-    compulsory: s.compulsory,
-    icon: s.icon
-  }));
+  // Use static fallback
+  activeSubjects = STATIC_SUBJECTS.map(s => ({ ...s }));
 }
 
 function mapSubjectWithIcon(backendSub) {
-  const name = backendSub.name || '';
-  const nameLower = name.toLowerCase();
+  const name = (backendSub.name || '').toLowerCase();
+  const codeKey = (backendSub.code || '').toLowerCase();
 
-  // Find matching static subject
-  let match = STATIC_SUBJECTS.find(s => s.name.toLowerCase() === nameLower || nameLower.includes(s.id));
-  if (!match) {
-    if (nameLower.includes('english')) {
-      match = STATIC_SUBJECTS.find(s => s.id === 'use-of-english');
-    } else if (nameLower.includes('math')) {
-      match = STATIC_SUBJECTS.find(s => s.id === 'mathematics');
-    } else if (nameLower.includes('literature')) {
-      match = STATIC_SUBJECTS.find(s => s.id === 'literature');
-    }
-  }
+  const match = STATIC_SUBJECTS.find(s =>
+    name === s.name.toLowerCase() ||
+    name.includes(s.id) ||
+    codeKey === s.id ||
+    (name.includes('english') && s.id === 'use-of-english') ||
+    (name.includes('math') && s.id === 'mathematics') ||
+    (name.includes('lit') && s.id === 'literature')
+  );
 
   return {
     id: backendSub._id || backendSub.id,
     name: backendSub.name,
-    compulsory: match ? match.compulsory : (nameLower.includes('english') ? true : false),
-    icon: match ? match.icon : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-    </svg>`
+    compulsory: match?.compulsory ?? name.includes('english'),
+    icon: match?.icon ?? STATIC_SUBJECTS[0].icon,
   };
 }
 
-// RESTORE SAVED
+
+// ── RESTORE SAVED SELECTION ───────────────────────────────────────
 function restoreSavedSelection() {
-  // Add compulsory subjects by default
+  // Pre-select compulsory subjects (Use of English)
   activeSubjects.filter(s => s.compulsory).forEach(s => selectedIds.add(s.id));
 
-  // 1. Try to restore from backend first
-  const backendSubjects = backendUser?.selectedSubjects ?? backendUser?.onboarding?.subjects;
+  // Try backend first
+  const backendSubjects =
+    backendUser?.onboarding?.subjects ??
+    backendUser?.selectedSubjects;
+
   if (Array.isArray(backendSubjects) && backendSubjects.length > 0) {
     backendSubjects.forEach(id => {
-      // Only restore if the subject exists in our active list
-      if (activeSubjects.some(s => s.id === id)) {
-        selectedIds.add(id);
-      }
+      if (activeSubjects.some(s => s.id === id)) selectedIds.add(id);
     });
     return;
   }
 
-  // 2. Fallback to sessionStorage
-  const saved = sessionStorage.getItem('onboarding_step1_subjects');
-  if (!saved) return;
-
+  // Fallback to sessionStorage
   try {
-    const ids = JSON.parse(saved);
-    if (Array.isArray(ids)) {
-      ids.forEach(id => {
-        // Only restore if the subject exists in our active list
-        if (activeSubjects.some(s => s.id === id)) {
-          selectedIds.add(id);
-        }
-      });
+    const saved = sessionStorage.getItem('onboarding_step1_subjects');
+    if (saved) {
+      const ids = JSON.parse(saved);
+      if (Array.isArray(ids)) {
+        ids.forEach(id => {
+          if (activeSubjects.some(s => s.id === id)) selectedIds.add(id);
+        });
+      }
     }
-  } catch {
-    // Ignore fresh start
-  }
+  } catch { /* ignore */ }
 }
 
-// RENDER SUBJECTS
+
+// ── RENDER SUBJECTS ───────────────────────────────────────────────
 function renderSubjects() {
   if (!subjectsGrid) return;
   subjectsGrid.innerHTML = '';
 
   activeSubjects.forEach(subject => {
     const li = document.createElement('li');
-
     const card = document.createElement('div');
+
     card.className = buildCardClasses(subject);
-    card.setAttribute('role',         'checkbox');
+    card.setAttribute('role', 'checkbox');
     card.setAttribute('aria-checked', String(selectedIds.has(subject.id)));
-    card.setAttribute('tabindex',     subject.compulsory ? '-1' : '0');
-    card.setAttribute('data-id',      subject.id);
-    card.setAttribute('aria-label',   subject.name);
+    card.setAttribute('tabindex', subject.compulsory ? '-1' : '0');
+    card.setAttribute('data-id', subject.id);
+    card.setAttribute('aria-label', subject.name);
 
     if (subject.compulsory) {
       const badge = document.createElement('div');
@@ -281,13 +281,13 @@ function renderSubjects() {
         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <polyline points="20 6 9 17 4 12"/>
       </svg>
-      <span>Selected</span>
+      <span>${selectedIds.has(subject.id) ? 'Selected' : subject.compulsory ? 'Required' : ''}</span>
     `;
     card.appendChild(statusEl);
 
     if (!subject.compulsory) {
-      card.addEventListener('click',   () => handleToggle(subject.id, card));
-      card.addEventListener('keydown', (e) => {
+      card.addEventListener('click', () => handleToggle(subject.id, card));
+      card.addEventListener('keydown', e => {
         if (e.key === ' ' || e.key === 'Enter') {
           e.preventDefault();
           handleToggle(subject.id, card);
@@ -307,25 +307,26 @@ function buildCardClasses(subject) {
   return classes.join(' ');
 }
 
-// TOGGLE SELECTION
+
+// ── TOGGLE ────────────────────────────────────────────────────────
 function handleToggle(id, card) {
   const subject = activeSubjects.find(s => s.id === id);
   if (!subject || subject.compulsory) return;
 
-  const isSelected = selectedIds.has(id);
-
-  if (isSelected) {
+  if (selectedIds.has(id)) {
     selectedIds.delete(id);
     card.classList.remove('selected');
     card.setAttribute('aria-checked', 'false');
+    card.querySelector('.subject-status span').textContent = '';
   } else {
     if (selectedIds.size >= MAX_SUBJECTS) {
-      showToast(`You can only select ${MAX_SUBJECTS} subjects.`, 'error');
+      showToast(`You can only select up to ${MAX_SUBJECTS} subjects.`, 'error');
       return;
     }
     selectedIds.add(id);
     card.classList.add('selected');
     card.setAttribute('aria-checked', 'true');
+    card.querySelector('.subject-status span').textContent = 'Selected';
   }
 
   updateProgress();
@@ -333,18 +334,19 @@ function handleToggle(id, card) {
   saveSelection();
 }
 
-function updateProgress() {
-  const count     = selectedIds.size;
-  const remaining = MAX_SUBJECTS - count;
-  const percent   = (count / TOTAL_SUBJECTS) * 100;
 
-  if (progressCount)  progressCount.textContent  = count;
-  if (progressFill)   progressFill.style.width    = `${percent}%`;
+// ── PROGRESS ──────────────────────────────────────────────────────
+function updateProgress() {
+  const count = selectedIds.size;
+  const needed = Math.max(0, MIN_SUBJECTS - count);
+  const percent = Math.min((count / MAX_SUBJECTS) * 100, 100);
+
+  if (progressCount) progressCount.textContent = count;
+  if (progressFill) progressFill.style.width = `${percent}%`;
 
   if (remainingBadge) {
-    remainingBadge.textContent = remaining > 0
-      ? `Remaining ${remaining}`
-      : 'Complete!';
+    remainingBadge.textContent =
+      count >= MIN_SUBJECTS ? 'Ready to go!' : `Select ${needed} more`;
   }
 
   const track = document.querySelector('.progress-track');
@@ -353,9 +355,9 @@ function updateProgress() {
 
 function updateNextButton() {
   if (!nextBtn) return;
-  const isReady = selectedIds.size === MAX_SUBJECTS;
-  nextBtn.disabled = !isReady;
-  nextBtn.setAttribute('aria-disabled', String(!isReady));
+  const ready = selectedIds.size >= MIN_SUBJECTS;
+  nextBtn.disabled = !ready;
+  nextBtn.setAttribute('aria-disabled', String(!ready));
 }
 
 function saveSelection() {
@@ -365,15 +367,16 @@ function saveSelection() {
   );
 }
 
-// NEXT BUTTON — navigate to step 2 with API sync
+
+// ── NEXT ──────────────────────────────────────────────────────────
 function bindNextButton() {
   if (!nextBtn) return;
   nextBtn.addEventListener('click', handleNext);
 }
 
 async function handleNext() {
-  if (selectedIds.size < MAX_SUBJECTS) {
-    showToast(`Please select ${MAX_SUBJECTS} subjects to continue.`, 'error');
+  if (selectedIds.size < MIN_SUBJECTS) {
+    showToast(`Please select at least ${MIN_SUBJECTS} subjects to continue.`, 'error');
     return;
   }
 
@@ -381,65 +384,62 @@ async function handleNext() {
 
   try {
     const subjectIds = [...selectedIds];
-    
-    // Sync Step 1: send subjects selection to backend
+
+    // Send to backend — same endpoint as React version
     await api.post(ENDPOINTS.STUDENT_ONBOARDING, { subjects: subjectIds });
 
+    // Persist for step 3 subject resolution
     const step1Data = {
       subjects: subjectIds.map(id => {
-        const subject = activeSubjects.find(s => s.id === id);
-        return { id, name: subject?.name || id };
+        const s = activeSubjects.find(s => s.id === id);
+        return { id, name: s?.name || id };
       }),
     };
-
     sessionStorage.setItem('onboarding_step1_data', JSON.stringify(step1Data));
+    sessionStorage.setItem('onboarding_step1_subjects', JSON.stringify(subjectIds));
     sessionStorage.setItem('onboarding_step1_done', '1');
 
     navigateTo('/pages/onboarding-step2.html');
   } catch (err) {
-    showToast(err?.message || 'Failed to sync selection with backend. Please try again.', 'error');
+    const msg = err?.data?.message || err?.message || 'Failed to save subjects. Please try again.';
+    showToast(msg, 'error');
   } finally {
     setNextLoading(false);
   }
 }
 
-function navigateTo(url) {
-  if (!pageOverlay) {
-    window.location.href = url;
-    return;
-  }
-  pageOverlay.classList.add('fade-in');
-  setTimeout(() => {
-    window.location.href = url;
-  }, 300);
+
+// ── HELPERS ───────────────────────────────────────────────────────
+function setNextLoading(isLoading) {
+  if (!nextBtn) return;
+  nextBtn.disabled = isLoading;
+  nextBtnText?.classList.toggle('hidden', isLoading);
+  nextBtnLoader?.classList.toggle('hidden', !isLoading);
 }
 
-function showToast(message, type = '') {
-  if (!toast) return;
-  toast.textContent = message;
-  toast.className   = `toast ${type}`.trim();
-  void toast.offsetWidth;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3500);
+function navigateTo(url) {
+  if (!pageOverlay) { window.location.href = url; return; }
+  pageOverlay.classList.add('fade-in');
+  setTimeout(() => { window.location.href = url; }, 300);
 }
 
 function fadeInOnLoad() {
   if (!pageOverlay) return;
   pageOverlay.classList.add('fade-in');
   requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      pageOverlay.classList.remove('fade-in');
-    });
+    requestAnimationFrame(() => { pageOverlay.classList.remove('fade-in'); });
   });
 }
 
-function setNextLoading(isLoading) {
-  if (!nextBtn || !nextBtnText || !nextBtnLoader) return;
-  nextBtn.disabled = isLoading;
-  nextBtnText.classList.toggle('hidden', isLoading);
-  nextBtnLoader.classList.toggle('hidden', !isLoading);
+function showToast(message, type = '') {
+  if (!toast) return;
+  toast.textContent = message;
+  toast.className = `toast ${type}`.trim();
+  void toast.offsetWidth;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
 }
 
+
+// BOOT
 init();
-bindNextButton();
-fadeInOnLoad();
