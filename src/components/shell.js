@@ -184,7 +184,7 @@ function buildSidebarHTML(activeKey, user, stats = {}) {
         ` : ''}
 
         <!-- USER BLOCK -->
-        /* <div class="sidebar-user-block">
+        <div class="sidebar-user-block">
           <div class="user-block-avatar">${initials}</div>
           <div class="user-block-info">
             <div class="user-block-name">${user?.name || 'Victor Okafor'}</div>
@@ -196,7 +196,7 @@ function buildSidebarHTML(activeKey, user, stats = {}) {
             </svg>
           </div>
         </div>
-      </div> */
+      </div> 
     </aside>
 
     <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
